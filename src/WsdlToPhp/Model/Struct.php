@@ -1,6 +1,8 @@
 <?php
 
-use WsdlToPhp\Model\AbstractModel;
+namespace WsdlToPhp\Model;
+
+use WsdlToPhp\Generator\Generator;
 
 /**
  * Class Struct stands for an available struct described in the WSDL
@@ -63,8 +65,8 @@ class Struct extends AbstractModel
      * @uses StructAttribute::getDefaultValue()
      * @uses StructAttribute::getGetterDeclaration()
      * @uses StructAttribute::getSetterDeclaration()
-     * @uses WsdlToPhpGenerator::getOptionGenerateWsdlClassFile()
-     * @uses WsdlToPhpGenerator::getPackageName()
+     * @uses Generator::instance()->getOptionGenerateWsdlClassFile()
+     * @uses Generator::getPackageName()
      * @param array $_body the body which will be populated
      * @return array
      */
@@ -122,7 +124,7 @@ class Struct extends AbstractModel
                                         'comment'=>$attribute->getComment()));
                 array_push($_body,$attribute->getDeclaration());
                 array_push($bodyParameters,'$_' . lcfirst($attribute->getCleanName()) . (!$attribute->isRequired()?' = ' . var_export($attribute->getDefaultValue(),true):''));
-                if(!WsdlToPhpGenerator::getOptionGenerateWsdlClassFile())
+                if(!Generator::instance()->getOptionGenerateWsdlClassFile())
                     array_push($bodyUses,$this->getPackagedName() . '::' . $attribute->getSetterName() . '()');
                 $model = self::getModelByName($attribute->getType());
                 if($model)
@@ -157,7 +159,7 @@ class Struct extends AbstractModel
             /**
              * Uses the parent constructor method
              */
-            if(WsdlToPhpGenerator::getOptionGenerateWsdlClassFile())
+            if(Generator::instance()->getOptionGenerateWsdlClassFile())
                 array_push($comments,'@see parent::__construct()');
             foreach($bodyUses as $bodyUse)
                 array_push($comments,'@uses ' . $bodyUse);
@@ -175,7 +177,7 @@ class Struct extends AbstractModel
             /**
              * Uses the parent constructor method
              */
-            if(WsdlToPhpGenerator::getOptionGenerateWsdlClassFile())
+            if(Generator::instance()->getOptionGenerateWsdlClassFile())
                 array_push($_body,(($model && $model->getIsStruct())?self::getGenericWsdlClassName():'parent') . '::__construct(array(' . implode(',',$constructParameters) . '),false);');
             /**
              * Uses its own setters
@@ -332,7 +334,7 @@ class Struct extends AbstractModel
             /**
              * __set_state method override
              */
-            if(WsdlToPhpGenerator::getOptionGenerateWsdlClassFile())
+            if(Generator::instance()->getOptionGenerateWsdlClassFile())
             {
                 /**
                  * __set_state() method comments

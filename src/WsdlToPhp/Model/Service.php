@@ -1,6 +1,8 @@
 <?php
 
-use WsdlToPhp\Model\AbstractModel;
+namespace WsdlToPhp\Model;
+
+use WsdlToPhp\Generator\Generator;
 
 /**
  * Class Service stands for an available service containing the functions/operations described in the WSDL
@@ -50,13 +52,13 @@ class Service extends AbstractModel
      * @uses AbstractModel::getGenericWsdlClassName()
      * @uses AbstractModel::getMetaValue()
      * @uses AbstractModel::cleanString()
-     * @uses WsdlToPhpStruct::getContextualPart()
+     * @uses Struct::getContextualPart()
      * @uses Service::getFunctions()
-     * @uses WsdlToPhpFunction::getReturnType()
-     * @uses WsdlToPhpFunction::getComment()
-     * @uses WsdlToPhpFunction::getBody()
-     * @uses WsdlToPhpGenerator::getPackageName()
-     * @uses WsdlToPhpGenerator::getOptionGenerateWsdlClassFile()
+     * @uses Method::getReturnType()
+     * @uses Method::getComment()
+     * @uses Method::getBody()
+     * @uses Generator::getPackageName()
+     * @uses Generator::instance()->getOptionGenerateWsdlClassFile()
      * @param array $_body
      * @return void
      */
@@ -77,54 +79,54 @@ class Service extends AbstractModel
                 $model = self::getModelByName($function->getReturnType());
                 if($model && $model->getIsStruct())
                 {
-                    array_push($returnTypes,$model->getPackagedName());
+                    array_push($returnTypes, $model->getPackagedName());
                     unset($model);
                 }
                 else
-                    array_push($returnTypes,$function->getReturnType());
+                    array_push($returnTypes, $function->getReturnType());
                 /**
                  * Gather SoapHeader informations
                  */
-                $soapHeaderNames = $function->getMetaValue('SOAPHeaderNames',array());
-                $soapHeaderTypes = $function->getMetaValue('SOAPHeaderTypes',array());
-                $soapHeaderNameSpaces = $function->getMetaValue('SOAPHeaderNamespaces','');
+                $soapHeaderNames = $function->getMetaValue('SOAPHeaderNames', array());
+                $soapHeaderTypes = $function->getMetaValue('SOAPHeaderTypes', array());
+                $soapHeaderNameSpaces = $function->getMetaValue('SOAPHeaderNamespaces', '');
                 if(count($soapHeaderNames) && count($soapHeaderNames) == count($soapHeaderTypes))
                 {
                     foreach($soapHeaderNames as $index=>$soapHeaderName)
                     {
-                        $soapHeaderType = str_replace('{@link ','',$soapHeaderTypes[$index]);
-                        $soapHeaderType = str_replace('}','',$soapHeaderType);
+                        $soapHeaderType = str_replace('{@link ', '', $soapHeaderTypes[$index]);
+                        $soapHeaderType = str_replace('}', '', $soapHeaderType);
                         $soapHeaderKey = $soapHeaderName . '-' . $soapHeaderType;
-                        if(!array_key_exists($soapHeaderKey,$soapHeaders))
+                        if(!array_key_exists($soapHeaderKey, $soapHeaders))
                             $soapHeaders[$soapHeaderKey] = array(
-                                                                'name'=>$soapHeaderName,
-                                                                'type'=>$soapHeaderType,
+                                                                'name'=>$soapHeaderName, 
+                                                                'type'=>$soapHeaderType, 
                                                                 'namespaces'=>array(
                                                                                     $soapHeaderNameSpaces[$index]));
-                        elseif(!in_array($soapHeaderNameSpaces[$index],$soapHeaders[$soapHeaderKey]['namespaces']))
-                            array_push($soapHeaders[$soapHeaderKey]['namespaces'],$soapHeaderNameSpaces[$index]);
+                        elseif(!in_array($soapHeaderNameSpaces[$index], $soapHeaders[$soapHeaderKey]['namespaces']))
+                            array_push($soapHeaders[$soapHeaderKey]['namespaces'], $soapHeaderNameSpaces[$index]);
                     }
                 }
             }
             /**
              * Generates the SoapHeaders setter methods
              */
-            if(count($soapHeaders) && WsdlToPhpGenerator::getOptionGenerateWsdlClassFile())
+            if(count($soapHeaders) && Generator::instance()->getOptionGenerateWsdlClassFile())
             {
-                $whateverStruct = new WsdlToPhpStruct('whatever');
+                $whateverStruct = new Struct('whatever');
                 $soapHeaderNameUniqueMethods = array();
                 foreach($soapHeaders as $soapHeader)
                 {
                     $soapHeaderName = $soapHeader['name'];
                     $soapHeaderType = $soapHeader['type'];
                     $soapHeaderNameSpaces = $soapHeader['namespaces'];
-                    $cleanedName = $this->cleanString($soapHeaderName,false);
-                    $headerParamKnown = strpos($soapHeaderType,WsdlToPhpGenerator::getPackageName() . $whateverStruct->getContextualPart()) === 0;
+                    $cleanedName = $this->cleanString($soapHeaderName, false);
+                    $headerParamKnown = strpos($soapHeaderType, Generator::getPackageName() . $whateverStruct->getContextualPart()) === 0;
                     $methodName = ucfirst($cleanedName);
                     /**
                      * Ensure unique setter naming
                      */
-                    if(!array_key_exists($methodName,$soapHeaderNameUniqueMethods))
+                    if(!array_key_exists($methodName, $soapHeaderNameUniqueMethods))
                         $soapHeaderNameUniqueMethods[$methodName] = 0;
                     else
                         $soapHeaderNameUniqueMethods[$methodName]++;
@@ -133,23 +135,23 @@ class Service extends AbstractModel
                      * setSoapHeader() method comments
                      */
                     $comments = array();
-                    array_push($comments,'Sets the ' . $soapHeaderName . ' SoapHeader param');
-                    array_push($comments,'@uses ' . self::getGenericWsdlClassName() . '::setSoapHeader()');
-                    array_push($comments,'@param ' . $soapHeaderType . ' $_' . lcfirst($headerParamKnown?$soapHeaderType:$cleanedName));
-                    array_push($comments,'@param string $_nameSpace ' . implode(', ',$soapHeaderNameSpaces));
-                    array_push($comments,'@param bool $_mustUnderstand');
-                    array_push($comments,'@param string $_actor');
-                    array_push($comments,'@return bool true|false');
+                    array_push($comments, 'Sets the ' . $soapHeaderName . ' SoapHeader param');
+                    array_push($comments, '@uses ' . self::getGenericWsdlClassName() . '::setSoapHeader()');
+                    array_push($comments, '@param ' . $soapHeaderType . ' $_' . lcfirst($headerParamKnown?$soapHeaderType:$cleanedName));
+                    array_push($comments, '@param string $_nameSpace ' . implode(', ', $soapHeaderNameSpaces));
+                    array_push($comments, '@param bool $_mustUnderstand');
+                    array_push($comments, '@param string $_actor');
+                    array_push($comments, '@return bool true|false');
                     /**
                      * getResult() method body
                      */
-                    array_push($_body,array(
+                    array_push($_body, array(
                                             'comment'=>$comments));
-                    array_push($_body,'public function setSoapHeader' . $methodName . '(' . ($headerParamKnown?$soapHeaderType . ' ':'') . '$_' . lcfirst($headerParamKnown?$soapHeaderType:$cleanedName) . ',$_nameSpace' . (count($soapHeaderNameSpaces) > 1?'':' = ' . var_export($soapHeaderNameSpaces[0],true)) . ',$_mustUnderstand = false,$_actor = null)');
-                    array_push($_body,'{');
-                    array_push($_body,'return $this->setSoapHeader($_nameSpace,\'' . $soapHeaderName . '\',$_' . lcfirst($headerParamKnown?$soapHeaderType:$cleanedName) . ',$_mustUnderstand,$_actor);');
-                    array_push($_body,'}');
-                    unset($soapHeaderName,$soapHeaderType,$soapHeaderNameSpaces,$cleanedName,$headerParamKnown,$methodName,$comments);
+                    array_push($_body, 'public function setSoapHeader' . $methodName . '(' . ($headerParamKnown?$soapHeaderType . ' ':'') . '$_' . lcfirst($headerParamKnown?$soapHeaderType:$cleanedName) . ', $_nameSpace' . (count($soapHeaderNameSpaces) > 1?'':' = ' . var_export($soapHeaderNameSpaces[0], true)) . ', $_mustUnderstand = false, $_actor = null)');
+                    array_push($_body, '{');
+                    array_push($_body, 'return $this->setSoapHeader($_nameSpace, \'' . $soapHeaderName . '\', $_' . lcfirst($headerParamKnown?$soapHeaderType:$cleanedName) . ', $_mustUnderstand, $_actor);');
+                    array_push($_body, '}');
+                    unset($soapHeaderName, $soapHeaderType, $soapHeaderNameSpaces, $cleanedName, $headerParamKnown, $methodName, $comments);
                 }
             }
             /**
@@ -157,14 +159,14 @@ class Service extends AbstractModel
              */
             foreach($this->getFunctions() as $function)
             {
-                array_push($_body,array(
+                array_push($_body, array(
                                         'comment'=>$function->getComment()));
                 $function->getBody($_body);
             }
             /**
              * Generates the override getResult method if needed
              */
-            if(count($returnTypes) && WsdlToPhpGenerator::getOptionGenerateWsdlClassFile())
+            if(count($returnTypes) && Generator::instance()->getOptionGenerateWsdlClassFile())
             {
                 $returnTypes = array_unique($returnTypes);
                 natcasesort($returnTypes);
@@ -172,21 +174,21 @@ class Service extends AbstractModel
                  * getResult() method comments
                  */
                 $comments = array();
-                array_push($comments,'Returns the result');
-                array_push($comments,'@see ' . self::getGenericWsdlClassName() . '::getResult()');
-                array_push($comments,'@return ' . implode('|',$returnTypes));
+                array_push($comments, 'Returns the result');
+                array_push($comments, '@see ' . self::getGenericWsdlClassName() . '::getResult()');
+                array_push($comments, '@return ' . implode('|', $returnTypes));
                 /**
                  * getResult() method body
                  */
-                array_push($_body,array(
+                array_push($_body, array(
                                         'comment'=>$comments));
-                array_push($_body,'public function getResult()');
-                array_push($_body,'{');
-                array_push($_body,'return parent::getResult();');
-                array_push($_body,'}');
+                array_push($_body, 'public function getResult()');
+                array_push($_body, '{');
+                array_push($_body, 'return parent::getResult();');
+                array_push($_body, '}');
                 unset($comments);
             }
-            unset($returnTypes,$soapHeaders);
+            unset($returnTypes, $soapHeaders);
         }
     }
     /**
@@ -208,18 +210,18 @@ class Service extends AbstractModel
     }
     /**
      * Adds a function to the service
-     * @uses WsdlToPhpFunction::setIsUnique()
+     * @uses Method::setIsUnique()
      * @param string $_functionName original function name
      * @param string $_functionParameterType original parameter type/name
      * @param string $_functionReturnType original return type/name
      * @param bool $_functionIsUnique original isUnique value
-     * @return WsdlToPhpFunction
+     * @return Method
      */
-    public function addFunction($_functionName,$_functionParameterType,$_functionReturnType,$_functionIsUnique = true)
+    public function addMethod($_functionName, $_functionParameterType, $_functionReturnType, $_functionIsUnique = true)
     {
-        $function = new WsdlToPhpFunction($_functionName,$_functionParameterType,$_functionReturnType,$this);
+        $function = new Method($_functionName, $_functionParameterType, $_functionReturnType, $this);
         $function->setIsUnique($_functionIsUnique);
-        array_push($this->functions,$function);
+        array_push($this->functions, $function);
         return $function;
     }
     /**
@@ -227,7 +229,7 @@ class Service extends AbstractModel
      * @uses Service::getFunctions()
      * @uses AbstractModel::getName()
      * @param string $_functionName the original function name
-     * @return WsdlToPhpFunction|null
+     * @return Method|null
      */
     public function getFunction($_functionName)
     {

@@ -1,6 +1,8 @@
 <?php
 
-use WsdlToPhp\Model\AbstractModel;
+namespace WsdlToPhp\Model;
+
+use WsdlToPhp\Generator\Generator;
 
 /**
  * Class StructValue stands for an enumeration value
@@ -22,16 +24,16 @@ class StructValue extends AbstractModel
      * @see AbstractModel::__construct()
      * @uses AbstractModel::setOwner()
      * @uses StructValue::setIndex()
-     * @param string $_name the original name
-     * @param string $_index the index of the value in the enumeration struct
-     * @param WsdlToPhpStruct $_wsdlToPhpStruct defines the struct which owns this value
+     * @param string $name the original name
+     * @param string $index the index of the value in the enumeration struct
+     * @param Struct $struct defines the struct which owns this value
      * @return StructValue
      */
-    public function __construct($_name,$_index,WsdlToPhpStruct $_wsdlToPhpStruct)
+    public function __construct($name, $index, Struct $struct)
     {
-        parent::__construct($_name);
-        $this->setIndex($_index);
-        $this->setOwner($_wsdlToPhpStruct);
+        parent::__construct($name);
+        $this->setIndex($index);
+        $this->setOwner($struct);
     }
     /**
      * Returns the name of the value as constant
@@ -42,18 +44,18 @@ class StructValue extends AbstractModel
      * @uses StructValue::constantSuffix()
      * @uses StructValue::getIndex()
      * @uses StructValue::getOwner()
-     * @uses WsdlToPhpGenerator::getOptionGenericConstantsNames()
-     * @param bool $_keepMultipleUnderscores optional, allows to keep the multiple consecutive underscores
+     * @uses Generator::instance()->getOptionGenericConstantsNames()
+     * @param bool $keepMultipleUnderscores optional, allows to keep the multiple consecutive underscores
      * @return string
      */
-    public function getCleanName($_keepMultipleUnderscores = false)
+    public function getCleanName($keepMultipleUnderscores = false)
     {
-        if(WsdlToPhpGenerator::getOptionGenericConstantsNames() && is_numeric($this->getIndex()) && $this->getIndex() >= 0)
+        if(Generator::instance()->getOptionGenericConstantsNames() && is_numeric($this->getIndex()) && $this->getIndex() >= 0)
             return 'ENUM_VALUE_' . $this->getIndex();
         else
         {
-            $key = self::constantSuffix($this->getOwner()->getName(),parent::getCleanName($_keepMultipleUnderscores),$this->getIndex());
-            return 'VALUE_' . strtoupper(parent::getCleanName($_keepMultipleUnderscores)) . ($key?'_' . $key:'');
+            $key = self::constantSuffix($this->getOwner()->getName(), parent::getCleanName($keepMultipleUnderscores), $this->getIndex());
+            return 'VALUE_' . strtoupper(parent::getCleanName($keepMultipleUnderscores)) . ($key?'_' . $key:'');
         }
     }
     /**
@@ -77,11 +79,11 @@ class StructValue extends AbstractModel
     /**
      * Sets the index attribute value
      * @param int
-     * @return int $_index
+     * @return int $index
      */
-    public function setIndex($_index)
+    public function setIndex($index)
     {
-        return ($this->index = $_index);
+        return ($this->index = $index);
     }
     /**
      * Returns the comment lines for this value
@@ -94,38 +96,38 @@ class StructValue extends AbstractModel
     {
         $value = $this->getValue();
         $comments = array();
-        array_push($comments,'Constant for value ' . var_export($value,true));
+        array_push($comments, 'Constant for value ' . var_export($value, true));
         $this->addMetaComment($comments);
-        array_push($comments,'@return ' . gettype($value) . ' ' . var_export($value,true));
+        array_push($comments, '@return ' . gettype($value) . ' ' . var_export($value, true));
         return $comments;
     }
     /**
      * Returns the declaration of the value
      * @see StructValue::getCleanName()
      * @see StructValue::getValue()
-     * @param string $_structName the name of the struct which the value belongs to
-     * @param int $_index the index of the constant contained by the struct class
+     * @param string $structName the name of the struct which the value belongs to
+     * @param int $index the index of the constant contained by the struct class
      * @return string
      */
-    public function getDeclaration($_structName,$_index = -1)
+    public function getDeclaration($structName, $index = -1)
     {
-        return 'const ' . $this->getCleanName() . ' = ' . var_export($this->getValue(),true) . ';';
+        return 'const ' . $this->getCleanName() . ' = ' . var_export($this->getValue(), true) . ';';
     }
     /**
      * Returns the index which has to be added at the end of natural constant name defined with the value cleaned
      * Allows to avoid multiple constant name to be indentic
-     * @param string $_structName the struct name
-     * @param mixed $_value the value
-     * @param int $_index the position of the value
+     * @param string $structName the struct name
+     * @param mixed $value the value
+     * @param int $index the position of the value
      * @return int
      */
-    private static function constantSuffix($_structName,$_value,$_index)
+    private static function constantSuffix($structName, $value, $index)
     {
-        $key = strtoupper($_structName . '_' . $_value);
-        $indexedKey = $key . '_' . $_index;
-        if(array_key_exists($indexedKey,self::$uniqueConstants))
+        $key = strtoupper($structName . '_' . $value);
+        $indexedKey = $key . '_' . $index;
+        if(array_key_exists($indexedKey, self::$uniqueConstants))
             return self::$uniqueConstants[$indexedKey];
-        elseif(!array_key_exists($key,self::$uniqueConstants))
+        elseif(!array_key_exists($key, self::$uniqueConstants))
             self::$uniqueConstants[$key] = 0;
         else
             self::$uniqueConstants[$key]++;
@@ -133,10 +135,10 @@ class StructValue extends AbstractModel
         return self::$uniqueConstants[$key];
     }
     /**
-     * Returns the owner model object, meaning a WsdlToPhpStruct object
+     * Returns the owner model object, meaning a Struct object
      * @see AbstractModel::getOwner()
      * @uses AbstractModel::getOwner()
-     * @return WsdlToPhpStruct
+     * @return Struct
      */
     public function getOwner()
     {
