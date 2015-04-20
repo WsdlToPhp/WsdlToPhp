@@ -2,6 +2,8 @@
 
 namespace WsdlToPhp\Model;
 
+use WsdlToPhp\Generator\Generator;
+
 /**
  * Class AbstractModel defines the basic properties and methods to operations and structs extracted from the WSDL
  */
@@ -81,34 +83,35 @@ abstract class AbstractModel
     /**
      * Returns the comments for the file
      * @uses AbstractModel::getPackagedName()
-     * @uses WsdlToPhpGenerator::getOptionAddComments()
+     * @uses Generator::instance()->getOptionAddComments()
      * @uses AbstractModel::getDocSubPackages()
-     * @uses WsdlToPhpGenerator::getPackageName()
+     * @uses Generator::getPackageName()
      * @return array
      */
     private function getFileComment()
     {
         $comments = array();
         array_push($comments,'File for class ' . $this->getPackagedName());
-        array_push($comments,'@package ' . WsdlToPhpGenerator::getPackageName());
+        array_push($comments,'@package ' . Generator::getPackageName());
         if(count($this->getDocSubPackages()))
             array_push($comments,'@subpackage ' . implode(',',$this->getDocSubPackages()));
-        if(count(WsdlToPhpGenerator::getOptionAddComments()))
+        if(count(Generator::instance()->getOptionAddComments()))
         {
-            foreach(WsdlToPhpGenerator::getOptionAddComments() as $tagName=>$tagValue)
+            foreach(Generator::instance()->getOptionAddComments() as $tagName=>$tagValue) {
                 array_push($comments,"@$tagName $tagValue");
+            }
         }
         return $comments;
     }
     /**
      * Returns the comments for the class
      * @uses AbstractModel::getPackagedName()
-     * @uses WsdlToPhpGenerator::getOptionAddComments()
+     * @uses Generator::instance()->getOptionAddComments()
      * @uses AbstractModel::getDocumentation()
      * @uses AbstractModel::addMetaComment()
      * @uses AbstractModel::getDocSubPackages()
-     * @uses WsdlToPhpStruct::getIsStruct()
-     * @uses WsdlToPhpGenerator::getPackageName()
+     * @uses Struct::getIsStruct()
+     * @uses Generator::getPackageName()
      * @return array
      */
     private function getClassComment()
@@ -128,12 +131,12 @@ abstract class AbstractModel
             if($inheritedModel && !$inheritedModel->getIsStruct())
                 $inheritedModel->addMetaComment($comments,false,false);
         }
-        array_push($comments,'@package ' . WsdlToPhpGenerator::getPackageName());
+        array_push($comments,'@package ' . Generator::getPackageName());
         if(count($this->getDocSubPackages()))
             array_push($comments,'@subpackage ' . implode(',',$this->getDocSubPackages()));
-        if(count(WsdlToPhpGenerator::getOptionAddComments()))
+        if(count(Generator::instance()->getOptionAddComments()))
         {
-            foreach(WsdlToPhpGenerator::getOptionAddComments() as $tagName=>$tagValue)
+            foreach(Generator::instance()->getOptionAddComments() as $tagName=>$tagValue)
                 array_push($comments,"@$tagName $tagValue");
         }
         return $comments;
@@ -141,15 +144,15 @@ abstract class AbstractModel
     /**
      * Method to override in sub class
      * Must return a string in order to declare the function, attribute or the value
-     * @uses WsdlToPhpStruct::getIsStruct()
+     * @uses Struct::getIsStruct()
      * @uses AbstractModel::getModelByName()
      * @uses AbstractModel::getInheritance()
      * @uses AbstractModel::getComment()
      * @uses AbstractModel::getPackagedName()
      * @uses AbstractModel::getClassBody()
      * @uses AbstractModel::getGenericWsdlClassName()
-     * @uses WsdlToPhpGenerator::getOptionInheritsClassIdentifier()
-     * @uses WsdlToPhpGenerator::getOptionGenerateWsdlClassFile()
+     * @uses Generator::instance()->getOptionInheritsClassIdentifier()
+     * @uses Generator::instance()->getOptionGenerateWsdlClassFile()
      * @return string
      */
     public function getClassDeclaration()
@@ -166,7 +169,7 @@ abstract class AbstractModel
          * Extends
          */
         $extends = '';
-        $base = WsdlToPhpGenerator::getOptionInheritsClassIdentifier();
+        $base = Generator::instance()->getOptionInheritsClassIdentifier();
         if(!empty($base) && ($model = self::getModelByName($this->getName() . $base)))
         {
             if($model->getIsStruct())
@@ -177,9 +180,9 @@ abstract class AbstractModel
             if($model->getIsStruct())
                 $extends = $model->getPackagedName();
         }
-        elseif(class_exists($this->getInheritance()) && stripos($this->getInheritance(),WsdlToPhpGenerator::getPackageName()) === 0)
+        elseif(class_exists($this->getInheritance()) && stripos($this->getInheritance(),Generator::getPackageName()) === 0)
             $extends = $this->getInheritance();
-        if(empty($extends) && WsdlToPhpGenerator::getOptionGenerateWsdlClassFile())
+        if(empty($extends) && Generator::instance()->getOptionGenerateWsdlClassFile())
             $extends = self::getGenericWsdlClassName();
         array_push($class,'class ' . $this->getPackagedName() . (!empty($extends)?' extends ' . $extends:''));
         /**
@@ -446,7 +449,7 @@ abstract class AbstractModel
     }
     /**
      * Returns the packaged name
-     * @uses WsdlToPhpGenerator::getPackageName()
+     * @uses Generator::getPackageName()
      * @uses AbstractModel::getCleanName()
      * @uses AbstractModel::getContextualPart()
      * @uses AbstractModel::uniqueName() to ensure unique naming of struct case sensitively
@@ -454,7 +457,7 @@ abstract class AbstractModel
      */
     public function getPackagedName()
     {
-        return WsdlToPhpGenerator::getPackageName() . $this->getContextualPart() . ucfirst(self::uniqueName($this->getCleanName(),$this->getContextualPart()));
+        return Generator::getPackageName() . $this->getContextualPart() . ucfirst(self::uniqueName($this->getCleanName(),$this->getContextualPart()));
     }
     /**
      * Allows to define the contextual part of the class name for the package
@@ -497,8 +500,8 @@ abstract class AbstractModel
     /**
      * Returns the model by its name
      * @uses AbstractModel::getModels()
-     * @param string $_modelName the original WsdlToPhpStruct name
-     * @return WsdlToPhpStruct|null
+     * @param string $_modelName the original Struct name
+     * @return Struct|null
      */
     public static function getModelByName($_modelName)
     {
@@ -511,11 +514,11 @@ abstract class AbstractModel
      * @uses AbstractModel::getName()
      * @uses AbstractModel::__toString()
      * @param AbstractModel $_model a AbstractModel object
-     * @return WsdlToPhpStruct|bool
+     * @return Struct|bool
      */
     protected static function updateModels(AbstractModel $_model)
     {
-        if($_model->__toString() != 'WsdlToPhpStruct' || !$_model->getName())
+        if($_model->__toString() != 'Struct' || !$_model->getName())
             return false;
         return (self::$models['_' . $_model->getName() . '_'] = $_model);
     }
@@ -615,12 +618,12 @@ abstract class AbstractModel
     }
     /**
      * Returns the generic name of the WsdlClass
-     * @uses WsdlToPhpGenerator::getPackageName()
+     * @uses Generator::getPackageName()
      * @return string
      */
     public static function getGenericWsdlClassName()
     {
-        return WsdlToPhpGenerator::getPackageName() . 'WsdlClass';
+        return Generator::getPackageName() . 'WsdlClass';
     }
     /**
      * Returns class name
