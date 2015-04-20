@@ -24,7 +24,7 @@ abstract class AbstractCommand extends ContainerAwareCommand
                 'force',
                 null,
                 InputOption::VALUE_NONE,
-                'If true, then emails are really sent'
+                'If true, then package is really generated otherwise debug informations are displayed'
             );
     }
     
