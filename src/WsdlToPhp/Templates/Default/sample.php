@@ -3,9 +3,6 @@
  * Test with PackageName for WSDL_PATH
  * @package PackageName
  */
-ini_set('memory_limit','512M');
-ini_set('display_errors',true);
-error_reporting(-1);
 /**
  * Load autoload
  */

@@ -1,15 +1,11 @@
 <?php
+
+use WsdlToPhp\Model\AbstractModel;
+
 /**
- * File for WsdlToPhpStructValue
- * @package WsdlToPhpGenerator
- * @date 19/12/2012
+ * Class StructValue stands for an enumeration value
  */
-/**
- * Class WsdlToPhpStructValue stands for an enumeration value
- * @package WsdlToPhpGenerator
- * @date 19/12/2012
- */
-class WsdlToPhpStructValue extends WsdlToPhpModel
+class StructValue extends AbstractModel
 {
     /**
      * Store the constants generated per structName
@@ -23,13 +19,13 @@ class WsdlToPhpStructValue extends WsdlToPhpModel
     private $index = 0;
     /**
      * Main constructor
-     * @see WsdlToPhpModel::__construct()
-     * @uses WsdlToPhpModel::setOwner()
-     * @uses WsdlToPhpStructValue::setIndex()
+     * @see AbstractModel::__construct()
+     * @uses AbstractModel::setOwner()
+     * @uses StructValue::setIndex()
      * @param string $_name the original name
      * @param string $_index the index of the value in the enumeration struct
      * @param WsdlToPhpStruct $_wsdlToPhpStruct defines the struct which owns this value
-     * @return WsdlToPhpStructValue
+     * @return StructValue
      */
     public function __construct($_name,$_index,WsdlToPhpStruct $_wsdlToPhpStruct)
     {
@@ -39,13 +35,13 @@ class WsdlToPhpStructValue extends WsdlToPhpModel
     }
     /**
      * Returns the name of the value as constant
-     * @see WsdlToPhpModel::getCleanName()
-     * @uses WsdlToPhpModel::getCleanName()
-     * @uses WsdlToPhpModel::getName()
-     * @uses WsdlToPhpModel::getOwner()
-     * @uses WsdlToPhpStructValue::constantSuffix()
-     * @uses WsdlToPhpStructValue::getIndex()
-     * @uses WsdlToPhpStructValue::getOwner()
+     * @see AbstractModel::getCleanName()
+     * @uses AbstractModel::getCleanName()
+     * @uses AbstractModel::getName()
+     * @uses AbstractModel::getOwner()
+     * @uses StructValue::constantSuffix()
+     * @uses StructValue::getIndex()
+     * @uses StructValue::getOwner()
      * @uses WsdlToPhpGenerator::getOptionGenericConstantsNames()
      * @param bool $_keepMultipleUnderscores optional, allows to keep the multiple consecutive underscores
      * @return string
@@ -62,8 +58,8 @@ class WsdlToPhpStructValue extends WsdlToPhpModel
     }
     /**
      * Returns the value with good type
-     * @uses WsdlToPhpModel::getName()
-     * @uses WsdlToPhpModel::getValueWithinItsType()
+     * @uses AbstractModel::getName()
+     * @uses AbstractModel::getValueWithinItsType()
      * @return mixed
      */
     public function getValue()
@@ -89,9 +85,9 @@ class WsdlToPhpStructValue extends WsdlToPhpModel
     }
     /**
      * Returns the comment lines for this value
-     * @see WsdlToPhpModel::getComment()
-     * @uses WsdlToPhpStructValue::getValue()
-     * @uses WsdlToPhpModel::addMetaComment()
+     * @see AbstractModel::getComment()
+     * @uses StructValue::getValue()
+     * @uses AbstractModel::addMetaComment()
      * @return array
      */
     public function getComment()
@@ -105,8 +101,8 @@ class WsdlToPhpStructValue extends WsdlToPhpModel
     }
     /**
      * Returns the declaration of the value
-     * @see WsdlToPhpStructValue::getCleanName()
-     * @see WsdlToPhpStructValue::getValue()
+     * @see StructValue::getCleanName()
+     * @see StructValue::getValue()
      * @param string $_structName the name of the struct which the value belongs to
      * @param int $_index the index of the constant contained by the struct class
      * @return string
@@ -138,8 +134,8 @@ class WsdlToPhpStructValue extends WsdlToPhpModel
     }
     /**
      * Returns the owner model object, meaning a WsdlToPhpStruct object
-     * @see WsdlToPhpModel::getOwner()
-     * @uses WsdlToPhpModel::getOwner()
+     * @see AbstractModel::getOwner()
+     * @uses AbstractModel::getOwner()
      * @return WsdlToPhpStruct
      */
     public function getOwner()

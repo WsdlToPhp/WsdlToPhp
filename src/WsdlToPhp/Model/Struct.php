@@ -1,15 +1,11 @@
 <?php
+
+use WsdlToPhp\Model\AbstractModel;
+
 /**
- * File for WsdlToPhpStruct
- * @package WsdlToPhpGenerator
- * @date 19/12/2012
+ * Class Struct stands for an available struct described in the WSDL
  */
-/**
- * Class WsdlToPhpStruct stands for an available struct described in the WSDL
- * @package WsdlToPhpGenerator
- * @date 19/12/2012
- */
-class WsdlToPhpStruct extends WsdlToPhpModel
+class Struct extends AbstractModel
 {
     /**
      * Attributes of the struct
@@ -33,11 +29,11 @@ class WsdlToPhpStruct extends WsdlToPhpModel
     private $isStruct = false;
     /**
      * Main constructor
-     * @see WsdlToPhpModel::__construct()
-     * @uses WsdlToPhpStruct::setIsStruct()
+     * @see AbstractModel::__construct()
+     * @uses Struct::setIsStruct()
      * @param string $_name the original name
      * @param bool $_isStruct defines if it's a real sruct or not
-     * @return WsdlToPhpStruct
+     * @return Struct
      */
     public function __construct($_name,$_isStruct = true)
     {
@@ -46,27 +42,27 @@ class WsdlToPhpStruct extends WsdlToPhpModel
     }
     /**
      * Returns the constructor method
-     * @uses WsdlToPhpModel::getName()
-     * @uses WsdlToPhpModel::getModelByName()
-     * @uses WsdlToPhpModel::getPackagedName()
-     * @uses WsdlToPhpModel::getCleanName()
-     * @uses WsdlToPhpModel::getInheritance()
-     * @uses WsdlToPhpModel::getGenericWsdlClassName()
-     * @uses WsdlToPhpStruct::isArray()
-     * @uses WsdlToPhpStruct::getIsRestriction()
-     * @uses WsdlToPhpStruct::getValues()
-     * @uses WsdlToPhpStruct::getAttributes()
-     * @uses WsdlToPhpStruct::getIsStruct()
-     * @uses WsdlToPhpStructValue::getComment()
-     * @uses WsdlToPhpStructValue::getDeclaration()
-     * @uses WsdlToPhpStructValue::getCleanName()
-     * @uses WsdlToPhpStructAttribute::getComment()
-     * @uses WsdlToPhpStructAttribute::getDeclaration()
-     * @uses WsdlToPhpStructAttribute::isRequired()
-     * @uses WsdlToPhpStructAttribute::getType()
-     * @uses WsdlToPhpStructAttribute::getDefaultValue()
-     * @uses WsdlToPhpStructAttribute::getGetterDeclaration()
-     * @uses WsdlToPhpStructAttribute::getSetterDeclaration()
+     * @uses AbstractModel::getName()
+     * @uses AbstractModel::getModelByName()
+     * @uses AbstractModel::getPackagedName()
+     * @uses AbstractModel::getCleanName()
+     * @uses AbstractModel::getInheritance()
+     * @uses AbstractModel::getGenericWsdlClassName()
+     * @uses Struct::isArray()
+     * @uses Struct::getIsRestriction()
+     * @uses Struct::getValues()
+     * @uses Struct::getAttributes()
+     * @uses Struct::getIsStruct()
+     * @uses StructValue::getComment()
+     * @uses StructValue::getDeclaration()
+     * @uses StructValue::getCleanName()
+     * @uses StructAttribute::getComment()
+     * @uses StructAttribute::getDeclaration()
+     * @uses StructAttribute::isRequired()
+     * @uses StructAttribute::getType()
+     * @uses StructAttribute::getDefaultValue()
+     * @uses StructAttribute::getGetterDeclaration()
+     * @uses StructAttribute::getSetterDeclaration()
      * @uses WsdlToPhpGenerator::getOptionGenerateWsdlClassFile()
      * @uses WsdlToPhpGenerator::getPackageName()
      * @param array $_body the body which will be populated
@@ -206,7 +202,7 @@ class WsdlToPhpStruct extends WsdlToPhpModel
             {
                 foreach($this->getAttributes() as $attr)
                     $attribute = $attr;
-                if($attribute instanceof WsdlToPhpStructAttribute)
+                if($attribute instanceof StructAttribute)
                 {
                     $model = self::getModelByName($attribute->getType());
                     $return = ($model && $model->getIsStruct())?$model->getPackagedName():$attribute->getType();
@@ -363,8 +359,8 @@ class WsdlToPhpStruct extends WsdlToPhpModel
     }
     /**
      * Returns the contextual part of the class name for the package
-     * @see WsdlToPhpModel::getContextualPart()
-     * @uses WsdlToPhpStruct::getIsRestriction()
+     * @see AbstractModel::getContextualPart()
+     * @uses Struct::getIsRestriction()
      * @return string
      */
     public function getContextualPart()
@@ -374,8 +370,8 @@ class WsdlToPhpStruct extends WsdlToPhpModel
     /**
      * Returns the sub package name which the model belongs to
      * Must be overridden by sub classes
-     * @see WsdlToPhpModel::getDocSubPackages()
-     * @uses WsdlToPhpStruct::getIsRestriction()
+     * @see AbstractModel::getDocSubPackages()
+     * @uses Struct::getIsRestriction()
      * @return array
      */
     public function getDocSubPackages()
@@ -385,8 +381,8 @@ class WsdlToPhpStruct extends WsdlToPhpModel
     }
     /**
      * Returns true if the current struct is a collection of values (like an array)
-     * @uses WsdlToPhpModel::getName()
-     * @uses WsdlToPhpStruct::countOwnAttributes()
+     * @uses AbstractModel::getName()
+     * @uses Struct::countOwnAttributes()
      * @return bool
      */
     public function isArray()
@@ -395,11 +391,11 @@ class WsdlToPhpStruct extends WsdlToPhpModel
     }
     /**
      * Returns the attributes of the struct and potentially from the parent class
-     * @uses WsdlToPhpModel::getInheritance()
-     * @uses WsdlToPhpModel::getModelByName()
-     * @uses WsdlToPhpStruct::getIsStruct()
-     * @uses WsdlToPhpStruct::getAttributes()
-     * @param bool $_includeInheritanceAttributes include the attributes of parent class, default parent attributes are not included. If true, then the array is an associative array containing and index "attribute" for the WsdlToPhpStructAttribute object and an index "model" for the WsdlToPhpStruct object.
+     * @uses AbstractModel::getInheritance()
+     * @uses AbstractModel::getModelByName()
+     * @uses Struct::getIsStruct()
+     * @uses Struct::getAttributes()
+     * @param bool $_includeInheritanceAttributes include the attributes of parent class, default parent attributes are not included. If true, then the array is an associative array containing and index "attribute" for the StructAttribute object and an index "model" for the Struct object.
      * @param bool $_requiredFirst places the required attributes first, then the not required in order to have the _contrust method with the required attribute at first
      * @return array
      */
@@ -414,7 +410,7 @@ class WsdlToPhpStruct extends WsdlToPhpModel
             $attributes = array();
             if($this->getInheritance() != '')
             {
-                $model = WsdlToPhpModel::getModelByName($this->getInheritance());
+                $model = AbstractModel::getModelByName($this->getInheritance());
                 while($model && $model->getIsStruct())
                 {
                     $modelAttributes = $model->getAttributes();
@@ -426,7 +422,7 @@ class WsdlToPhpStruct extends WsdlToPhpModel
                                                         'model'=>$model));
                     }
                     unset($modelAttributes);
-                    $model = WsdlToPhpModel::getModelByName($model->getInheritance());
+                    $model = AbstractModel::getModelByName($model->getInheritance());
                 }
             }
             $thisAttributes = $this->getAttributes();
@@ -465,7 +461,7 @@ class WsdlToPhpStruct extends WsdlToPhpModel
     }
     /**
      * Returns the number of own attributes
-     * @uses WsdlToPhpStruct::getAttributes()
+     * @uses Struct::getAttributes()
      * @return int
      */
     public function countOwnAttributes()
@@ -483,22 +479,22 @@ class WsdlToPhpStruct extends WsdlToPhpModel
     }
     /**
      * Adds attribute based on its original name
-     * @uses WsdlToPhpModel::updateModels()
+     * @uses AbstractModel::updateModels()
      * @param string $_attributeName the attribute name
      * @param string $_attributeType the attribute type
-     * @return WsdlToPhpStructAttribute
+     * @return StructAttribute
      */
     public function addAttribute($_attributeName,$_attributeType)
     {
-        $this->attributes[$_attributeName] = new WsdlToPhpStructAttribute($_attributeName,$_attributeType,$this);
+        $this->attributes[$_attributeName] = new StructAttribute($_attributeName,$_attributeType,$this);
         self::updateModels($this);
         return $this->attributes[$_attributeName];
     }
     /**
      * Returns the attribute by its name, otherwise null
-     * @uses WsdlToPhpStruct::getAttributes()
+     * @uses Struct::getAttributes()
      * @param string $_attributeName the original attribute name
-     * @return WsdlToPhpStructAttribute|null
+     * @return StructAttribute|null
      */
     public function getAttribute($_attributeName)
     {
@@ -514,7 +510,7 @@ class WsdlToPhpStruct extends WsdlToPhpModel
     }
     /**
      * Sets the isRestriction value
-     * @uses WsdlToPhpModel::updateModels()
+     * @uses AbstractModel::updateModels()
      * @param bool $_isRestriction
      * @return bool
      */
@@ -534,7 +530,7 @@ class WsdlToPhpStruct extends WsdlToPhpModel
     }
     /**
      * Sets the isStruct value
-     * @uses WsdlToPhpModel::updateModels()
+     * @uses AbstractModel::updateModels()
      * @param bool $_isStruct
      * @return bool
      */
@@ -554,7 +550,7 @@ class WsdlToPhpStruct extends WsdlToPhpModel
     }
     /**
      * Sets the values for an enumeration
-     * @uses WsdlToPhpModel::updateModels()
+     * @uses AbstractModel::updateModels()
      * @param array $_values
      * @return array
      */
@@ -566,23 +562,23 @@ class WsdlToPhpStruct extends WsdlToPhpModel
     }
     /**
      * Adds value to values array
-     * @uses WsdlToPhpModel::updateModels()
-     * @uses WsdlToPhpStruct::getValue()
-     * @uses WsdlToPhpStruct::getValues()
+     * @uses AbstractModel::updateModels()
+     * @uses Struct::getValue()
+     * @uses Struct::getValues()
      * @param mixed $_value the original value
      */
     public function addValue($_value)
     {
         if(!$this->getValue($_value))
-            array_push($this->values,new WsdlToPhpStructValue($_value,count($this->getValues()),$this));
+            array_push($this->values,new StructValue($_value,count($this->getValues()),$this));
         self::updateModels($this);
     }
     /**
      * Gets the value object for the given value
-     * @uses WsdlToPhpStruct::getValues()
-     * @uses WsdlToPhpModel::getName()
+     * @uses Struct::getValues()
+     * @uses AbstractModel::getName()
      * @param string $_value Value name
-     * @return WsdlToPhpStructValue|null
+     * @return StructValue|null
      */
     public function getValue($_value)
     {

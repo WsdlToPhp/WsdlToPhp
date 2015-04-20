@@ -1,15 +1,11 @@
 <?php
+
+use WsdlToPhp\Model\AbstractModel;
+
 /**
- * File for WsdlToPhpStructAttribute
- * @package WsdlToPhpGenerator
- * @date 19/12/2012
+ * Class StructAttribute stands for an available struct attribute described in the WSDL
  */
-/**
- * Class WsdlToPhpStructAttribute stands for an available struct attribute described in the WSDL
- * @package WsdlToPhpGenerator
- * @date 19/12/2012
- */
-class WsdlToPhpStructAttribute extends WsdlToPhpModel
+class StructAttribute extends AbstractModel
 {
     /**
      * Type of the struct attribute
@@ -18,13 +14,13 @@ class WsdlToPhpStructAttribute extends WsdlToPhpModel
     private $type = '';
     /**
      * Main constructor
-     * @see WsdlToPhpModel::__construct()
-     * @uses WsdlToPhpStructAttribute::setType()
-     * @uses WsdlToPhpModel::setOwner()
+     * @see AbstractModel::__construct()
+     * @uses StructAttribute::setType()
+     * @uses AbstractModel::setOwner()
      * @param string $_name the original name
      * @param string $_type the type
      * @param WsdlToPhpStruct $_wsdlToPhpStruct defines the struct which owns this value
-     * @return WsdlToPhpStructAttribute
+     * @return StructAttribute
      */
     public function __construct($_name,$_type,WsdlToPhpStruct $_wsdlToPhpStruct)
     {
@@ -34,15 +30,15 @@ class WsdlToPhpStructAttribute extends WsdlToPhpModel
     }
     /**
      * Returns the comment lines for this attribute
-     * @see WsdlToPhpModel::getComment()
-     * @uses WsdlToPhpModel::getName()
+     * @see AbstractModel::getComment()
+     * @uses AbstractModel::getName()
      * @uses WsdlToPhpStruct::getIsStruct()
-     * @uses WsdlToPhpStructAttribute::getType()
-     * @uses WsdlToPhpStructAttribute::getOwner()
-     * @uses WsdlToPhpModel::addMetaComment()
-     * @uses WsdlToPhpModel::getModelByName()
-     * @uses WsdlToPhpModel::getPackagedName()
-     * @uses WsdlToPhpModel::getInheritance()
+     * @uses StructAttribute::getType()
+     * @uses StructAttribute::getOwner()
+     * @uses AbstractModel::addMetaComment()
+     * @uses AbstractModel::getModelByName()
+     * @uses AbstractModel::getPackagedName()
+     * @uses AbstractModel::getInheritance()
      * @return array
      */
     public function getComment()
@@ -72,10 +68,10 @@ class WsdlToPhpStructAttribute extends WsdlToPhpModel
     }
     /**
      * Returns the unique name in the current struct (for setters/getters and struct contrusctor array)
-     * @uses WsdlToPhpModel::getCleanName()
-     * @uses WsdlToPhpModel::getName()
-     * @uses WsdlToPhpModel::uniqueName()
-     * @uses WsdlToPhpStructAttribute::getOwner()
+     * @uses AbstractModel::getCleanName()
+     * @uses AbstractModel::getName()
+     * @uses AbstractModel::uniqueName()
+     * @uses StructAttribute::getOwner()
      * @return string
      */
     public function getUniqueName()
@@ -84,7 +80,7 @@ class WsdlToPhpStructAttribute extends WsdlToPhpModel
     }
     /**
      * Returns the declaration of the attribute
-     * @uses WsdlToPhpModel::getCleanName()
+     * @uses AbstractModel::getCleanName()
      * @return string
      */
     public function getDeclaration()
@@ -93,7 +89,7 @@ class WsdlToPhpStructAttribute extends WsdlToPhpModel
     }
     /**
      * Returns the getter name for this attribute
-     * @uses WsdlToPhpStructAttribute::getUniqueName()
+     * @uses StructAttribute::getUniqueName()
      * @return string
      */
     public function getGetterName()
@@ -102,7 +98,7 @@ class WsdlToPhpStructAttribute extends WsdlToPhpModel
     }
     /**
      * Returns the getter name for this attribute
-     * @uses WsdlToPhpStructAttribute::getUniqueName()
+     * @uses StructAttribute::getUniqueName()
      * @return string
      */
     public function getSetterName()
@@ -111,16 +107,16 @@ class WsdlToPhpStructAttribute extends WsdlToPhpModel
     }
     /**
      * Returns the array of lines to declare the getter
-     * @uses WsdlToPhpModel::getModelByName()
-     * @uses WsdlToPhpModel::getCleanName()
-     * @uses WsdlToPhpModel::nameIsClean()
-     * @uses WsdlToPhpModel::getName()
-     * @uses WsdlToPhpModel::getPackagedName()
+     * @uses AbstractModel::getModelByName()
+     * @uses AbstractModel::getCleanName()
+     * @uses AbstractModel::nameIsClean()
+     * @uses AbstractModel::getName()
+     * @uses AbstractModel::getPackagedName()
      * @uses WsdlToPhpStruct::getIsStruct()
-     * @uses WsdlToPhpStructAttribute::getType()
-     * @uses WsdlToPhpStructAttribute::getGetterName()
-     * @uses WsdlToPhpStructAttribute::isRequired()
-     * @uses WsdlToPhpStructAttribute::getOwner()
+     * @uses StructAttribute::getType()
+     * @uses StructAttribute::getGetterName()
+     * @uses StructAttribute::isRequired()
+     * @uses StructAttribute::getOwner()
      * @param array $_body
      * @param WsdlToPhpStruct $_struct
      * @return void
@@ -181,17 +177,17 @@ class WsdlToPhpStructAttribute extends WsdlToPhpModel
     }
     /**
      * Returns the array of lines to declare the setter
-     * @uses WsdlToPhpModel::getModelByName()
-     * @uses WsdlToPhpModel::getCleanName()
-     * @uses WsdlToPhpModel::nameIsClean()
-     * @uses WsdlToPhpModel::getName()
-     * @uses WsdlToPhpModel::getPackagedName()
-     * @uses WsdlToPhpModel::getInheritance()
+     * @uses AbstractModel::getModelByName()
+     * @uses AbstractModel::getCleanName()
+     * @uses AbstractModel::nameIsClean()
+     * @uses AbstractModel::getName()
+     * @uses AbstractModel::getPackagedName()
+     * @uses AbstractModel::getInheritance()
      * @uses WsdlToPhpStruct::getIsRestriction()
      * @uses WsdlToPhpStruct::isArray()
-     * @uses WsdlToPhpStructAttribute::getType()
-     * @uses WsdlToPhpStructAttribute::getSetterName()
-     * @uses WsdlToPhpStructAttribute::getOwner()
+     * @uses StructAttribute::getType()
+     * @uses StructAttribute::getSetterName()
+     * @uses StructAttribute::getOwner()
      * @param array $_body
      * @param WsdlToPhpStruct $_struct
      * @return void
@@ -264,9 +260,9 @@ class WsdlToPhpStructAttribute extends WsdlToPhpModel
     }
     /**
      * Returns potential default value
-     * @uses WsdlToPhpModel::getMetaValueFirstSet()
-     * @uses WsdlToPhpModel::getValueWithinItsType()
-     * @uses WsdlToPhpStructAttribute::getType()
+     * @uses AbstractModel::getMetaValueFirstSet()
+     * @uses AbstractModel::getValueWithinItsType()
+     * @uses StructAttribute::getType()
      * @return mixed
      */
     public function getDefaultValue()
@@ -280,8 +276,8 @@ class WsdlToPhpStructAttribute extends WsdlToPhpModel
     }
     /**
      * Returns true or false depending on minOccurs information associated to the attribute
-     * @uses WsdlToPhpModel::getMetaValueFirstSet()
-     * @uses WsdlToPhpModel::getMetaValue()
+     * @uses AbstractModel::getMetaValueFirstSet()
+     * @uses AbstractModel::getMetaValue()
      * @return bool true|false
      */
     public function isRequired()
@@ -294,7 +290,7 @@ class WsdlToPhpStructAttribute extends WsdlToPhpModel
     }
     /**
      * Returns the patern which the value must match
-     * @uses WsdlToPhpModel::getMetaValueFirstSet()
+     * @uses AbstractModel::getMetaValueFirstSet()
      * @return string
      */
     public function getPattern()
@@ -307,8 +303,8 @@ class WsdlToPhpStructAttribute extends WsdlToPhpModel
     }
     /**
      * Returns the owner model object, meaning a WsdlToPhpStruct object
-     * @see WsdlToPhpModel::getOwner()
-     * @uses WsdlToPhpModel::getOwner()
+     * @see AbstractModel::getOwner()
+     * @uses AbstractModel::getOwner()
      * @return WsdlToPhpStruct
      */
     public function getOwner()

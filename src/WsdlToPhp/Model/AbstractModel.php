@@ -1,15 +1,11 @@
 <?php
+
+namespace WsdlToPhp\Model;
+
 /**
- * File for WsdlToPhpModel class
- * @package WsdlToPhpGenerator
- * @date 19/12/2012
+ * Class AbstractModel defines the basic properties and methods to operations and structs extracted from the WSDL
  */
-/**
- * Class WsdlToPhpModel defines the basic properties and methods to operations and structs extracted from the WSDL
- * @package WsdlToPhpGenerator
- * @date 19/12/2012
- */
-class WsdlToPhpModel
+abstract class AbstractModel
 {
     /**
      * Constant used to define the key to store documentation value in meta
@@ -38,7 +34,7 @@ class WsdlToPhpModel
     private $inheritance = '';
     /**
      * Store the object which owns the current model
-     * @var WsdlToPhpModel
+     * @var AbstractModel
      */
     private $owner = null;
     /**
@@ -64,10 +60,10 @@ class WsdlToPhpModel
     private static $uniqueNames = array();
     /**
      * Main constructor
-     * @uses WsdlToPhpModel::setName()
-     * @uses WsdlToPhpModel::updateModels()
+     * @uses AbstractModel::setName()
+     * @uses AbstractModel::updateModels()
      * @param string $_name the original name
-     * @return WsdlToPhpModel
+     * @return AbstractModel
      */
     public function __construct($_name)
     {
@@ -84,9 +80,9 @@ class WsdlToPhpModel
     }
     /**
      * Returns the comments for the file
-     * @uses WsdlToPhpModel::getPackagedName()
+     * @uses AbstractModel::getPackagedName()
      * @uses WsdlToPhpGenerator::getOptionAddComments()
-     * @uses WsdlToPhpModel::getDocSubPackages()
+     * @uses AbstractModel::getDocSubPackages()
      * @uses WsdlToPhpGenerator::getPackageName()
      * @return array
      */
@@ -106,11 +102,11 @@ class WsdlToPhpModel
     }
     /**
      * Returns the comments for the class
-     * @uses WsdlToPhpModel::getPackagedName()
+     * @uses AbstractModel::getPackagedName()
      * @uses WsdlToPhpGenerator::getOptionAddComments()
-     * @uses WsdlToPhpModel::getDocumentation()
-     * @uses WsdlToPhpModel::addMetaComment()
-     * @uses WsdlToPhpModel::getDocSubPackages()
+     * @uses AbstractModel::getDocumentation()
+     * @uses AbstractModel::addMetaComment()
+     * @uses AbstractModel::getDocSubPackages()
      * @uses WsdlToPhpStruct::getIsStruct()
      * @uses WsdlToPhpGenerator::getPackageName()
      * @return array
@@ -146,12 +142,12 @@ class WsdlToPhpModel
      * Method to override in sub class
      * Must return a string in order to declare the function, attribute or the value
      * @uses WsdlToPhpStruct::getIsStruct()
-     * @uses WsdlToPhpModel::getModelByName()
-     * @uses WsdlToPhpModel::getInheritance()
-     * @uses WsdlToPhpModel::getComment()
-     * @uses WsdlToPhpModel::getPackagedName()
-     * @uses WsdlToPhpModel::getClassBody()
-     * @uses WsdlToPhpModel::getGenericWsdlClassName()
+     * @uses AbstractModel::getModelByName()
+     * @uses AbstractModel::getInheritance()
+     * @uses AbstractModel::getComment()
+     * @uses AbstractModel::getPackagedName()
+     * @uses AbstractModel::getClassBody()
+     * @uses AbstractModel::getGenericWsdlClassName()
      * @uses WsdlToPhpGenerator::getOptionInheritsClassIdentifier()
      * @uses WsdlToPhpGenerator::getOptionGenerateWsdlClassFile()
      * @return string
@@ -234,7 +230,7 @@ class WsdlToPhpModel
     }
     /**
      * Sets the name of the class the current class inherits from
-     * @uses WsdlToPhpModel::updateModels()
+     * @uses AbstractModel::updateModels()
      * @param string
      */
     public function setInheritance($_inheritance = '')
@@ -245,9 +241,9 @@ class WsdlToPhpModel
     }
     /**
      * Add meta informations to comment array
-     * @uses WsdlToPhpModel::META_DOCUMENTATION
-     * @uses WsdlToPhpModel::getMeta()
-     * @uses WsdlToPhpModel::cleanComment()
+     * @uses AbstractModel::META_DOCUMENTATION
+     * @uses AbstractModel::getMeta()
+     * @uses AbstractModel::cleanComment()
      * @param array $_comments array which meta are added to
      * @param bool $_addStars add comments tags
      * @param bool $_ignoreDocumentation ignore documentation info or not
@@ -294,8 +290,8 @@ class WsdlToPhpModel
     }
     /**
      * Add meta information to the operation
-     * @uses WsdlToPhpModel::getMeta()
-     * @uses WsdlToPhpModel::updateModels()
+     * @uses AbstractModel::getMeta()
+     * @uses AbstractModel::updateModels()
      * @param string $_metaName
      * @param mixed $_metaValue
      * @return mixed
@@ -322,8 +318,8 @@ class WsdlToPhpModel
     /**
      * Sets the documentation meta value.
      * Documentation is set as an array so if multiple documentation nodes are set for an unique element, it will gather them.
-     * @uses WsdlToPhpModel::META_DOCUMENTATION
-     * @uses WsdlToPhpModel::addMeta()
+     * @uses AbstractModel::META_DOCUMENTATION
+     * @uses AbstractModel::addMeta()
      * @param string $_documentation the documentation from the WSDL
      * @return string the documentation from the WSDL
      */
@@ -334,9 +330,9 @@ class WsdlToPhpModel
     }
     /**
      * Get the documentation meta value
-     * @uses WsdlToPhpModel::META_DOCUMENTATION
-     * @uses WsdlToPhpModel::getMetaValue()
-     * @uses WsdlToPhpModel::cleanComment()
+     * @uses AbstractModel::META_DOCUMENTATION
+     * @uses AbstractModel::getMetaValue()
+     * @uses AbstractModel::cleanComment()
      * @return string the documentation from the WSDL
      */
     public function getDocumentation()
@@ -345,8 +341,8 @@ class WsdlToPhpModel
     }
     /**
      * Sets the from schema meta value.
-     * @uses WsdlToPhpModel::META_FROM_SCHEMA
-     * @uses WsdlToPhpModel::addMeta()
+     * @uses AbstractModel::META_FROM_SCHEMA
+     * @uses AbstractModel::addMeta()
      * @param string $_fromSchema the url from which the element comes from
      * @return string the url from which the element comes from
      */
@@ -356,8 +352,8 @@ class WsdlToPhpModel
     }
     /**
      * Get the from schema meta value
-     * @uses WsdlToPhpModel::META_FROM_SCHEMA
-     * @uses WsdlToPhpModel::getMetaValue()
+     * @uses AbstractModel::META_FROM_SCHEMA
+     * @uses AbstractModel::getMetaValue()
      * @return string the from schema meta value
      */
     public function getFromSchema()
@@ -366,7 +362,7 @@ class WsdlToPhpModel
     }
     /**
      * Returns a meta value according to its name
-     * @uses WsdlToPhpModel::getMeta()
+     * @uses AbstractModel::getMeta()
      * @param string $_metaName the meta information name
      * @param string $_fallback the fallback value if unset
      * @return mixed the meta information value
@@ -409,8 +405,8 @@ class WsdlToPhpModel
     }
     /**
      * Returns a valid clean name for PHP
-     * @uses WsdlToPhpModel::getName()
-     * @uses WsdlToPhpModel::cleanString()
+     * @uses AbstractModel::getName()
+     * @uses AbstractModel::cleanString()
      * @param bool $_keepMultipleUnderscores optional, allows to keep the multiple consecutive underscores
      * @return string
      */
@@ -420,7 +416,7 @@ class WsdlToPhpModel
     }
     /**
      * Returns the owner model object
-     * @return WsdlToPhpModel
+     * @return AbstractModel
      */
     public function getOwner()
     {
@@ -428,11 +424,11 @@ class WsdlToPhpModel
     }
     /**
      * Sets the owner model object
-     * @param WsdlToPhpModel $_owner object the owner of the current model
-     * @uses WsdlToPhpModel::updateModels()
-     * @return WsdlToPhpModel
+     * @param AbstractModel $_owner object the owner of the current model
+     * @uses AbstractModel::updateModels()
+     * @return AbstractModel
      */
-    public function setOwner(WsdlToPhpModel $_owner)
+    public function setOwner(AbstractModel $_owner)
     {
         $this->owner = $_owner;
         self::updateModels($this);
@@ -440,8 +436,8 @@ class WsdlToPhpModel
     }
     /**
      * Returns true if the original name is safe to use as a PHP property, variable name or class name
-     * @uses WsdlToPhpModel::getName()
-     * @uses WsdlToPhpModel::getCleanName()
+     * @uses AbstractModel::getName()
+     * @uses AbstractModel::getCleanName()
      * @return bool
      */
     public function nameIsClean()
@@ -451,9 +447,9 @@ class WsdlToPhpModel
     /**
      * Returns the packaged name
      * @uses WsdlToPhpGenerator::getPackageName()
-     * @uses WsdlToPhpModel::getCleanName()
-     * @uses WsdlToPhpModel::getContextualPart()
-     * @uses WsdlToPhpModel::uniqueName() to ensure unique naming of struct case sensitively
+     * @uses AbstractModel::getCleanName()
+     * @uses AbstractModel::getContextualPart()
+     * @uses AbstractModel::uniqueName() to ensure unique naming of struct case sensitively
      * @return string
      */
     public function getPackagedName()
@@ -500,7 +496,7 @@ class WsdlToPhpModel
     }
     /**
      * Returns the model by its name
-     * @uses WsdlToPhpModel::getModels()
+     * @uses AbstractModel::getModels()
      * @param string $_modelName the original WsdlToPhpStruct name
      * @return WsdlToPhpStruct|null
      */
@@ -512,12 +508,12 @@ class WsdlToPhpModel
     }
     /**
      * Updates models with model
-     * @uses WsdlToPhpModel::getName()
-     * @uses WsdlToPhpModel::__toString()
-     * @param WsdlToPhpModel $_model a WsdlToPhpModel object
+     * @uses AbstractModel::getName()
+     * @uses AbstractModel::__toString()
+     * @param AbstractModel $_model a AbstractModel object
      * @return WsdlToPhpStruct|bool
      */
-    protected static function updateModels(WsdlToPhpModel $_model)
+    protected static function updateModels(AbstractModel $_model)
     {
         if($_model->__toString() != 'WsdlToPhpStruct' || !$_model->getName())
             return false;

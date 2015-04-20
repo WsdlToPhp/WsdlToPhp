@@ -1,15 +1,11 @@
 <?php
+
+use WsdlToPhp\Model\AbstractModel;
+
 /**
- * File for WsdlToPhpFunction
- * @package WsdlToPhpGenerator
- * @date 19/12/2012
+ * Class Method stands for an available operation described in the WSDL
  */
-/**
- * Class WsdlToPhpFunction stands for an available operation described in the WSDL
- * @package WsdlToPhpGenerator
- * @date 19/12/2012
- */
-class WsdlToPhpFunction extends WsdlToPhpModel
+class Method extends AbstractModel
 {
     /**
      * Type of the parameter for the operation
@@ -28,15 +24,15 @@ class WsdlToPhpFunction extends WsdlToPhpModel
     private $isUnique = true;
     /**
      * Main constructor
-     * @see WsdlToPhpModel::__construct()
-     * @uses WsdlToPhpFunction::setParameterType()
-     * @uses WsdlToPhpFunction::setReturnType()
-     * @uses WsdlToPhpModel::setOwner()
+     * @see AbstractModel::__construct()
+     * @uses Method::setParameterType()
+     * @uses Method::setReturnType()
+     * @uses AbstractModel::setOwner()
      * @param string $_name the function name
      * @param string $_parameterType the type/name of the parameter
      * @param string $_returnType the type/name of the return value
      * @param WsdlToPhpService $_wsdlToPhpService defines the struct which owns this value
-     * @return WsdlToPhpFunction
+     * @return Method
      */
     public function __construct($_name,$_parameterType,$_returnType,WsdlToPhpService $_wsdlToPhpService)
     {
@@ -48,14 +44,14 @@ class WsdlToPhpFunction extends WsdlToPhpModel
     /**
      * Returns the name of the method that is used to call the operation
      * It takes care of the fact that the method might not be the only one named as it is.
-     * @uses WsdlToPhpModel::getCleanName()
-     * @uses WsdlToPhpModel::replaceReservedPhpKeyword()
-     * @uses WsdlToPhpModel::getOwner()
-     * @uses WsdlToPhpModel::getPackagedName()
-     * @uses WsdlToPhpModel::uniqueName()
-     * @uses WsdlToPhpFunction::getOwner()
-     * @uses WsdlToPhpFunction::getParameterType()
-     * @uses WsdlToPhpFunction::getIsUnique()
+     * @uses AbstractModel::getCleanName()
+     * @uses AbstractModel::replaceReservedPhpKeyword()
+     * @uses AbstractModel::getOwner()
+     * @uses AbstractModel::getPackagedName()
+     * @uses AbstractModel::uniqueName()
+     * @uses Method::getOwner()
+     * @uses Method::getParameterType()
+     * @uses Method::getIsUnique()
      * @return string
      */
     public function getMethodName()
@@ -73,20 +69,20 @@ class WsdlToPhpFunction extends WsdlToPhpModel
     }
     /**
      * Returns the comment lines for this function
-     * @see WsdlToPhpModel::getComment()
+     * @see AbstractModel::getComment()
      * @uses WsdlToPhpStructAttribute::getGetterName()
-     * @uses WsdlToPhpFunction::getParameterType()
-     * @uses WsdlToPhpFunction::getReturnType()
-     * @uses WsdlToPhpFunction::getIsUnique()
+     * @uses Method::getParameterType()
+     * @uses Method::getReturnType()
+     * @uses Method::getIsUnique()
      * @uses WsdlToPhpStruct::getAttributes()
      * @uses WsdlToPhpStruct::getIsStruct()
      * @uses WsdlToPhpStruct::getIsRestriction()
-     * @uses WsdlToPhpModel::getPackagedName()
-     * @uses WsdlToPhpModel::getModelByName()
-     * @uses WsdlToPhpModel::addMetaComment()
-     * @uses WsdlToPhpModel::getDocumentation()
-     * @uses WsdlToPhpModel::getGenericWsdlClassName()
-     * @uses WsdlToPhpModel::cleanString()
+     * @uses AbstractModel::getPackagedName()
+     * @uses AbstractModel::getModelByName()
+     * @uses AbstractModel::addMetaComment()
+     * @uses AbstractModel::getDocumentation()
+     * @uses AbstractModel::getGenericWsdlClassName()
+     * @uses AbstractModel::cleanString()
      * @return array
      */
     public function getComment()
@@ -139,15 +135,15 @@ class WsdlToPhpFunction extends WsdlToPhpModel
     }
     /**
      * Set the function body
-     * @uses WsdlToPhpModel::getName()
-     * @uses WsdlToPhpModel::getPackagedName()
-     * @uses WsdlToPhpModel::getModelByName()
-     * @uses WsdlToPhpModel::nameIsClean()
-     * @uses WsdlToPhpModel::cleanString()
-     * @uses WsdlToPhpModel::uniqueName()
-     * @uses WsdlToPhpFunction::getParameterType()
-     * @uses WsdlToPhpFunction::getOwner()
-     * @uses WsdlToPhpFunction::getMethodName()
+     * @uses AbstractModel::getName()
+     * @uses AbstractModel::getPackagedName()
+     * @uses AbstractModel::getModelByName()
+     * @uses AbstractModel::nameIsClean()
+     * @uses AbstractModel::cleanString()
+     * @uses AbstractModel::uniqueName()
+     * @uses Method::getParameterType()
+     * @uses Method::getOwner()
+     * @uses Method::getMethodName()
      * @uses WsdlToPhpStruct::getAttributes()
      * @uses WsdlToPhpStruct::getIsStruct()
      * @uses WsdlToPhpStructAttribute::getGetterName()
@@ -325,8 +321,8 @@ class WsdlToPhpFunction extends WsdlToPhpModel
     }
     /**
      * Returns the owner model object, meaning a WsdlToPhpService object
-     * @see WsdlToPhpModel::getOwner()
-     * @uses WsdlToPhpModel::getOwner()
+     * @see AbstractModel::getOwner()
+     * @uses AbstractModel::getOwner()
      * @return WsdlToPhpService
      */
     public function getOwner()
