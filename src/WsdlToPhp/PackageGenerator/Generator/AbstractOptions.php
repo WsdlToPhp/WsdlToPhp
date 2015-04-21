@@ -90,7 +90,7 @@ abstract class AbstractOptions
                 'values' => $values,
             );
         } elseif(!empty($this->options[$optionName]['values']) && !in_array($optionValue, $this->options[$optionName]['values'], true)) {
-            throw new \InvalidArgumentException(sprintf('Invalid option value "%s", possible values: %s', $optionValue, implode(', ', $this->options[$optionName]['values'])));
+            throw new \InvalidArgumentException(sprintf('Invalid value "%s" for option "%s", possible values: %s', $optionValue, $optionName, implode(', ', $this->options[$optionName]['values'])));
         } else {
             $this->options[$optionName]['value'] = $optionValue;
         }
