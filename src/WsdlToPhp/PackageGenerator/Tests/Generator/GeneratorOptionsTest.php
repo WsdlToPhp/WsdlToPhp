@@ -3,7 +3,7 @@
 namespace WsdlToPhp\PackageGenerator\Tests\Generator;
 
 use WsdlToPhp\PackageGenerator\Tests\TestCase;
-use WsdlToPhp\PackageGenerator\Generator\GeneratorOptions;
+use WsdlToPhp\PackageGenerator\ConfigurationReaders\GeneratorOptions;
 
 class GeneratorOptionsTest extends TestCase
 {
@@ -14,7 +14,7 @@ class GeneratorOptionsTest extends TestCase
     {
         return GeneratorOptions::instance(dirname(__FILE__) . '/../resources/generator_options.yml');
     }
-    
+
     public function testGetDefaultOptionValue()
     {
         $this->assertEquals('start', self::optionsInstance()->getOptionValue('category'));
@@ -30,7 +30,7 @@ class GeneratorOptionsTest extends TestCase
         $this->assertTrue(self::optionsInstance()->getOptionValue('generate_tutorial_file'));
         $this->assertEquals(array(), self::optionsInstance()->getOptionValue('add_comments'));
     }
-    
+
     public function testSetExistingOptionValue()
     {
         self::optionsInstance()->setOptionValue('category', 'end');
@@ -46,13 +46,13 @@ class GeneratorOptionsTest extends TestCase
         self::optionsInstance()->setOptionValue('category', 'null');
         self::optionsInstance()->setCategory(null);
     }
-    
+
     public function testSetUnexistingOptionValue()
     {
         $newOptionKey = 'new_option';
-        
+
         self::optionsInstance()->setOptionValue($newOptionKey, '1', array(0, 1, 2));
-        
+
         $this->assertEquals(1, self::optionsInstance()->getOptionValue($newOptionKey));
     }
     /**
@@ -61,11 +61,11 @@ class GeneratorOptionsTest extends TestCase
     public function testSetUnexistingOptionValueWithInvalidValue()
     {
         $newOptionKey = 'new_option';
-        
+
         self::optionsInstance()->setOptionValue($newOptionKey, '1', array(0, 1, 2));
-        
+
         $this->assertEquals(1, self::optionsInstance()->getOptionValue('new_option'));
-        
+
         self::optionsInstance()->setOptionValue($newOptionKey, 'null');
     }
 }
