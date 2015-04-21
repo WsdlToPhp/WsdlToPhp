@@ -3,6 +3,7 @@
 namespace WsdlToPhp\PackageGenerator\Generator;
 
 use WsdlToPhp\PackageGenerator\Model\AbstractModel;
+use WsdlToPhp\PackageGenerator\ConfigurationReaders\GeneratorOptions;
 
 class Utils
 {
