@@ -1,8 +1,8 @@
 <?php
 
-namespace WsdlToPhp\Model;
+namespace WsdlToPhp\PackageGenerator\Model;
 
-use WsdlToPhp\Generator\Generator;
+use WsdlToPhp\PackageGenerator\Generator\Generator;
 
 /**
  * Class Service stands for an available service containing the functions/operations described in the WSDL

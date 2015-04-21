@@ -1,6 +1,6 @@
 <?php
 
-namespace WsdlToPhp\Generator;
+namespace WsdlToPhp\PackageGenerator\Generator;
 
 class GeneratorOptions extends AbstractOptions
 {

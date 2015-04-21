@@ -1,16 +1,16 @@
 <?php
 
-namespace WsdlToPhp\Generator;
+namespace WsdlToPhp\PackageGenerator\Generator;
 
 use Doctrine\Instantiator\Exception\InvalidArgumentException;
 
-use WsdlToPhp\Model\AbstractModel;
-use WsdlToPhp\Model\EmptyModel;
-use WsdlToPhp\Model\Struct;
-use WsdlToPhp\Model\StructAttribute;
-use WsdlToPhp\Model\StructValue;
-use WsdlToPhp\Model\Service;
-use WsdlToPhp\Model\Method;
+use WsdlToPhp\PackageGenerator\Model\AbstractModel;
+use WsdlToPhp\PackageGenerator\Model\EmptyModel;
+use WsdlToPhp\PackageGenerator\Model\Struct;
+use WsdlToPhp\PackageGenerator\Model\StructAttribute;
+use WsdlToPhp\PackageGenerator\Model\StructValue;
+use WsdlToPhp\PackageGenerator\Model\Service;
+use WsdlToPhp\PackageGenerator\Model\Method;
 
 /**
  * Class Generator

@@ -1,8 +1,8 @@
 <?php
 
-namespace WsdlToPhp\Model;
+namespace WsdlToPhp\PackageGenerator\Model;
 
-use WsdlToPhp\Generator\Generator;
+use WsdlToPhp\PackageGenerator\Generator\Generator;
 
 /**
  * Class Method stands for an available operation described in the WSDL

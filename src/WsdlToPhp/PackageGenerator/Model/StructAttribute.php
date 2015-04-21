@@ -1,6 +1,6 @@
 <?php
 
-namespace WsdlToPhp\Model;
+namespace WsdlToPhp\PackageGenerator\Model;
 
 /**
  * Class StructAttribute stands for an available struct attribute described in the WSDL

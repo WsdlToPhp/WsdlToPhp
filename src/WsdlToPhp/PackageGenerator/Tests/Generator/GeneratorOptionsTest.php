@@ -1,9 +1,9 @@
 <?php
 
-namespace WsdlToPhp\Tests\Generator;
+namespace WsdlToPhp\PackageGenerator\Tests\Generator;
 
-use WsdlToPhp\Tests\TestCase;
-use WsdlToPhp\Generator\GeneratorOptions;
+use WsdlToPhp\PackageGenerator\Tests\TestCase;
+use WsdlToPhp\PackageGenerator\Generator\GeneratorOptions;
 
 class GeneratorOptionsTest extends TestCase
 {
@@ -12,7 +12,7 @@ class GeneratorOptionsTest extends TestCase
      */
     public static function optionsInstance()
     {
-        return GeneratorOptions::instance(dirname(__FILE__) . '/generator_options.yml');
+        return GeneratorOptions::instance(dirname(__FILE__) . '/../resources/generator_options.yml');
     }
     
     public function testGetDefaultOptionValue()

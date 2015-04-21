@@ -1,6 +1,6 @@
 <?php
 
-namespace WsdlToPhp\Command;
+namespace WsdlToPhp\PackageGenerator\Command;
 
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Output\OutputInterface;

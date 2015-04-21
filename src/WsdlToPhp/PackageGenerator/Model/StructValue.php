@@ -1,8 +1,8 @@
 <?php
 
-namespace WsdlToPhp\Model;
+namespace WsdlToPhp\PackageGenerator\Model;
 
-use WsdlToPhp\Generator\Generator;
+use WsdlToPhp\PackageGenerator\Generator\Generator;
 
 /**
  * Class StructValue stands for an enumeration value

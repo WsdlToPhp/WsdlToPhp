@@ -33,5 +33,5 @@
     "autoload": {
         "psr-0": { "WsdlToPhp": "src" }
     },
-    "target-dir": "WsdlToPhp/Generator"
+    "target-dir": "WsdlToPhp/PackageGenerator"
 }

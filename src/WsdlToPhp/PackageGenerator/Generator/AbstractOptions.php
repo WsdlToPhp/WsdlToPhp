@@ -1,6 +1,6 @@
 <?php
 
-namespace WsdlToPhp\Generator;
+namespace WsdlToPhp\PackageGenerator\Generator;
 
 use Symfony\Component\Yaml\Parser;
 

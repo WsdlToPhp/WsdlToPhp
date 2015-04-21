@@ -1,6 +1,6 @@
 <?php
 
-namespace WsdlToPhp\Model;
+namespace WsdlToPhp\PackageGenerator\Model;
 
 class EmptyModel extends AbstractModel
 {

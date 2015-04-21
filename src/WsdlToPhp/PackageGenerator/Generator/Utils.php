@@ -1,8 +1,8 @@
 <?php
 
-namespace WsdlToPhp\Generator;
+namespace WsdlToPhp\PackageGenerator\Generator;
 
-use WsdlToPhp\Model\AbstractModel;
+use WsdlToPhp\PackageGenerator\Model\AbstractModel;
 
 class Utils
 {
