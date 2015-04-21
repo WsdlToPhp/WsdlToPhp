@@ -399,7 +399,7 @@ class Generator extends \SoapClient
     }
     /**
      * @param string options's file to parse
-     * @return \WsdlToPhp\Generator\Options
+     * @return Generator
      */
     public static function instance($pathToWsdl = null, $login = false, $password = false, array $wsdlOptions = array())
     {
@@ -450,7 +450,7 @@ class Generator extends \SoapClient
          * Root directory
          */
         if(!is_dir($rootDirectory) && !$createRootDirectory) {
-            return false;
+            throw \InvalidArgumentException(sprintf('Unable to use dir "%s" as dir does not exists and its creation has been disabled', $rootDirectory));
         } elseif(!is_dir($rootDirectory) && $createRootDirectory) {
             mkdir($rootDirectory, $rootDirectoryRights);
         }
@@ -1514,27 +1514,54 @@ class Generator extends \SoapClient
     }
     /**
      * Sets the optionCategory value
-     * @return int
+     * @return string
      */
     public function getOptionCategory()
     {
         return $this->options->getCategory();
     }
     /**
+     * Sets the optionCategory value
+     * @param string
+     * @return GeneratorOptions
+     */
+    public function setOptionCategory($category)
+    {
+        return $this->options->setCategory($category);
+    }
+    /**
      * Sets the optionSubCategory value
-     * @return int
+     * @return string
      */
     public function getOptionSubCategory()
     {
         return $this->options->getSubCategory();
     }
     /**
+     * Sets the optionSubCategory value
+     * @param string
+     * @return GeneratorOptions
+     */
+    public function setOptionSubCategory($subCategory)
+    {
+        return $this->options->setSubCategory($subCategory);
+    }
+    /**
      * Sets the optionGatherMethods value
-     * @return int
+     * @return string
      */
     public function getOptionGatherMethods()
     {
         return $this->options->getGatherMethods();
+    }
+    /**
+     * Sets the optionGatherMethods value
+     * @param string
+     * @return GeneratorOptions
+     */
+    public function setOptionGatherMethods($gatherMethods)
+    {
+        return $this->options->setGatherMethods($gatherMethods);
     }
     /**
      * Gets the optionSendArrayAsParameter value
