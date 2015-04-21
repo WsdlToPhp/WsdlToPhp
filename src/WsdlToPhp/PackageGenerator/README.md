@@ -11,9 +11,10 @@ It does not need PEAR nor NuSOAP nor anything else, at least PHP 5.3.3, SoapClie
 
 Usage
 -----
+
 To generate a package, nothing as simple as this:
 
-    $ cd path/to/WsdlToPhp/PackageGenerator/
+    $ cd /path/to/WsdlToPhp/PackageGenerator/
     $ composer install
     $ php console wsdltophp:generate:package -h => display help
     $ php console wsdltophp:generate:package \
