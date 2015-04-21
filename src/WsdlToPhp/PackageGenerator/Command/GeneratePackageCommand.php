@@ -9,6 +9,44 @@ use WsdlToPhp\PackageGenerator\Generator\Generator;
 
 class GeneratePackageCommand extends AbstractCommand
 {
+    /**
+     * @var Generator
+     */
+    protected $generator;
+    
+    /**
+     * @return Generator
+     */
+    public function getGenerator()
+    {
+        return $this->generator;
+    }
+    
+    /**
+     * @param Generator $generator
+     * @return GeneratePackageCommand
+     */
+    protected function setGenerator(Generator $generator)
+    {
+        $this->generator = $generator;
+        return $this;
+    }
+    
+    /**
+     * @param string $wsdlUrl
+     * @param string $wsdlLogin
+     * @param string $wsdlPassword
+     * @param string $wsdlOptions
+     * @return Generator
+     */
+    protected function getInstanceOfGenerator($wsdlUrl, $wsdlLogin = null, $wsdlPassword = null, $wsdlOptions = null)
+    {
+        return Generator::instance($wsdlUrl, $wsdlLogin, $wsdlPassword, $wsdlOptions);
+    }
+    
+    /**
+     * @see \WsdlToPhp\PackageGenerator\Command\AbstractCommand::configure()
+     */
     protected function configure()
     {
         parent::configure();
@@ -47,36 +85,92 @@ class GeneratePackageCommand extends AbstractCommand
         $this->writeLn(" Start");
 
         $wsdlUrl            = $this->input->getOption('wsdl-urlorpath');
-        $wsdlProxyHost      = $this->input->getOption('wsdl-proxy-host');
-        $wsdlProxyPort      = $this->input->getOption('wsdl-proxy-port');
-        $wsdlProxyLogin     = $this->input->getOption('wsdl-proxy-login');
-        $wsdlProxyPass      = $this->input->getOption('wsdl-proxy-password');
         $wsdlLogin          = $this->input->getOption('wsdl-login');
         $wsdlPassword       = $this->input->getOption('wsdl-password');
         $packageName        = $this->input->getOption('wsdl-prefix');
         $packageDestination = $this->input->getOption('wsdl-destination');
-        $wsdlOptions        = array();
-
-        if (!empty($wsdlProxyHost)) {
-            $wsdlOptions['proxy_host'] = $wsdlProxyHost;
-        }
-        if (!empty($wsdlProxyPort)) {
-            $wsdlOptions['proxy_port'] = $wsdlProxyPort;
-        }
-        if (!empty($wsdlProxyLogin)) {
-            $wsdlOptions['proxy_login'] = $wsdlProxyLogin;
-        }
-        if (!empty($wsdlProxyPass)) {
-            $wsdlOptions['proxy_password'] = $wsdlProxyPass;
-        }
+        $wsdlOptions        = $this->defineWsdlOptions();
         
-        $generator = Generator::instance($wsdlUrl, $wsdlLogin, $wsdlPassword, $wsdlOptions);
+        $this->setGenerator($this->getInstanceOfGenerator($wsdlUrl, $wsdlLogin, $wsdlPassword, $wsdlOptions));
+        
+        $this->definePackageGenerationOptions();
+        
         if ($this->canExecute()) {
-            $generator->generateClasses($packageName, $packageDestination);
+            $this->getGenerator()->generateClasses($packageName, $packageDestination);
         } else {
             $this->writeLn("  Generation not launched, use --force to force generation");
         }
         
         $this->writeLn(" End");
+    }
+    
+    /**
+     * @return array
+     */
+    protected function defineWsdlOptions()
+    {
+        $options        = array();
+        $wsdlProxyHost  = $this->input->getOption('wsdl-proxy-host');
+        $wsdlProxyPort  = $this->input->getOption('wsdl-proxy-port');
+        $wsdlProxyLogin = $this->input->getOption('wsdl-proxy-login');
+        $wsdlProxyPass  = $this->input->getOption('wsdl-proxy-password');
+        
+        if (!empty($wsdlProxyHost)) {
+            $options['proxy_host'] = $wsdlProxyHost;
+        }
+        if (!empty($wsdlProxyPort)) {
+            $options['proxy_port'] = $wsdlProxyPort;
+        }
+        if (!empty($wsdlProxyLogin)) {
+            $options['proxy_login'] = $wsdlProxyLogin;
+        }
+        if (!empty($wsdlProxyPass)) {
+            $options['proxy_password'] = $wsdlProxyPass;
+        }
+        
+        return $options;
+    }
+    
+    /**
+     * @return array
+     */
+    protected function getPackageGenerationCommandLineOptions()
+    {
+        return array(
+            'wsdl-namespace'        => 'Namespace',
+            'wsdl-category'         => 'Category',
+            'wsdl-subcategory'      => 'SubCategory',
+            'wsdl-gathermethods'    => 'GatherMethods',
+            'wsdl-genwsdlclass'     => 'GenerateWsdlClass',
+            'wsdl-gentutorial'      => 'GenerateTutorialFile',
+            'wsdl-genautoload'      => 'GenerateAutoloadFile',
+            'wsdl-sendarrayparam'   => 'SendArrayAsParameter',
+            'wsdl-genericconstants' => 'GenericConstantsName',
+            'wsdl-reponseasobj'     => 'GetResponseAsWsdlObject',
+            'wsdl-inherits'         => 'InheritsFromIdentifier',
+            'wsdl-paramsasarray'    => 'SendParametersAsArray',
+        );
+    }
+    
+    /**
+     * @return array
+     */
+    protected function definePackageGenerationOptions()
+    {
+        if ($this->generator instanceof Generator) {
+            foreach ($this->getPackageGenerationCommandLineOptions() as $optionName=>$optionMethod) {
+                if ($this->input->hasOption($optionName)) {
+                    $setOption = sprintf('setOption%s' , $optionMethod);
+                    if (method_exists($this->generator, $setOption)) {
+                        call_user_func_array(array(
+                            $this->generator, 
+                            $setOption,
+                        ), array(
+                            $this->input->getOption($optionName),
+                        ));
+                    }
+                }
+            }
+        }
     }
 }
