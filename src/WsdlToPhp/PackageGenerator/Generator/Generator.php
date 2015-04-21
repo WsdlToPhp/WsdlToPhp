@@ -2,8 +2,6 @@
 
 namespace WsdlToPhp\PackageGenerator\Generator;
 
-use Doctrine\Instantiator\Exception\InvalidArgumentException;
-
 use WsdlToPhp\PackageGenerator\Model\AbstractModel;
 use WsdlToPhp\PackageGenerator\Model\EmptyModel;
 use WsdlToPhp\PackageGenerator\Model\Struct;
@@ -382,14 +380,14 @@ class Generator extends \SoapClient
         {
             parent::__construct($pathToWsdl, $options);
         }
-        catch(SoapFault $fault)
+        catch(\SoapFault $fault)
         {
             $options['soap_version'] = SOAP_1_2;
             try
             {
                 parent::__construct($pathToWsdl, $options);
             }
-            catch(SoapFault $fault)
+            catch(\SoapFault $fault)
             {
                 throw new \Exception('Unable to load WSDL!', null, $fault);
             }
@@ -450,7 +448,7 @@ class Generator extends \SoapClient
          * Root directory
          */
         if(!is_dir($rootDirectory) && !$createRootDirectory) {
-            throw \InvalidArgumentException(sprintf('Unable to use dir "%s" as dir does not exists and its creation has been disabled', $rootDirectory));
+            throw new \InvalidArgumentException(sprintf('Unable to use dir "%s" as dir does not exists and its creation has been disabled', $rootDirectory));
         } elseif(!is_dir($rootDirectory) && $createRootDirectory) {
             mkdir($rootDirectory, $rootDirectoryRights);
         }
@@ -786,9 +784,9 @@ class Generator extends \SoapClient
                         for($i = $start;$i < $infosCount;$i += 2)
                         {
                             $info = str_replace(array(
-                                                    ', ', 
-                                                    '(', 
-                                                    ')', 
+                                                    ', ',
+                                                    '(',
+                                                    ')',
                                                     '$'), '', trim($infos[$i]));
                             if(!empty($info))
                                 $methodParameters = array_merge($methodParameters, array(
@@ -963,7 +961,7 @@ class Generator extends \SoapClient
                     $filename);
     }
     /**
-     * Generates autoload file for all classes. 
+     * Generates autoload file for all classes.
      * The classes are loaded automatically in order of their dependency regarding their inheritance.
      * @uses Generator::getPackageName()
      * @uses Generator::getOptionAddComments()
@@ -1060,13 +1058,13 @@ class Generator extends \SoapClient
                 }
             }
             $content = str_replace(array(
-                                        'packageName', 
-                                        'PackageName', 
-                                        'meta_informations', 
+                                        'packageName',
+                                        'PackageName',
+                                        'meta_informations',
                                         "'wsdl_url_value'"), array(
-                                                                lcfirst(self::getPackageName(false)), 
-                                                                self::getPackageName(), 
-                                                                $metaInformation, 
+                                                                lcfirst(self::getPackageName(false)),
+                                                                self::getPackageName(),
+                                                                $metaInformation,
                                                                 var_export(self::getWsdl(0), true)), $content);
             file_put_contents($rootDirectory . self::getPackageName() . 'WsdlClass.php', $content);
             self::audit('generate_wsdlclass');
@@ -1115,8 +1113,8 @@ class Generator extends \SoapClient
                         $classMethods = array();
                         foreach($methods as $method) {
                             if($method->class === $className && !in_array($method->getName(), array(
-                                                                                                    '__toString', 
-                                                                                                    '__construct', 
+                                                                                                    '__toString',
+                                                                                                    '__construct',
                                                                                                     'getResult'))) {
                                 array_push($classMethods, $method);
                             }
@@ -1191,22 +1189,22 @@ class Generator extends \SoapClient
                         $fileContent = file_get_contents($pathToTutorialTemplate);
                     }
                     $fileContent = str_replace(array(
-                                                    'packageName', 
-                                                    'PackageName', 
-                                                    'PACKAGENAME', 
-                                                    'WSDL_PATH', 
+                                                    'packageName',
+                                                    'PackageName',
+                                                    'PACKAGENAME',
+                                                    'WSDL_PATH',
                                                     '$content;'), array(
-                                                                    lcfirst(self::getPackageName()), 
-                                                                    ucfirst(self::getPackageName()), 
-                                                                    strtoupper(self::getPackageName()), 
-                                                                    var_export($this->getWsdl(0), true), 
+                                                                    lcfirst(self::getPackageName()),
+                                                                    ucfirst(self::getPackageName()),
+                                                                    strtoupper(self::getPackageName()),
+                                                                    var_export($this->getWsdl(0), true),
                                                                     $content), $fileContent);
                     file_put_contents($rootDirectory . 'sample.php', $fileContent);
                 }
                 self::audit('generate_tutorial');
                 return true;
             } elseif(!class_exists('ReflectionClass')) {
-                throw new \ClassNotFoundException("Generator::generateTutorialFile() needs ReflectionClass, see http://fr2.php.net/manual/fr/class.reflectionclass.php");
+                throw new \InvalidArgumentException("Generator::generateTutorialFile() needs ReflectionClass, see http://fr2.php.net/manual/fr/class.reflectionclass.php");
             }
         }
     }
@@ -1729,7 +1727,7 @@ class Generator extends \SoapClient
         /**
          * New node to browse
          */
-        elseif($domNode instanceof DOMElement)
+        elseif($domNode instanceof \DOMElement)
             $this->manageWsdlNode($wsdlLocation, $domNode, $fromWsdlLocation, $nodeNameMatch);
     }
     /**
@@ -1764,11 +1762,11 @@ class Generator extends \SoapClient
              */
             array_push($tags, 'attribute');
             /**
-             * Retrieve operation message types in order to fully determine themselves  
+             * Retrieve operation message types in order to fully determine themselves
              */
             array_push($tags, 'input');
             /**
-             * Retrieve operation message types in order to fully determine themselves  
+             * Retrieve operation message types in order to fully determine themselves
              */
             array_push($tags, 'output');
             foreach($tags as $tagName)
@@ -1808,7 +1806,7 @@ class Generator extends \SoapClient
              */
             for($i = 0;$i < $childNodesLength;$i++)
             {
-                if($childNodes->item($i) instanceof DOMElement)
+                if($childNodes->item($i) instanceof \DOMElement)
                 {
                     $this->loadWsdls('', $childNodes->item($i), $wsdlLocation, $nodeNameMatch);
                     break;
@@ -1831,8 +1829,8 @@ class Generator extends \SoapClient
      * @uses \DOMNode::item()
      * @uses \DOMNode::hasChildNodes()
      * @uses \DOMNode::hasAttributes()
-     * @uses DOMElement::hasAttribute()
-     * @uses DOMElement::getAttribute()
+     * @uses \DOMElement::hasAttribute()
+     * @uses \DOMElement::getAttribute()
      * @param string $wsdlLocation the wsdl location
      * @param \DOMNode $domNode the node
      * @param string $fromWsdlLocation the wsdl location imported
@@ -1925,8 +1923,8 @@ class Generator extends \SoapClient
      * @uses Generator::loadWsdls()
      * @uses Generator::auditInit()
      * @uses Generator::audit()
-     * @uses DOMElement::hasAttribute()
-     * @uses DOMElement::getAttribute()
+     * @uses \DOMElement::hasAttribute()
+     * @uses \DOMElement::getAttribute()
      * @param string $wsdlLocation the wsdl location
      * @param \DOMNode $domNode the node
      * @param string $fromWsdlLocation the wsdl location imported
@@ -2021,8 +2019,8 @@ class Generator extends \SoapClient
      * @uses \DOMNodeList::item()
      * @uses \DOMNode::hasChildNodes()
      * @uses \DOMNode::hasAttributes()
-     * @uses DOMElement::hasAttribute()
-     * @uses DOMElement::getAttribute()
+     * @uses \DOMElement::hasAttribute()
+     * @uses \DOMElement::getAttribute()
      * @param string $wsdlLocation the wsdl location
      * @param \DOMNode $domNode the node
      * @param string $fromWsdlLocation the wsdl location imported
@@ -2095,8 +2093,8 @@ class Generator extends \SoapClient
      * @uses Generator::getStruct()
      * @uses Generator::addStructMeta()
      * @uses AbstractModel::getMetaValue()
-     * @uses DOMElement::getAttribute()
-     * @uses DOMElement::hasAttribute()
+     * @uses \DOMElement::getAttribute()
+     * @uses \DOMElement::hasAttribute()
      * @param string $wsdlLocation the wsdl location
      * @param \DOMNode $domNode the node
      * @param string $fromWsdlLocation the wsdl location imported
@@ -2121,7 +2119,7 @@ class Generator extends \SoapClient
      * @uses Generator::auditInit()
      * @uses Generator::audit()
      * @uses Generator::addStructMeta()
-     * @uses DOMElement::getAttribute()
+     * @uses \DOMElement::getAttribute()
      * @param string $wsdlLocation the wsdl location
      * @param \DOMNode $domNode the node
      * @param string $fromWsdlLocation the wsdl location imported
@@ -2144,8 +2142,8 @@ class Generator extends \SoapClient
      * @uses Generator::addWsdlMeta()
      * @uses Generator::auditInit()
      * @uses Generator::audit()
-     * @uses DOMElement::getAttribute()
-     * @uses DOMElement::hasAttribute()
+     * @uses \DOMElement::getAttribute()
+     * @uses \DOMElement::hasAttribute()
      * @param string $wsdlLocation the wsdl location
      * @param \DOMNode $domNode the node
      * @param string $fromWsdlLocation the wsdl location imported
@@ -2156,11 +2154,11 @@ class Generator extends \SoapClient
         self::auditInit('managewsdlnode_documentation', !empty($wsdlLocation)?$wsdlLocation:$fromWsdlLocation);
         $documentation = trim($domNode->nodeValue);
         $documentation = str_replace(array(
-                                            "\r", 
-                                            "\n", 
+                                            "\r",
+                                            "\n",
                                             "\t"), array(
-                                                    '', 
-                                                    '', 
+                                                    '',
+                                                    '',
                                                     ' '), $documentation);
         $documentation = preg_replace('[\s+]', ' ', $documentation);
         /**
@@ -2231,8 +2229,8 @@ class Generator extends \SoapClient
      * @uses Generator::setStructInheritance()
      * @uses Generator::auditInit()
      * @uses Generator::audit()
-     * @uses DOMElement::hasAttribute()
-     * @uses DOMElement::getAttribute()
+     * @uses \DOMElement::hasAttribute()
+     * @uses \DOMElement::getAttribute()
      * @param string $wsdlLocation the wsdl location
      * @param \DOMNode $domNode the node
      * @param string $fromWsdlLocation the wsdl location imported
@@ -2284,8 +2282,8 @@ class Generator extends \SoapClient
      * @uses Generator::executeDomXPathQuery()
      * @uses AbstractModel::getPackagedName()
      * @uses AbstractModel::getMetaValue()
-     * @uses DOMElement::getAttribute()
-     * @uses DOMElement::hasAttribute()
+     * @uses \DOMElement::getAttribute()
+     * @uses \DOMElement::hasAttribute()
      * @uses \DOMNodeList::item()
      * @param string $wsdlLocation the wsdl location
      * @param \DOMNode $domNode the node
@@ -2362,7 +2360,7 @@ class Generator extends \SoapClient
                                     $partElement = '';
                                     $partNamespace = '';
                                     $partAttributes = array(
-                                                            'element', 
+                                                            'element',
                                                             'type');
                                     foreach($partAttributes as $partAttributeName)
                                     {
@@ -2401,8 +2399,8 @@ class Generator extends \SoapClient
                                                 $nodes = self::executeDomXPathQuery($domDocument, "//*[@name='$partElement']");
                                                 $nodesLength = $nodes->length;
                                                 $nodeIndex = 0;
-                                                while($nodeIndex < $nodesLength && (!($nodes->item($nodeIndex) instanceof DOMElement) || (($nodes->item($nodeIndex) instanceof DOMElement) && (!$nodes->item($nodeIndex)->hasAttribute('type') || ($nodes->item($nodeIndex)->hasAttribute('type') && $nodes->item($nodeIndex)->getAttribute('type') === '')))) && $nodeIndex++);
-                                                if($nodeIndex <= $nodesLength && ($nodes->item($nodeIndex) instanceof DOMElement) && $nodes->item($nodeIndex)->hasAttribute('type') && $nodes->item($nodeIndex)->getAttribute('type') != '')
+                                                while($nodeIndex < $nodesLength && (!($nodes->item($nodeIndex) instanceof \DOMElement) || (($nodes->item($nodeIndex) instanceof \DOMElement) && (!$nodes->item($nodeIndex)->hasAttribute('type') || ($nodes->item($nodeIndex)->hasAttribute('type') && $nodes->item($nodeIndex)->getAttribute('type') === '')))) && $nodeIndex++);
+                                                if($nodeIndex <= $nodesLength && ($nodes->item($nodeIndex) instanceof \DOMElement) && $nodes->item($nodeIndex)->hasAttribute('type') && $nodes->item($nodeIndex)->getAttribute('type') != '')
                                                 {
                                                     $headerType = explode(':', $nodes->item($nodeIndex)->getAttribute('type'));
                                                     $headerType = $headerType[count($headerType) - 1];
@@ -2456,8 +2454,8 @@ class Generator extends \SoapClient
     }
     /**
      * Manages attribute node to extract informations about its type if \SoapClient didn't succeed to determine it
-     * @uses DOMElement::hasAttribute()
-     * @uses DOMElement::getAttribute()
+     * @uses \DOMElement::hasAttribute()
+     * @uses \DOMElement::getAttribute()
      * @uses Generator::findSuitableParent()
      * @uses Generator::getStructAttribute()
      * @uses Generator::getStruct()
@@ -2478,7 +2476,7 @@ class Generator extends \SoapClient
     {
         if($nodeNameMatch === 'attribute')
         {
-            if(($domNode instanceof DOMElement) && $domNode->hasAttribute('name') && $domNode->getAttribute('name') && $domNode->hasAttribute('type') && $domNode->getAttribute('type'))
+            if(($domNode instanceof \DOMElement) && $domNode->hasAttribute('name') && $domNode->getAttribute('name') && $domNode->hasAttribute('type') && $domNode->getAttribute('type'))
             {
                 $parentNode = self::findSuitableParent($domNode);
                 if($parentNode)
@@ -2525,7 +2523,7 @@ class Generator extends \SoapClient
      * @uses Generator::setStructInheritance()
      * @uses \DOMNode::hasAttributes()
      * @uses \DOMNodeList::item()
-     * @uses DOMElement::getAttribute()
+     * @uses \DOMElement::getAttribute()
      * @uses AbstractModel::getModelByName()
      * @uses AbstractModel::getInheritance()
      * @uses AbstractModel::getName()
@@ -2601,7 +2599,7 @@ class Generator extends \SoapClient
      * @uses Generator::setStructInheritance()
      * @uses \DOMNode::hasAttributes()
      * @uses \DOMNodeList::item()
-     * @uses DOMElement::getAttribute()
+     * @uses \DOMElement::getAttribute()
      * @uses AbstractModel::getName()
      * @param string $wsdlLocation the wsdl location
      * @param \DOMNode $domNode the node
@@ -2665,8 +2663,8 @@ class Generator extends \SoapClient
      * @uses Generator::executeDomXPathQuery()
      * @uses \DOMNode::hasAttributes()
      * @uses \DOMNodeList::item()
-     * @uses DOMElement::getAttribute()
-     * @uses DOMElement::hasAttribute()
+     * @uses \DOMElement::getAttribute()
+     * @uses \DOMElement::hasAttribute()
      * @uses Method::getParameterType()
      * @uses Method::setParameterType()
      * @uses Method::getReturnType()
@@ -2720,11 +2718,11 @@ class Generator extends \SoapClient
                                 $nodes = self::executeDomXPathQuery($domDocument, "//*[@name='$messageName']");
                                 $nodesLength = $nodes->length;
                                 $nodeIndex = 0;
-                                while($nodeIndex < $nodesLength && (!($nodes->item($nodeIndex) instanceof DOMElement) || (($nodes->item($nodeIndex) instanceof DOMElement) && stripos($nodes->item($nodeIndex)->nodeName, 'message') === false)) && $nodeIndex++);
+                                while($nodeIndex < $nodesLength && (!($nodes->item($nodeIndex) instanceof \DOMElement) || (($nodes->item($nodeIndex) instanceof \DOMElement) && stripos($nodes->item($nodeIndex)->nodeName, 'message') === false)) && $nodeIndex++);
                                 /**
                                  * Message definition found, then find its corresponding element
                                  */
-                                if($nodeIndex <= $nodesLength && ($nodes->item($nodeIndex) instanceof DOMElement) && stripos($nodes->item($nodeIndex)->nodeName, 'message') !== false && $nodes->item($nodeIndex)->hasChildNodes())
+                                if($nodeIndex <= $nodesLength && ($nodes->item($nodeIndex) instanceof \DOMElement) && stripos($nodes->item($nodeIndex)->nodeName, 'message') !== false && $nodes->item($nodeIndex)->hasChildNodes())
                                 {
                                     $childNodes = $nodes->item($nodeIndex)->childNodes;
                                     $childNodesCount = $childNodes->length;
@@ -2735,7 +2733,7 @@ class Generator extends \SoapClient
                                         {
                                             $partElement = '';
                                             $partAttributes = array(
-                                                                    'element', 
+                                                                    'element',
                                                                     'type');
                                             foreach($partAttributes as $partAttributeName)
                                             {
@@ -2760,8 +2758,8 @@ class Generator extends \SoapClient
                                                         $nodes = self::executeDomXPathQuery($domDocument, "//*[@name='$partElement']");
                                                         $nodesLength = $nodes->length;
                                                         $nodeIndex = 0;
-                                                        while($nodeIndex < $nodesLength && (!($nodes->item($nodeIndex) instanceof DOMElement) || (($nodes->item($nodeIndex) instanceof DOMElement) && (!$nodes->item($nodeIndex)->hasAttribute('type') || ($nodes->item($nodeIndex)->hasAttribute('type') && $nodes->item($nodeIndex)->getAttribute('type') === '')))) && $nodeIndex++);
-                                                        if($nodeIndex <= $nodesLength && ($nodes->item($nodeIndex) instanceof DOMElement) && $nodes->item($nodeIndex)->hasAttribute('type') && $nodes->item($nodeIndex)->getAttribute('type') != '')
+                                                        while($nodeIndex < $nodesLength && (!($nodes->item($nodeIndex) instanceof \DOMElement) || (($nodes->item($nodeIndex) instanceof \DOMElement) && (!$nodes->item($nodeIndex)->hasAttribute('type') || ($nodes->item($nodeIndex)->hasAttribute('type') && $nodes->item($nodeIndex)->getAttribute('type') === '')))) && $nodeIndex++);
+                                                        if($nodeIndex <= $nodesLength && ($nodes->item($nodeIndex) instanceof \DOMElement) && $nodes->item($nodeIndex)->hasAttribute('type') && $nodes->item($nodeIndex)->getAttribute('type') != '')
                                                         {
                                                             $parameterType = explode(':', $nodes->item($nodeIndex)->getAttribute('type'));
                                                             $parameterType = $parameterType[count($parameterType) - 1];
@@ -2828,38 +2826,38 @@ class Generator extends \SoapClient
      * Centralize method to find a valid parent
      * @uses Generator::auditInit()
      * @uses Generator::audit()
-     * @uses DOMElement::getAttribute()
-     * @uses DOMElement::hasAttribute()
+     * @uses \DOMElement::getAttribute()
+     * @uses \DOMElement::hasAttribute()
      * @param \DOMNode $domNode
      * @param bool $checkName whether to validate the attribute named "name" or not
      * @param array $parentTags parent tags name to fit a parent tag
      * @param int $maxDeep max deep of this current node
-     * @return DOMElement|null
+     * @return \DOMElement|null
      */
     final private static function findSuitableParent(\DOMNode $domNode, $checkName = true, array $parentTags = array(), $maxDeep = 5)
     {
         self::auditInit(__METHOD__, $domNode->nodeName);
         $parentTags = array_merge(array(
-                                        'element', 
-                                        'complexType', 
-                                        'simpleType', 
+                                        'element',
+                                        'complexType',
+                                        'simpleType',
                                         'attribute'), $parentTags);
         $parentNode = $domNode->parentNode;
-        while($maxDeep-- > 0 && ($parentNode instanceof DOMElement) && $parentNode->nodeName && (!preg_match('/' . implode('|', $parentTags) . '/i', $parentNode->nodeName) || ($checkName && preg_match('/' . implode('|', $parentTags) . '/i', $parentNode->nodeName) && (!$parentNode->hasAttribute('name') || $parentNode->getAttribute('name') == ''))))
+        while($maxDeep-- > 0 && ($parentNode instanceof \DOMElement) && $parentNode->nodeName && (!preg_match('/' . implode('|', $parentTags) . '/i', $parentNode->nodeName) || ($checkName && preg_match('/' . implode('|', $parentTags) . '/i', $parentNode->nodeName) && (!$parentNode->hasAttribute('name') || $parentNode->getAttribute('name') == ''))))
             $parentNode = $parentNode->parentNode;
         self::audit(__METHOD__, $domNode->nodeName);
-        return ($parentNode instanceof DOMElement)?$parentNode:null;
+        return ($parentNode instanceof \DOMElement)?$parentNode:null;
     }
     /**
-     * Execute query on \DOMDocument using DOMXPath
-     * @uses DOMXPath::query()
+     * Execute query on \DOMDocument using \DOMXPath
+     * @uses \DOMXPath::query()
      * @param \DOMDocument $domDocument the \DOMDocument to execute the query on
      * @param string $query the query to execute
      * @return \DOMNodeList the results
      */
     public static function executeDomXPathQuery(\DOMDocument $domDocument, $query)
     {
-        $domXPath = new DOMXPath($domDocument);
+        $domXPath = new \DOMXPath($domDocument);
         return $domXPath->query($query);
     }
     /**
@@ -3021,7 +3019,7 @@ class Generator extends \SoapClient
      * @uses Generator::WSDL_TO_PHP_GENERATOR_AUDIT_KEY
      * @uses Generator::getGlobal()
      * @uses Generator::setGlobal()
-     * @param string $auditName the type of audit (parsing, generating, etc..). If audit name is parsing_DOM, than parsing is created to cumulate time for all parsing processes 
+     * @param string $auditName the type of audit (parsing, generating, etc..). If audit name is parsing_DOM, than parsing is created to cumulate time for all parsing processes
      * @param string $auditElement audit specific element
      * @param int $spentTime already spent time on the current audit category (and element)
      * @param bool $createOnly indicates if the element must be only created or not
@@ -3039,8 +3037,8 @@ class Generator extends \SoapClient
          * Variables contained by an audit entry
          */
         $variables = array(
-                        'spent_time'=>$spentTime, 
-                        'last_time'=>$time, 
+                        'spent_time'=>$spentTime,
+                        'last_time'=>$time,
                         'calls'=>0);
         /**
          * Audit content
@@ -3072,7 +3070,7 @@ class Generator extends \SoapClient
          */
         if(!array_key_exists($auditName, $audit))
             $audit[$auditName] = array(
-                                        'own'=>$variables, 
+                                        'own'=>$variables,
                                         'elements'=>array());
         elseif(!$createOnly)
         {
@@ -3107,7 +3105,7 @@ class Generator extends \SoapClient
     /**
      * Method to initialize audit for an element
      * @uses Generator::audit()
-     * @param string $auditName the type of audit (parsing, generating, etc..). If audit name is parsing_DOM, than parsing is created to cumulate time for all parsing processes 
+     * @param string $auditName the type of audit (parsing, generating, etc..). If audit name is parsing_DOM, than parsing is created to cumulate time for all parsing processes
      * @param string $auditElement audit specific element
      * @return bool true
      */
