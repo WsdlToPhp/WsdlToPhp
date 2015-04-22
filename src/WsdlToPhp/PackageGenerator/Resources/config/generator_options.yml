@@ -27,7 +27,7 @@ send_parameters_as_array: # will be removed !
     values: [ true, false ]
 inherits_from_identifier: # will be removed !
     default: ''
-    values: ''
+    values: null
 generic_constants_names:
     default: false
     values: [ true, false ]
@@ -36,4 +36,4 @@ generate_tutorial_file:
     values: [ true, false ]
 add_comments:
     default: [ ]
-    values: [ ]
+    values: null

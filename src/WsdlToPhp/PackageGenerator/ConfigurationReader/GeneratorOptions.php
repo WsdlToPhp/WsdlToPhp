@@ -145,7 +145,19 @@ class GeneratorOptions extends AbstractYamlReader
      */
     public function setAddComments(array $addComments = array())
     {
-        return $this->setOptionValue(self::ADD_COMMENTS, $addComments);
+        /**
+         * If array is type array("author:john Doe","Release:1",)
+         */
+        $comments = array();
+        foreach ($addComments as $index=>$value) {
+            if (is_numeric($index) && strpos($value, ':') > 0) {
+                list($tag, $val) = explode(':', $value);
+                $comments[$tag] = $val;
+            } else {
+                $comments[$index] = $value;
+            }
+        }
+        return $this->setOptionValue(self::ADD_COMMENTS, $comments);
     }
     /**
      * Get gather methods option value

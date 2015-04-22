@@ -1571,12 +1571,30 @@ class Generator extends \SoapClient
         return $this->options->getSendArrayAsParameter();
     }
     /**
+     * Sets the optionSendArrayAsParameter value
+     * @apram bool
+     * @return GeneratorOptions
+     */
+    public function setOptionSendArrayAsParameter($sendArrayAsParameter)
+    {
+        return $this->options->setSendArrayAsParameter($sendArrayAsParameter);
+    }
+    /**
      * Gets the optionGenerateAutoloadFile value
      * @return bool
      */
     public function getOptionGenerateAutoloadFile()
     {
         return $this->options->getGenerateAutoloadFile();
+    }
+    /**
+     * Sts the optionGenerateAutoloadFile value
+     * @param bool
+     * @return GeneratorOptions
+     */
+    public function setOptionGenerateAutoloadFile($generateAutoloadFile)
+    {
+        return $this->options->setGenerateAutoloadFile($generateAutoloadFile);
     }
     /**
      * Gets the optionGenerateWsdlClassFile value
@@ -1620,12 +1638,30 @@ class Generator extends \SoapClient
         return $this->options->getSendParametersAsArray();
     }
     /**
+     * Sets the optionResponseAsWsdlObject value
+     * @param bool
+     * @return GeneratorOptions
+     */
+    public function setOptionSendParametersAsArray($sendParametersAsArray)
+    {
+        return $this->options->setSendParametersAsArray($sendParametersAsArray);
+    }
+    /**
      * Gets the optionInheritsClassIdentifier value
      * @return string
      */
     public function getOptionInheritsClassIdentifier()
     {
         return $this->options->getInheritsFromIdentifier();
+    }
+    /**
+     * Sets the optionInheritsClassIdentifier value
+     * @param string
+     * @return GeneratorOptions
+     */
+    public function setOptionInheritsClassIdentifier($inheritsFromIdentifier)
+    {
+        return $this->options->setInheritsFromIdentifier($inheritsFromIdentifier);
     }
     /**
      * Gets the optionGenericConstantsNames value
@@ -1636,6 +1672,15 @@ class Generator extends \SoapClient
         return $this->options->getGenericConstantsName();
     }
     /**
+     * Sets the optionGenericConstantsNames value
+     * @param bool
+     * @return GeneratorOptions
+     */
+    public function setOptionGenericConstantsNames($genericConstantsNames)
+    {
+        return $this->options->setGenericConstantsName($genericConstantsNames);
+    }
+    /**
      * Gets the optionGenerateTutorialFile value
      * @return bool
      */
@@ -1644,12 +1689,30 @@ class Generator extends \SoapClient
         return $this->options->getGenerateTutorialFile();
     }
     /**
+     * Sets the optionGenerateTutorialFile value
+     * @param bool
+     * @return GeneratorOptions
+     */
+    public function setOptionGenerateTutorialFile($generateTutorialFile)
+    {
+        return $this->options->setGenerateTutorialFile($generateTutorialFile);
+    }
+    /**
      * Gets the optionAddComments value
      * @return array
      */
     public function getOptionAddComments()
     {
         return $this->options->getAddComments();
+    }
+    /**
+     * Sets the optionAddComments value
+     * @param array
+     * @return GeneratorOptions
+     */
+    public function setOptionAddComments($addComments)
+    {
+        return $this->options->setAddComments($addComments);
     }
     /**
      * Gets the package name

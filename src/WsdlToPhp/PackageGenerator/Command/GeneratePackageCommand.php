@@ -73,7 +73,8 @@ class GeneratePackageCommand extends AbstractCommand
             ->addOption('wsdl-genericconstants', 'wsdl-cst', InputOption::VALUE_OPTIONAL, 'Enable/Disable usage of generic constants name (ex : ENUM_VALUE_0, ENUM_VALUE_1, etc) or contextual values (ex : VALUE_STRING, VALUE_YES, VALUES_NO, etc)')
             ->addOption('wsdl-reponseasobj', 'wsdl-obj', InputOption::VALUE_OPTIONAL, 'Enable/Disable usage of object to encapsulate Web Service response')
             ->addOption('wsdl-inherits', 'wsdl-inh', InputOption::VALUE_OPTIONAL, 'Astracts struct base name to identify abtract structs, can be avoided as it will be soon removed')
-            ->addOption('wsdl-paramsasarray', 'wsdl-pararray', InputOption::VALUE_OPTIONAL, 'Enable/Disable usage of a \'parameters\' parameter in an array to contain request parameters, disabled in most cases');
+            ->addOption('wsdl-paramsasarray', 'wsdl-pararray', InputOption::VALUE_OPTIONAL, 'Enable/Disable usage of a \'parameters\' parameter in an array to contain request parameters, disabled in most cases')
+            ->addOption('wsdl-addcomments', 'wsdl-com', InputOption::VALUE_OPTIONAL | InputOption::VALUE_IS_ARRAY, 'Set comments to be used within each generated file');
     }
 
     /**
@@ -99,11 +100,18 @@ class GeneratePackageCommand extends AbstractCommand
             $this->getGenerator()->generateClasses($packageName, $packageDestination);
         } else {
             $this->writeLn("  Generation not launched, use --force to force generation");
-            $this->writeLn("  Options used:");
-            array_walk($packageGenerationOptions, function(&$value, $index){
-                $value = sprintf("%s: %s", $index, $value);
-            });
-            $this->writeLn("    " . implode(PHP_EOL . '    ', $packageGenerationOptions));
+            $this->writeLn("  Wsdl used:");
+            $this->writeLn("    " . implode(PHP_EOL . '    ', $this->formatArrayForConsole(array(
+                'url'          => $wsdlUrl,
+                'login'        => $wsdlLogin,
+                'password'     => $wsdlPassword,
+                'Package name' => $packageName,
+                'Package dest' => $packageDestination,
+            ))));
+            $this->writeLn("  Wsdl options used:");
+            $this->writeLn("    " . implode(PHP_EOL . '    ', $this->formatArrayForConsole($wsdlOptions)));
+            $this->writeLn("  Generator options used:");
+            $this->writeLn("    " . implode(PHP_EOL . '    ', $this->formatArrayForConsole($packageGenerationOptions)));
         }
 
         $this->writeLn(" End");
@@ -146,14 +154,15 @@ class GeneratePackageCommand extends AbstractCommand
             'wsdl-category'         => 'Category',
             'wsdl-subcategory'      => 'SubCategory',
             'wsdl-gathermethods'    => 'GatherMethods',
-            'wsdl-genwsdlclass'     => 'GenerateWsdlClass',
+            'wsdl-genwsdlclass'     => 'GenerateWsdlClassFile',
             'wsdl-gentutorial'      => 'GenerateTutorialFile',
             'wsdl-genautoload'      => 'GenerateAutoloadFile',
             'wsdl-sendarrayparam'   => 'SendArrayAsParameter',
-            'wsdl-genericconstants' => 'GenericConstantsName',
+            'wsdl-genericconstants' => 'GenericConstantsNames',
             'wsdl-reponseasobj'     => 'GetResponseAsWsdlObject',
-            'wsdl-inherits'         => 'InheritsFromIdentifier',
+            'wsdl-inherits'         => 'InheritsClassIdentifier',
             'wsdl-paramsasarray'    => 'SendParametersAsArray',
+            'wsdl-addcomments'      => 'AddComments',
         );
     }
 
@@ -195,5 +204,17 @@ class GeneratePackageCommand extends AbstractCommand
             return false;
         }
         return $optionValue;
+    }
+    /**
+     * Utility method to return readeable array based on "key: value"
+     * @param array $array
+     * @return array
+     */
+    private function formatArrayForConsole($array)
+    {
+        array_walk($array, function(&$value, $index){
+            $value = sprintf("%s: %s", $index, is_scalar($value) ? $value : implode(', ', $value));
+        });
+        return $array;
     }
 }
