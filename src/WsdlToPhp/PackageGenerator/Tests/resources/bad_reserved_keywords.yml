@@ -1,7 +1,7 @@
 # List oh PHP reserved keywords that must not be used within generated classes.
 # If an element matched one of this reserved keywords, it is replaced by "_" + {reserved_keyword} + nb_used_times
 
-reserved_keywords:
+reservedkeywords:
     # constants
     - "PHP_VERSION"
     - "PHP_MAJOR_VERSION"

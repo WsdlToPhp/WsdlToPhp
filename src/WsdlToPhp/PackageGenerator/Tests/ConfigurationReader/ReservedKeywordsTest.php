@@ -22,4 +22,11 @@ class ReservedKeywordsTest extends TestCase
         $this->assertTrue(self::instance()->is('__CLASS__'));
         $this->assertFalse(self::instance()->is('__class__'));
     }
+    /**
+     * @expectedException InvalidArgumentException
+     */
+    public function testException()
+    {
+        ReservedKeywords::instance(dirname(__FILE__) . '/../resources/bad_reserved_keywords.yml');
+    }
 }
