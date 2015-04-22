@@ -166,20 +166,20 @@ abstract class AbstractModel
          */
         $extends = '';
         $base = Generator::instance()->getOptionInheritsClassIdentifier();
-        if(!empty($base) && ($model = self::getModelByName($this->getName() . $base)))
-        {
-            if($model->getIsStruct())
+        if(!empty($base) && ($model = self::getModelByName($this->getName() . $base))) {
+            if($model->getIsStruct()) {
                 $extends = $model->getPackagedName();
-        }
-        elseif($this->getInheritance() != '' && ($model = self::getModelByName($this->getInheritance())))
-        {
-            if($model->getIsStruct())
+            }
+        } elseif($this->getInheritance() != '' && ($model = self::getModelByName($this->getInheritance()))) {
+            if($model->getIsStruct()) {
                 $extends = $model->getPackagedName();
-        }
-        elseif(class_exists($this->getInheritance()) && stripos($this->getInheritance(),Generator::getPackageName()) === 0)
+            }
+        } elseif(class_exists($this->getInheritance()) && stripos($this->getInheritance(),Generator::getPackageName()) === 0) {
             $extends = $this->getInheritance();
-        if(empty($extends) && Generator::instance()->getOptionGenerateWsdlClassFile())
+        }
+        if(empty($extends) && Generator::instance()->getOptionGenerateWsdlClassFile()) {
             $extends = self::getGenericWsdlClassName();
+        }
         array_push($class,'class ' . $this->getPackagedName() . (!empty($extends)?' extends ' . $extends:''));
         /**
          * Class body starts here
@@ -619,6 +619,6 @@ abstract class AbstractModel
      */
     public function __toString()
     {
-        return __CLASS__;
+        return 'AbstractModel';
     }
 }

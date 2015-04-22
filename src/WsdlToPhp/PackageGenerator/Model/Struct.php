@@ -597,6 +597,6 @@ class Struct extends AbstractModel
      */
     public function __toString()
     {
-        return __CLASS__;
+        return 'Struct';
     }
 }

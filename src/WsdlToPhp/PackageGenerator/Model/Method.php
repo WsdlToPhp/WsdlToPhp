@@ -337,6 +337,6 @@ class Method extends AbstractModel
      */
     public function __toString()
     {
-        return __CLASS__;
+        return 'Method';
     }
 }

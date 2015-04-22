@@ -99,8 +99,8 @@ class Service extends AbstractModel
                         $soapHeaderKey = $soapHeaderName . '-' . $soapHeaderType;
                         if(!array_key_exists($soapHeaderKey, $soapHeaders))
                             $soapHeaders[$soapHeaderKey] = array(
-                                                                'name'=>$soapHeaderName, 
-                                                                'type'=>$soapHeaderType, 
+                                                                'name'=>$soapHeaderName,
+                                                                'type'=>$soapHeaderType,
                                                                 'namespaces'=>array(
                                                                                     $soapHeaderNameSpaces[$index]));
                         elseif(!in_array($soapHeaderNameSpaces[$index], $soapHeaders[$soapHeaderKey]['namespaces']))
@@ -246,6 +246,6 @@ class Service extends AbstractModel
      */
     public function __toString()
     {
-        return __CLASS__;
+        return 'Service';
     }
 }

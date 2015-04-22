@@ -51,7 +51,7 @@ class StructAttribute extends AbstractModel
         {
             /**
              * A virtual struct exists only to store meta informations about itself
-             * A property for which the data type points to its actual owner class has to be of its native type 
+             * A property for which the data type points to its actual owner class has to be of its native type
              * So don't add meta informations about a valid struct
              */
             if(!$model->getIsStruct() || $model->getPackagedName() == $this->getOwner()->getPackagedName())
@@ -268,10 +268,10 @@ class StructAttribute extends AbstractModel
     public function getDefaultValue()
     {
         return self::getValueWithinItsType($this->getMetaValueFirstSet(array(
-                                                                            'default', 
-                                                                            'Default', 
-                                                                            'DefaultValue', 
-                                                                            'defaultValue', 
+                                                                            'default',
+                                                                            'Default',
+                                                                            'DefaultValue',
+                                                                            'defaultValue',
                                                                             'defaultvalue')), $this->getType());
     }
     /**
@@ -283,9 +283,9 @@ class StructAttribute extends AbstractModel
     public function isRequired()
     {
         return ($this->getMetaValue('use', '') === 'required' || $this->getMetaValueFirstSet(array(
-                                                                                                'minOccurs', 
-                                                                                                'minoccurs', 
-                                                                                                'MinOccurs', 
+                                                                                                'minOccurs',
+                                                                                                'minoccurs',
+                                                                                                'MinOccurs',
                                                                                                 'Minoccurs'), false));
     }
     /**
@@ -296,9 +296,9 @@ class StructAttribute extends AbstractModel
     public function getPattern()
     {
         return $this->getMetaValueFirstSet(array(
-                                                'pattern', 
-                                                'Pattern', 
-                                                'match', 
+                                                'pattern',
+                                                'Pattern',
+                                                'match',
                                                 'Match'), '');
     }
     /**
@@ -317,6 +317,6 @@ class StructAttribute extends AbstractModel
      */
     public function __toString()
     {
-        return __CLASS__;
+        return 'StructAttribute';
     }
 }
