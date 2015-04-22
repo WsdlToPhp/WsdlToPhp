@@ -50,12 +50,11 @@ class StructValue extends AbstractModel
      */
     public function getCleanName($keepMultipleUnderscores = false)
     {
-        if(Generator::instance()->getOptionGenericConstantsNames() && is_numeric($this->getIndex()) && $this->getIndex() >= 0)
+        if (Generator::instance()->getOptionGenericConstantsNames() && is_numeric($this->getIndex()) && $this->getIndex() >= 0) {
             return 'ENUM_VALUE_' . $this->getIndex();
-        else
-        {
+        } else {
             $key = self::constantSuffix($this->getOwner()->getName(), parent::getCleanName($keepMultipleUnderscores), $this->getIndex());
-            return 'VALUE_' . strtoupper(parent::getCleanName($keepMultipleUnderscores)) . ($key?'_' . $key:'');
+            return 'VALUE_' . strtoupper(parent::getCleanName($keepMultipleUnderscores)) . ($key ? '_' . $key : '');
         }
     }
     /**
@@ -125,12 +124,13 @@ class StructValue extends AbstractModel
     {
         $key = strtoupper($structName . '_' . $value);
         $indexedKey = $key . '_' . $index;
-        if(array_key_exists($indexedKey, self::$uniqueConstants))
+        if (array_key_exists($indexedKey, self::$uniqueConstants)) {
             return self::$uniqueConstants[$indexedKey];
-        elseif(!array_key_exists($key, self::$uniqueConstants))
+        } elseif (!array_key_exists($key, self::$uniqueConstants)) {
             self::$uniqueConstants[$key] = 0;
-        else
+        } else {
             self::$uniqueConstants[$key]++;
+        }
         self::$uniqueConstants[$indexedKey] = self::$uniqueConstants[$key];
         return self::$uniqueConstants[$key];
     }

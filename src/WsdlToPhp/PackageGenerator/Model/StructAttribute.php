@@ -47,23 +47,21 @@ class StructAttribute extends AbstractModel
         array_push($comments, 'The ' . $this->getName());
         $this->addMetaComment($comments);
         $model = self::getModelByName($this->getType());
-        if($model)
-        {
+        if ($model) {
             /**
              * A virtual struct exists only to store meta informations about itself
              * A property for which the data type points to its actual owner class has to be of its native type
              * So don't add meta informations about a valid struct
              */
-            if(!$model->getIsStruct() || $model->getPackagedName() == $this->getOwner()->getPackagedName())
-            {
+            if (!$model->getIsStruct() || $model->getPackagedName() == $this->getOwner()->getPackagedName()) {
                 $model->addMetaComment($comments);
-                array_push($comments, '@var ' . ($model->getInheritance()?$model->getInheritance():$this->getType()));
-            }
-            else
+                array_push($comments, '@var ' . ($model->getInheritance() ? $model->getInheritance() : $this->getType()));
+            } else {
                 array_push($comments, '@var ' . $model->getPackagedName());
-        }
-        else
+            }
+        } else {
             array_push($comments, '@var ' . $this->getType());
+        }
         return $comments;
     }
     /**
@@ -130,8 +128,7 @@ class StructAttribute extends AbstractModel
          */
         $comments = array();
         array_push($comments, 'Get ' . $this->getName() . ' value');
-        if($isXml)
-        {
+        if ($isXml) {
             array_push($comments, '@uses DOMDocument::loadXML()');
             array_push($comments, '@uses DOMDocument::hasChildNodes()');
             array_push($comments, '@uses DOMDocument::saveXML()');
@@ -139,24 +136,22 @@ class StructAttribute extends AbstractModel
             array_push($comments, '@uses ' . $struct->getPackagedName() . '::' . $this->getSetterName() . '()');
             array_push($comments, '@param bool true or false whether to return XML value as string or as DOMDocument');
         }
-        array_push($comments, '@return ' . ($model?(($model->getIsStruct() && $model->getPackagedName() != $this->getOwner()->getPackagedName())?$model->getPackagedName():($model->getInheritance()?$model->getInheritance():$this->getType())):$this->getType()) . ($this->isRequired()?'':'|null'));
-        array_push($body, array(
-                                'comment'=>$comments));
+        array_push($comments, '@return ' . ($model ? (($model->getIsStruct() && $model->getPackagedName() != $this->getOwner()->getPackagedName()) ? $model->getPackagedName() : ($model->getInheritance() ? $model->getInheritance() : $this->getType())) : $this->getType()) . ($this->isRequired() ? '' : '|null'));
+        array_push($body, array('comment' => $comments));
         /**
          * get() method body
          */
-        array_push($body, 'public function ' . $this->getGetterName() . '(' . ($isXml?'$asString = true':'') . ')');
+        array_push($body, 'public function ' . $this->getGetterName() . '(' . ($isXml ? '$asString = true' : '') . ')');
         array_push($body, "{");
         $thisAccess = '';
-        if($this->nameIsClean())
+        if ($this->nameIsClean())
             $thisAccess = '$this->' . $this->getName();
         else
             $thisAccess = '$this->{\'' . addslashes($this->getName()) . '\'}';
         /**
          * format XML data
          */
-        if($isXml)
-        {
+        if ($isXml) {
             array_push($body, 'if(!empty(' . $thisAccess . ') && !(' . $thisAccess . ' instanceof DOMDocument))');
             array_push($body, '{');
             array_push($body, '$dom = new DOMDocument(\'1.0\', \'UTF-8\');');
@@ -168,10 +163,12 @@ class StructAttribute extends AbstractModel
             array_push($body, 'unset($dom);');
             array_push($body, '}');
         }
-        if($isXml)
+        if ($isXml) {
             array_push($body, 'return ($asString && (' . $thisAccess . ' instanceof DOMDocument) && ' . $thisAccess . '->hasChildNodes())?' . $thisAccess . '->saveXML(' . $thisAccess . '->childNodes->item(0)):' . $thisAccess . ';');
-        else
+        }
+        else {
             array_push($body, 'return ' . $thisAccess . ';');
+        }
         array_push($body, "}");
         unset($model, $isXml, $comments);
     }
@@ -200,44 +197,38 @@ class StructAttribute extends AbstractModel
          */
         $comments = array();
         array_push($comments, 'Set ' . $this->getName() . ' value');
-        if($model && $model->getIsRestriction() && !$struct->isArray())
+        if ($model && $model->getIsRestriction() && !$struct->isArray())
             array_push($comments, '@uses ' . $model->getPackagedName() . '::valueIsValid()');
-        if($model)
-        {
-            if($model->getIsStruct() && $model->getPackagedName() != $this->getOwner()->getPackagedName())
-            {
+        if ($model) {
+            if ($model->getIsStruct() && $model->getPackagedName() != $this->getOwner()->getPackagedName()) {
                 array_push($comments, '@param ' . $model->getPackagedName() . ' $' . lcfirst($this->getCleanName()) . ' the ' . $this->getName());
                 array_push($comments, '@return ' . $model->getPackagedName());
+            } else {
+                array_push($comments, '@param ' . ($model->getInheritance() ? $model->getInheritance() : $this->getType()) . ' $' . lcfirst($this->getCleanName()) . ' the ' . $this->getName());
+                array_push($comments, '@return ' . ($model->getInheritance() ? $model->getInheritance() : $this->getType()));
             }
-            else
-            {
-                array_push($comments, '@param ' . ($model->getInheritance()?$model->getInheritance():$this->getType()) . ' $' . lcfirst($this->getCleanName()) . ' the ' . $this->getName());
-                array_push($comments, '@return ' . ($model->getInheritance()?$model->getInheritance():$this->getType()));
-            }
-        }
-        else
-        {
+        } else {
             array_push($comments, '@param ' . $this->getType() . ' $' . lcfirst($this->getCleanName()) . ' the ' . $this->getName());
             array_push($comments, '@return ' . $this->getType());
         }
-        array_push($body, array(
-                                'comment'=>$comments));
+        array_push($body, array('comment' => $comments));
         /**
          * set() method body
          */
         array_push($body, 'public function ' . $this->getSetterName() . '($' . lcfirst($this->getCleanName()) . ')');
         array_push($body, '{');
-        if($model && $model->getIsRestriction() && !$struct->isArray())
-        {
+        if ($model && $model->getIsRestriction() && !$struct->isArray()) {
             array_push($body, 'if(!' . $model->getPackagedName() . '::valueIsValid($' . lcfirst($this->getCleanName()) . '))');
             array_push($body, '{');
             array_push($body, 'return false;');
             array_push($body, '}');
         }
-        if($this->nameIsClean())
+        if ($this->nameIsClean()) {
             array_push($body, 'return ($this->' . $this->getName() . ' = $' . lcfirst($this->getCleanName()) . ');');
-        else
+        }
+        else {
             array_push($body, 'return ($this->' . $this->getCleanName() . ' = $this->{\'' . addslashes($this->getName()) . '\'} = $' . lcfirst($this->getCleanName()) . ');');
+        }
         array_push($body, '}');
         unset($model, $comments);
     }
@@ -267,12 +258,7 @@ class StructAttribute extends AbstractModel
      */
     public function getDefaultValue()
     {
-        return self::getValueWithinItsType($this->getMetaValueFirstSet(array(
-                                                                            'default',
-                                                                            'Default',
-                                                                            'DefaultValue',
-                                                                            'defaultValue',
-                                                                            'defaultvalue')), $this->getType());
+        return self::getValueWithinItsType($this->getMetaValueFirstSet(array('default', 'Default', 'DefaultValue', 'defaultValue', 'defaultvalue')), $this->getType());
     }
     /**
      * Returns true or false depending on minOccurs information associated to the attribute
@@ -282,11 +268,7 @@ class StructAttribute extends AbstractModel
      */
     public function isRequired()
     {
-        return ($this->getMetaValue('use', '') === 'required' || $this->getMetaValueFirstSet(array(
-                                                                                                'minOccurs',
-                                                                                                'minoccurs',
-                                                                                                'MinOccurs',
-                                                                                                'Minoccurs'), false));
+        return ($this->getMetaValue('use', '') === 'required' || $this->getMetaValueFirstSet(array('minOccurs', 'minoccurs', 'MinOccurs', 'Minoccurs'), false));
     }
     /**
      * Returns the patern which the value must match
@@ -295,11 +277,7 @@ class StructAttribute extends AbstractModel
      */
     public function getPattern()
     {
-        return $this->getMetaValueFirstSet(array(
-                                                'pattern',
-                                                'Pattern',
-                                                'match',
-                                                'Match'), '');
+        return $this->getMetaValueFirstSet(array('pattern', 'Pattern', 'match', 'Match'), '');
     }
     /**
      * Returns the owner model object, meaning a Struct object

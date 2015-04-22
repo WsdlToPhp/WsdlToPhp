@@ -59,12 +59,12 @@ class Method extends AbstractModel
     public function getMethodName()
     {
         $methodName = $this->getCleanName();
-        if(!$this->getIsUnique())
-        {
-            if(is_string($this->getParameterType()))
+        if (!$this->getIsUnique()) {
+            if (is_string($this->getParameterType())) {
                 $methodName .= ucfirst($this->getParameterType());
-            else
+            } else {
                 $methodName .= '_' . md5(var_export($this->getParameterType(), true));
+            }
         }
         $methodName = self::replaceReservedPhpKeyword($methodName, $this->getOwner()->getPackagedName());
         return self::uniqueName($methodName, $this->getOwner()->getPackagedName());
@@ -91,47 +91,46 @@ class Method extends AbstractModel
     {
         $comments = array();
         array_push($comments, 'Method to call the operation originally named ' . $this->getName());
-        if(!$this->getIsUnique())
+        if (!$this->getIsUnique()) {
             array_push($comments, 'This method has been renamed because it is defined several times but with different signature');
-        if($this->getDocumentation() != '')
+        }
+        if ($this->getDocumentation() != '') {
             array_push($comments, 'Documentation : ' . $this->getDocumentation());
+        }
         $this->addMetaComment($comments, false, true);
         /**
          * @Uses and @Param
          */
-        if(Generator::instance()->getOptionGenerateWsdlClassFile())
-        {
+        if (Generator::instance()->getOptionGenerateWsdlClassFile()) {
             array_push($comments, '@uses ' . self::getGenericWsdlClassName() . '::getSoapClient()');
             array_push($comments, '@uses ' . self::getGenericWsdlClassName() . '::setResult()');
             array_push($comments, '@uses ' . self::getGenericWsdlClassName() . '::saveLastError()');
         }
-        if(is_string($this->getParameterType()))
-        {
+        if (is_string($this->getParameterType())) {
             $model = self::getModelByName($this->getParameterType());
-            if($model && $model->getIsStruct() && !$model->getIsRestriction())
+            if ($model && $model->getIsStruct() && !$model->getIsRestriction())
                 array_push($comments, '@param ' . $model->getPackagedName() . ' $' . lcfirst($model->getPackagedName()));
             else
                 array_push($comments, '@param ' . $this->getParameterType() . ' $' . lcfirst($this->getParameterType()));
-        }
-        elseif(is_array($this->getParameterType()))
-        {
-            foreach($this->getParameterType() as $parameterName=>$parameterType)
-            {
+        } elseif (is_array($this->getParameterType())) {
+            foreach ($this->getParameterType() as $parameterName => $parameterType) {
                 $model = self::getModelByName($parameterType);
-                if($model && $model->getIsStruct() && !$model->getIsRestriction())
+                if ($model && $model->getIsStruct() && !$model->getIsRestriction()) {
                     array_push($comments, '@param ' . $model->getPackagedName() . ' $' . lcfirst(self::cleanString($parameterName)));
-                else
+                } else {
                     array_push($comments, '@param ' . $parameterType . ' $' . lcfirst(self::cleanString($parameterName)));
+                }
             }
         }
         /**
          * @Return
          */
         $model = self::getModelByName($this->getReturnType());
-        if($model && $model->getIsStruct() && !$model->getIsRestriction())
+        if ($model && $model->getIsStruct() && !$model->getIsRestriction()) {
             array_push($comments, '@return ' . $model->getPackagedName());
-        else
+        } else {
             array_push($comments, '@return ' . $this->getReturnType());
+        }
         unset($model);
         return $comments;
     }
@@ -159,37 +158,32 @@ class Method extends AbstractModel
     public function getBody(&$body)
     {
         $parameterModel = self::getModelByName($this->getParameterType());
-        $parameterModel = ($parameterModel && $parameterModel->getIsStruct() && !$parameterModel->getIsRestriction())?$parameterModel:null;
+        $parameterModel = ($parameterModel && $parameterModel->getIsStruct() && !$parameterModel->getIsRestriction()) ? $parameterModel : null;
         $returnModel = self::getModelByName($this->getReturnType());
-        $returnModel = ($returnModel && $returnModel->getIsStruct() && !$returnModel->getIsRestriction())?$returnModel:null;
-        if($parameterModel)
-        {
-            if(count($parameterModel->getAttributes(true, true)))
-            {
+        $returnModel = ($returnModel && $returnModel->getIsStruct() && !$returnModel->getIsRestriction()) ? $returnModel : null;
+        if ($parameterModel) {
+            if (count($parameterModel->getAttributes(true, true))) {
                 $parameterName = '$' . lcfirst($parameterModel->getPackagedName());
                 $parameter = $parameterModel->getPackagedName() . ' ' . $parameterName;
-            }
-            else
+            } else
                 $parameterName = $parameter = '';
-        }
-        elseif(is_string($this->getParameterType()))
+        } elseif (is_string($this->getParameterType())) {
             $parameterName = $parameter = '$' . lcfirst(self::cleanString($this->getParameterType()));
-        elseif(is_array($this->getParameterType()))
-        {
+        } elseif (is_array($this->getParameterType())) {
             $parameters = array();
-            foreach($this->getParameterType() as $parameterName=>$parameterType)
-            {
+            foreach ($this->getParameterType() as $parameterName => $parameterType) {
                 $model = self::getModelByName($parameterType);
-                if(false && $model && $model->getIsStruct() && !$model->getIsRestriction())
+                if (false && $model && $model->getIsStruct() && !$model->getIsRestriction()) {
                     $parameterName = $model->getPackagedName();
-                else
+                } else {
                     $parameterName = self::cleanString($parameterName);
-                array_push($parameters, (($model && $model->getIsStruct() && !$model->getIsRestriction())?$model->getPackagedName() . ' ':'') . '$' . lcfirst($parameterName));
+                }
+                array_push($parameters, (($model && $model->getIsStruct() && !$model->getIsRestriction()) ? $model->getPackagedName() . ' ' : '') . '$' . lcfirst($parameterName));
             }
             $parameterName = $parameter = implode(', ', $parameters);
-        }
-        else
+        } else {
             $parameterName = $parameter = '';
+        }
         array_push($body, 'public function ' . $this->getMethodName() . '(' . $parameter . ')');
         array_push($body, '{');
         array_push($body, 'try');
@@ -197,70 +191,59 @@ class Method extends AbstractModel
         /**
          * Response
          */
-        $responseAsObjStart = ((Generator::instance()->getOptionResponseAsWsdlObject() && $returnModel)?'new ' . $returnModel->getPackagedName() . '(':'');
-        $responseAsObjEnd = ((Generator::instance()->getOptionResponseAsWsdlObject() && $returnModel)?')':'');
+        $responseAsObjStart = ((Generator::instance()->getOptionResponseAsWsdlObject() && $returnModel) ? 'new ' . $returnModel->getPackagedName() . '(' : '');
+        $responseAsObjEnd = ((Generator::instance()->getOptionResponseAsWsdlObject() && $returnModel) ? ')' : '');
         /**
          * Soap parameters
          */
-        if($parameterModel)
-        {
+        if ($parameterModel) {
             $attributes = $parameterModel->getAttributes(true, true);
-            if(count($attributes))
-            {
+            if (count($attributes)) {
                 $soapParametersStart = $parameterName;
                 $soapParametersEnd = '';
-            }
-            else
+            } else
                 $soapParametersStart = $soapParametersEnd = '';
-        }
-        elseif(is_string($this->getParameterType()))
-        {
-            $soapParametersStart = Generator::instance()->getOptionSendArrayAsParameter()?'\'' . addslashes($this->getParameterType()) . '\'=>':'';
+        } elseif (is_string($this->getParameterType())) {
+            $soapParametersStart = Generator::instance()->getOptionSendArrayAsParameter() ? '\'' . addslashes($this->getParameterType()) . '\'=>' : '';
             $soapParametersEnd = '$' . lcfirst(self::cleanString($this->getParameterType()));
-        }
-        elseif(is_array($this->getParameterType()))
-        {
+        } elseif (is_array($this->getParameterType())) {
             $soapParametersStart = array();
             $soapParametersEnd = '';
-            foreach($this->getParameterType() as $parameterName=>$parameterType)
-            {
+            foreach ($this->getParameterType() as $parameterName => $parameterType) {
                 $model = self::getModelByName($parameterType);
-                if(false && $model && $model->getIsStruct() && !$model->getIsRestriction())
+                if (false && $model && $model->getIsStruct() && !$model->getIsRestriction()) {
                     $paramName = $model->getPackagedName();
-                else
+                } else {
                     $paramName = self::cleanString($parameterName);
-                array_push($soapParametersStart, (Generator::instance()->getOptionSendArrayAsParameter()?'\'' . addslashes($parameterName) . '\'=>':'') . '$' . lcfirst($paramName));
+                }
+                array_push($soapParametersStart, (Generator::instance()->getOptionSendArrayAsParameter() ? '\'' . addslashes($parameterName) . '\'=>' : '') . '$' . lcfirst($paramName));
                 unset($model);
             }
             $soapParametersStart = implode(', ', $soapParametersStart);
-        }
-        else
+        } else
             $soapParametersStart = $soapParametersEnd = '';
         /**
          * Soap call
          */
-        $soapCallStart = 'self::getSoapClient()->' . ($this->nameIsClean()?$this->getName() . '(':'__soapCall(\'' . $this->getName() . '\'' . ((!empty($soapParametersStart) || !empty($soapParametersEnd))?', array(':''));
-        $soapCallEnd = ((!$this->nameIsClean() && (!empty($soapParametersStart) || !empty($soapParametersEnd)))?')':'') . ')' . (Generator::instance()->getOptionSendParametersAsArray()?'->parameters':'');
+        $soapCallStart = 'self::getSoapClient()->' . ($this->nameIsClean() ? $this->getName() . '(' : '__soapCall(\'' . $this->getName() . '\'' . ((!empty($soapParametersStart) || !empty($soapParametersEnd)) ? ', array(' : ''));
+        $soapCallEnd = ((!$this->nameIsClean() && (!empty($soapParametersStart) || !empty($soapParametersEnd))) ? ')' : '') . ')' . (Generator::instance()->getOptionSendParametersAsArray() ? '->parameters' : '');
         /**
          * Send parameters in parameters array
          */
-        if(!empty($soapParametersStart) && $this->nameIsClean())
-        {
-            $sendParametersAsArrayStart = (Generator::instance()->getOptionSendParametersAsArray()?'array(\'parameters\'=>':'');
-            $sendParametersAsArrayEnd = (Generator::instance()->getOptionSendParametersAsArray()?')':'');
-        }
-        else
+        if (!empty($soapParametersStart) && $this->nameIsClean()) {
+            $sendParametersAsArrayStart = (Generator::instance()->getOptionSendParametersAsArray() ? 'array(\'parameters\'=>' : '');
+            $sendParametersAsArrayEnd = (Generator::instance()->getOptionSendParametersAsArray() ? ')' : '');
+        } else
             $sendParametersAsArrayStart = $sendParametersAsArrayEnd = '';
         /**
          * Send an array
          */
-        if(!empty($soapParametersStart) && $this->nameIsClean())
-        {
-            $sendArrayAsParameterStart = (Generator::instance()->getOptionSendArrayAsParameter()?'array(':'');
-            $sendArrayAsParameterEnd = (Generator::instance()->getOptionSendArrayAsParameter()?')':'');
-        }
-        else
+        if (!empty($soapParametersStart) && $this->nameIsClean()) {
+            $sendArrayAsParameterStart = (Generator::instance()->getOptionSendArrayAsParameter() ? 'array(' : '');
+            $sendArrayAsParameterEnd = (Generator::instance()->getOptionSendArrayAsParameter() ? ')' : '');
+        } else {
             $sendArrayAsParameterStart = $sendArrayAsParameterEnd = '';
+        }
         array_push($body, 'return $this->setResult(' . $responseAsObjStart . $soapCallStart . $sendParametersAsArrayStart . $sendArrayAsParameterStart . $soapParametersStart . $soapParametersEnd . $sendArrayAsParameterEnd . $sendParametersAsArrayEnd . $soapCallEnd . $responseAsObjEnd . ');');
         array_push($body, '}');
         array_push($body, 'catch(SoapFault $soapFault)');

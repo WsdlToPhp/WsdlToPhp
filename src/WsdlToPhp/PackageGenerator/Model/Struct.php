@@ -15,7 +15,7 @@ class Struct extends AbstractModel
      */
     private $attributes = array();
     /**
-     * Is the struct a restriction with defined values ?
+     * Is the struct a restriction with defined values  ?
      * @var bool
      */
     private $isRestriction = false;
@@ -33,14 +33,14 @@ class Struct extends AbstractModel
      * Main constructor
      * @see AbstractModel::__construct()
      * @uses Struct::setIsStruct()
-     * @param string $_name the original name
-     * @param bool $_isStruct defines if it's a real sruct or not
+     * @param string $name the original name
+     * @param bool $isStruct defines if it's a real sruct or not
      * @return Struct
      */
-    public function __construct($_name,$_isStruct = true)
+    public function __construct($name, $isStruct = true)
     {
-        parent::__construct($_name);
-        $this->setIsStruct($_isStruct);
+        parent::__construct($name);
+        $this->setIsStruct($isStruct);
     }
     /**
      * Returns the constructor method
@@ -67,295 +67,272 @@ class Struct extends AbstractModel
      * @uses StructAttribute::getSetterDeclaration()
      * @uses Generator::instance()->getOptionGenerateWsdlClassFile()
      * @uses Generator::getPackageName()
-     * @param array $_body the body which will be populated
+     * @param array $body the body which will be populated
      * @return array
      */
-    public function getClassBody(&$_body)
+    public function getClassBody(&$body)
     {
         /**
          * A restriction struct with enumeration values
          */
-        if($this->getIsRestriction() && count($this->getValues()))
-        {
+        if ($this->getIsRestriction() && count($this->getValues())) {
             $constantsDefined = array();
-            foreach($this->getValues() as $index=>$value)
-            {
-                array_push($_body,array(
-                                        'comment'=>$value->getComment()));
-                array_push($_body,$value->getDeclaration($this->getName(),$index));
-                array_push($constantsDefined,$this->getPackagedName() . '::' . $value->getCleanName());
+            foreach ($this->getValues() as $index => $value) {
+                array_push($body, array('comment' => $value->getComment()));
+                array_push($body, $value->getDeclaration($this->getName(), $index));
+                array_push($constantsDefined, $this->getPackagedName() . '::' . $value->getCleanName());
             }
             /**
              * valueIsValid() method comments
              */
             $comments = array();
-            array_push($comments,'Return true if value is allowed');
-            foreach($constantsDefined as $constantName)
-                array_push($comments,'@uses ' . $constantName);
-            array_push($comments,'@param mixed $_value value');
-            array_push($comments,'@return bool true|false');
-            array_push($_body,array(
-                                    'comment'=>$comments));
+            array_push($comments, 'Return true if value is allowed');
+            foreach ($constantsDefined as $constantName)
+                array_push($comments, '@uses ' . $constantName);
+            array_push($comments, '@param mixed $value value');
+            array_push($comments, '@return bool true|false');
+            array_push($body, array('comment' => $comments));
             /**
              * valueIsValid() method body
              */
-            array_push($_body,'public static function valueIsValid($_value)');
-            array_push($_body,'{');
-            array_push($_body,'return in_array($_value,array(' . implode(',',$constantsDefined) . '));');
-            array_push($_body,'}');
+            array_push($body, 'public static function valueIsValid($value)');
+            array_push($body, '{');
+            array_push($body, 'return in_array($value, array(' . implode(', ', $constantsDefined) . '));');
+            array_push($body, '}');
             unset($comments);
-        }
-        /**
-         * A classic struct with attributes
-         */
-        elseif(count($this->getAttributes()))
-        {
+        } elseif (count($this->getAttributes())) {
             /**
+             * A classic struct with attributes
              * Gathers informations about attributes
              */
             $bodyParameters = array();
             $bodyParams = array();
             $bodyUses = array();
             $constructParameters = array();
-            $attributes = $this->getAttributes(false,true);
-            foreach($attributes as $attribute)
-            {
-                array_push($_body,array(
-                                        'comment'=>$attribute->getComment()));
-                array_push($_body,$attribute->getDeclaration());
-                array_push($bodyParameters,'$_' . lcfirst($attribute->getCleanName()) . (!$attribute->isRequired()?' = ' . var_export($attribute->getDefaultValue(),true):''));
-                if(!Generator::instance()->getOptionGenerateWsdlClassFile())
-                    array_push($bodyUses,$this->getPackagedName() . '::' . $attribute->getSetterName() . '()');
-                $model = self::getModelByName($attribute->getType());
-                if($model)
-                {
-                    if($model->getIsStruct() && $model->getPackagedName() != $this->getPackagedName())
-                    {
-                        if($model->isArray())
-                            array_push($constructParameters,'\'' . $attribute->getUniqueName() . '\'=>($_' . lcfirst($attribute->getCleanName()) . ' instanceof ' . $model->getPackagedName() . ')?$_' . lcfirst($attribute->getCleanName()) . ':new ' . $model->getPackagedName() . '($_' . lcfirst($attribute->getCleanName()) . ')');
-                        else
-                            array_push($constructParameters,'\'' . $attribute->getUniqueName() . '\'=>$_' . lcfirst($attribute->getCleanName()));
-                        $paramType = $model->getPackagedName();
-                    }
-                    else
-                    {
-                        array_push($constructParameters,'\'' . $attribute->getUniqueName() . '\'=>$_' . lcfirst($attribute->getCleanName()));
-                        $paramType = $model->getInheritance()?$model->getInheritance():$attribute->getType();
-                    }
+            $attributes = $this->getAttributes(false, true);
+            foreach ($attributes as $attribute) {
+                array_push($body, array('comment' => $attribute->getComment()));
+                array_push($body, $attribute->getDeclaration());
+                array_push($bodyParameters, '$' . lcfirst($attribute->getCleanName()) . (!$attribute->isRequired() ? ' = ' . var_export($attribute->getDefaultValue(), true) : ''));
+                if (!Generator::instance()->getOptionGenerateWsdlClassFile()) {
+                    array_push($bodyUses, $this->getPackagedName() . '::' . $attribute->getSetterName() . '()');
                 }
-                else
-                {
-                    array_push($constructParameters,'\'' . $attribute->getUniqueName() . '\'=>$_' . lcfirst($attribute->getCleanName()));
+                $model = self::getModelByName($attribute->getType());
+                if ($model) {
+                    if ($model->getIsStruct() && $model->getPackagedName() != $this->getPackagedName()) {
+                        if ($model->isArray()) {
+                            array_push($constructParameters, '\'' . $attribute->getUniqueName() . '\'=>($' . lcfirst($attribute->getCleanName()) . ' instanceof ' . $model->getPackagedName() . ') ? $' . lcfirst($attribute->getCleanName()) . ' : new ' . $model->getPackagedName() . '($' . lcfirst($attribute->getCleanName()) . ')');
+                        } else {
+                            array_push($constructParameters, '\'' . $attribute->getUniqueName() . '\'=>$' . lcfirst($attribute->getCleanName()));
+                        }
+                        $paramType = $model->getPackagedName();
+                    } else {
+                        array_push($constructParameters, '\'' . $attribute->getUniqueName() . '\'=>$' . lcfirst($attribute->getCleanName()));
+                        $paramType = $model->getInheritance() ? $model->getInheritance() : $attribute->getType();
+                    }
+                } else {
+                    array_push($constructParameters, '\'' . $attribute->getUniqueName() . '\'=>$' . lcfirst($attribute->getCleanName()));
                     $paramType = $attribute->getType();
                 }
-                array_push($bodyParams,$paramType . ' $_' . lcfirst($attribute->getCleanName()));
-                unset($paramType,$model);
+                array_push($bodyParams, $paramType . ' $' . lcfirst($attribute->getCleanName()));
+                unset($paramType, $model);
             }
             /**
              * __contruct() method comments
              */
             $comments = array();
-            array_push($comments,'Constructor method for ' . $this->getCleanName());
+            array_push($comments, 'Constructor method for ' . $this->getCleanName());
             /**
              * Uses the parent constructor method
              */
-            if(Generator::instance()->getOptionGenerateWsdlClassFile())
-                array_push($comments,'@see parent::__construct()');
-            foreach($bodyUses as $bodyUse)
-                array_push($comments,'@uses ' . $bodyUse);
-            foreach($bodyParams as $bodyParam)
-                array_push($comments,'@param ' . $bodyParam);
-            array_push($comments,'@return ' . $this->getPackagedName());
-            array_push($_body,array(
-                                    'comment'=>$comments));
+            if (Generator::instance()->getOptionGenerateWsdlClassFile()) {
+                array_push($comments, '@see parent::__construct()');
+            }
+            foreach ($bodyUses as $bodyUse) {
+                array_push($comments, '@uses ' . $bodyUse);
+            }
+            foreach ($bodyParams as $bodyParam) {
+                array_push($comments, '@param ' . $bodyParam);
+            }
+            array_push($comments, '@return ' . $this->getPackagedName());
+            array_push($body, array('comment' => $comments));
             /**
              * __contruct() method body
              */
-            array_push($_body,'public function __construct(' . implode(',',$bodyParameters) . ')');
-            array_push($_body,'{');
+            array_push($body, 'public function __construct(' . implode(', ', $bodyParameters) . ')');
+            array_push($body, '{');
             $model = self::getModelByName($this->getInheritance());
             /**
              * Uses the parent constructor method
              */
-            if(Generator::instance()->getOptionGenerateWsdlClassFile())
-                array_push($_body,(($model && $model->getIsStruct())?self::getGenericWsdlClassName():'parent') . '::__construct(array(' . implode(',',$constructParameters) . '),false);');
+            if (Generator::instance()->getOptionGenerateWsdlClassFile()) {
+                array_push($body, (($model && $model->getIsStruct()) ? self::getGenericWsdlClassName() : 'parent') . '::__construct(array(' . implode(', ', $constructParameters) . '), false);');
+            }
             /**
              * Uses its own setters
              */
-            else
-            {
-                foreach($attributes as $attribute)
-                    array_push($_body,'$this->' . $attribute->getSetterName() . '($_' . lcfirst($attribute->getCleanName()) . ');');
+            else {
+                foreach ($attributes as $attribute) {
+                    array_push($body, '$this->' . $attribute->getSetterName() . '($' . lcfirst($attribute->getCleanName()) . ');');
+                }
             }
-            array_push($_body,'}');
+            array_push($body, '}');
             /**
              * Setters and getters
              */
-            foreach($this->getAttributes(false,true) as $attribute)
-            {
-                $attribute->getGetterDeclaration($_body,$this);
-                $attribute->getSetterDeclaration($_body,$this);
+            foreach ($this->getAttributes(false, true) as $attribute) {
+                $attribute->getGetterDeclaration($body, $this);
+                $attribute->getSetterDeclaration($body, $this);
             }
-            unset($comments,$bodyParameters,$bodyParams,$constructParameters);
+            unset($comments, $bodyParameters, $bodyParams, $constructParameters);
             /**
              * A array struct
              */
-            if($this->isArray())
-            {
-                foreach($this->getAttributes() as $attr)
+            if ($this->isArray()) {
+                foreach ($this->getAttributes() as $attr) {
                     $attribute = $attr;
-                if($attribute instanceof StructAttribute)
-                {
+                }
+                if ($attribute instanceof StructAttribute) {
                     $model = self::getModelByName($attribute->getType());
-                    $return = ($model && $model->getIsStruct())?$model->getPackagedName():$attribute->getType();
+                    $return = ($model && $model->getIsStruct()) ? $model->getPackagedName() : $attribute->getType();
                     $comments = array();
                     /**
                      * current() method comments
                      */
-                    array_push($comments,'Returns the current element');
-                    array_push($comments,'@see ' . self::getGenericWsdlClassName() . '::current()');
-                    array_push($comments,'@return ' . $return);
-                    array_push($_body,array(
-                                            'comment'=>$comments));
+                    array_push($comments, 'Returns the current element');
+                    array_push($comments, '@see ' . self::getGenericWsdlClassName() . '::current()');
+                    array_push($comments, '@return ' . $return);
+                    array_push($body, array('comment' => $comments));
                     /**
                      * current() method body
                      */
-                    array_push($_body,'public function current()');
-                    array_push($_body,'{');
-                    array_push($_body,'return parent::current();');
-                    array_push($_body,'}');
+                    array_push($body, 'public function current()');
+                    array_push($body, '{');
+                    array_push($body, 'return parent::current();');
+                    array_push($body, '}');
                     $comments = array();
                     /**
                      * item() method comments
                      */
-                    array_push($comments,'Returns the indexed element');
-                    array_push($comments,'@see ' . self::getGenericWsdlClassName() . '::item()');
-                    array_push($comments,'@param int $_index');
-                    array_push($comments,'@return ' . $return);
-                    array_push($_body,array(
-                                            'comment'=>$comments));
+                    array_push($comments, 'Returns the indexed element');
+                    array_push($comments, '@see ' . self::getGenericWsdlClassName() . '::item()');
+                    array_push($comments, '@param int $index');
+                    array_push($comments, '@return ' . $return);
+                    array_push($body, array('comment' => $comments));
                     /**
                      * item() method body
                      */
-                    array_push($_body,'public function item($_index)');
-                    array_push($_body,'{');
-                    array_push($_body,'return parent::item($_index);');
-                    array_push($_body,'}');
+                    array_push($body, 'public function item($index)');
+                    array_push($body, '{');
+                    array_push($body, 'return parent::item($index);');
+                    array_push($body, '}');
                     $comments = array();
                     /**
                      * first() method comments
                      */
-                    array_push($comments,'Returns the first element');
-                    array_push($comments,'@see ' . self::getGenericWsdlClassName() . '::first()');
-                    array_push($comments,'@return ' . $return);
-                    array_push($_body,array(
-                                            'comment'=>$comments));
+                    array_push($comments, 'Returns the first element');
+                    array_push($comments, '@see ' . self::getGenericWsdlClassName() . '::first()');
+                    array_push($comments, '@return ' . $return);
+                    array_push($body, array('comment' => $comments));
                     /**
                      * first() method body
                      */
-                    array_push($_body,'public function first()');
-                    array_push($_body,'{');
-                    array_push($_body,'return parent::first();');
-                    array_push($_body,'}');
+                    array_push($body, 'public function first()');
+                    array_push($body, '{');
+                    array_push($body, 'return parent::first();');
+                    array_push($body, '}');
                     $comments = array();
                     /**
                      * last() method comments
                      */
-                    array_push($comments,'Returns the last element');
-                    array_push($comments,'@see ' . self::getGenericWsdlClassName() . '::last()');
-                    array_push($comments,'@return ' . $return);
-                    array_push($_body,array(
-                                            'comment'=>$comments));
+                    array_push($comments, 'Returns the last element');
+                    array_push($comments, '@see ' . self::getGenericWsdlClassName() . '::last()');
+                    array_push($comments, '@return ' . $return);
+                    array_push($body, array('comment' => $comments));
                     /**
                      * last() method body
                      */
-                    array_push($_body,'public function last()');
-                    array_push($_body,'{');
-                    array_push($_body,'return parent::last();');
-                    array_push($_body,'}');
+                    array_push($body, 'public function last()');
+                    array_push($body, '{');
+                    array_push($body, 'return parent::last();');
+                    array_push($body, '}');
                     $comments = array();
                     /**
                      * offsetGet() method comments
                      */
-                    array_push($comments,'Returns the element at the offset');
-                    array_push($comments,'@see ' . self::getGenericWsdlClassName() . '::last()');
-                    array_push($comments,'@param int $_offset');
-                    array_push($comments,'@return ' . $return);
-                    array_push($_body,array(
-                                            'comment'=>$comments));
+                    array_push($comments, 'Returns the element at the offset');
+                    array_push($comments, '@see ' . self::getGenericWsdlClassName() . '::last()');
+                    array_push($comments, '@param int $offset');
+                    array_push($comments, '@return ' . $return);
+                    array_push($body, array('comment' => $comments));
                     /**
                      * offsetGet() method body
                      */
-                    array_push($_body,'public function offsetGet($_offset)');
-                    array_push($_body,'{');
-                    array_push($_body,'return parent::offsetGet($_offset);');
-                    array_push($_body,'}');
-                    if($model && $model->getIsRestriction())
-                    {
+                    array_push($body, 'public function offsetGet($offset)');
+                    array_push($body, '{');
+                    array_push($body, 'return parent::offsetGet($offset);');
+                    array_push($body, '}');
+                    if ($model && $model->getIsRestriction()) {
                         $comments = array();
                         /**
                          * add() method comments
                          */
-                        array_push($comments,'Add element to array');
-                        array_push($comments,'@see ' . self::getGenericWsdlClassName() . '::add()');
-                        array_push($comments,'@uses ' . $model->getPackagedName() . '::valueIsValid()');
-                        array_push($comments,'@param ' . $model->getPackagedName() . ' $_item');
-                        array_push($comments,'@return ' . $return);
-                        array_push($_body,array(
-                                                'comment'=>$comments));
+                        array_push($comments, 'Add element to array');
+                        array_push($comments, '@see ' . self::getGenericWsdlClassName() . '::add()');
+                        array_push($comments, '@uses ' . $model->getPackagedName() . '::valueIsValid()');
+                        array_push($comments, '@param ' . $model->getPackagedName() . ' $item');
+                        array_push($comments, '@return ' . $return);
+                        array_push($body, array('comment' => $comments));
                         /**
                          * add() method body
                          */
-                        array_push($_body,'public function add($_item)');
-                        array_push($_body,'{');
-                        array_push($_body,'return ' . $model->getPackagedName() . '::valueIsValid($_item)?parent::add($_item):false;');
-                        array_push($_body,'}');
+                        array_push($body, 'public function add($item)');
+                        array_push($body, '{');
+                        array_push($body, 'return ' . $model->getPackagedName() . '::valueIsValid($item) ? parent::add($item) : false;');
+                        array_push($body, '}');
                     }
                     /**
                      * getAttributeName() method comments
                      */
                     $comments = array();
-                    array_push($comments,'Returns the attribute name');
-                    array_push($comments,'@see ' . self::getGenericWsdlClassName() . '::getAttributeName()');
-                    array_push($comments,'@return string ' . $attribute->getCleanName());
-                    array_push($_body,array(
-                                            'comment'=>$comments));
+                    array_push($comments, 'Returns the attribute name');
+                    array_push($comments, '@see ' . self::getGenericWsdlClassName() . '::getAttributeName()');
+                    array_push($comments, '@return string ' . $attribute->getCleanName());
+                    array_push($body, array('comment' => $comments));
                     /**
                      * getAttributeName() method body
                      */
-                    array_push($_body,'public function getAttributeName()');
-                    array_push($_body,'{');
-                    array_push($_body,'return \'' . $attribute->getCleanName() . '\';');
-                    array_push($_body,'}');
-                    unset($comments,$model);
+                    array_push($body, 'public function getAttributeName()');
+                    array_push($body, '{');
+                    array_push($body, 'return \'' . $attribute->getCleanName() . '\';');
+                    array_push($body, '}');
+                    unset($comments, $model);
                 }
                 unset($attribute);
             }
             /**
              * __set_state method override
              */
-            if(Generator::instance()->getOptionGenerateWsdlClassFile())
-            {
+            if (Generator::instance()->getOptionGenerateWsdlClassFile()) {
                 /**
                  * __set_state() method comments
                  */
                 $comments = array();
-                array_push($comments,'Method called when an object has been exported with var_export() functions');
-                array_push($comments,'It allows to return an object instantiated with the values');
-                array_push($comments,'@see ' . self::getGenericWsdlClassName() . '::__set_state()');
-                array_push($comments,'@uses ' . self::getGenericWsdlClassName() . '::__set_state()');
-                array_push($comments,'@param array $_array the exported values');
-                array_push($comments,'@return ' . $this->getPackagedName());
-                array_push($_body,array(
-                                        'comment'=>$comments));
+                array_push($comments, 'Method called when an object has been exported with var_export() functions');
+                array_push($comments, 'It allows to return an object instantiated with the values');
+                array_push($comments, '@see ' . self::getGenericWsdlClassName() . '::__set_state()');
+                array_push($comments, '@uses ' . self::getGenericWsdlClassName() . '::__set_state()');
+                array_push($comments, '@param array $array the exported values');
+                array_push($comments, '@return ' . $this->getPackagedName());
+                array_push($body, array('comment' => $comments));
                 unset($comments);
                 /**
                  * __set_state method body
                  */
-                array_push($_body,'public static function __set_state(array $_array,$_className = __CLASS__)');
-                array_push($_body,'{');
-                array_push($_body,'return parent::__set_state($_array,$_className);');
-                array_push($_body,'}');
+                array_push($body, 'public static function __set_state(array $array, $className = __CLASS__)');
+                array_push($body, '{');
+                array_push($body, 'return parent::__set_state($array, $className);');
+                array_push($body, '}');
             }
         }
     }
@@ -367,7 +344,7 @@ class Struct extends AbstractModel
      */
     public function getContextualPart()
     {
-        return $this->getIsRestriction()?'Enum':'Struct';
+        return $this->getIsRestriction() ? 'Enum' : 'Struct';
     }
     /**
      * Returns the sub package name which the model belongs to
@@ -378,8 +355,7 @@ class Struct extends AbstractModel
      */
     public function getDocSubPackages()
     {
-        return array(
-                    $this->getIsRestriction()?'Enumerations':'Structs');
+        return array($this->getIsRestriction() ? 'Enumerations' : 'Structs');
     }
     /**
      * Returns true if the current struct is a collection of values (like an array)
@@ -389,7 +365,7 @@ class Struct extends AbstractModel
      */
     public function isArray()
     {
-        return ($this->countOwnAttributes() === 1 && stripos($this->getName(),'array') !== false);
+        return ($this->countOwnAttributes() === 1 && stripos($this->getName(), 'array') !== false);
     }
     /**
      * Returns the attributes of the struct and potentially from the parent class
@@ -397,67 +373,61 @@ class Struct extends AbstractModel
      * @uses AbstractModel::getModelByName()
      * @uses Struct::getIsStruct()
      * @uses Struct::getAttributes()
-     * @param bool $_includeInheritanceAttributes include the attributes of parent class, default parent attributes are not included. If true, then the array is an associative array containing and index "attribute" for the StructAttribute object and an index "model" for the Struct object.
-     * @param bool $_requiredFirst places the required attributes first, then the not required in order to have the _contrust method with the required attribute at first
+     * @param bool $includeInheritanceAttributes include the attributes of parent class, default parent attributes are not included. If true, then the array is an associative array containing and index "attribute" for the StructAttribute object and an index "model" for the Struct object.
+     * @param bool $requiredFirst places the required attributes first, then the not required in order to have the _contrust method with the required attribute at first
      * @return array
      */
-    public function getAttributes($_includeInheritanceAttributes = false,$_requiredFirst = false)
+    public function getAttributes($includeInheritanceAttributes = false, $requiredFirst = false)
     {
         $attributes = $this->attributes;
         /**
          * Returns the inherited attributes
          */
-        if($_includeInheritanceAttributes)
-        {
+        if ($includeInheritanceAttributes) {
             $attributes = array();
-            if($this->getInheritance() != '')
-            {
+            if ($this->getInheritance() != '') {
                 $model = AbstractModel::getModelByName($this->getInheritance());
-                while($model && $model->getIsStruct())
-                {
+                while ($model && $model->getIsStruct()) {
                     $modelAttributes = $model->getAttributes();
-                    if(count($modelAttributes))
-                    {
-                        foreach($modelAttributes as $attribute)
-                            array_push($attributes,array(
-                                                        'attribute'=>$attribute,
-                                                        'model'=>$model));
+                    if (count($modelAttributes)) {
+                        foreach ($modelAttributes as $attribute) {
+                            array_push($attributes, array('attribute' => $attribute, 'model' => $model));
+                        }
                     }
                     unset($modelAttributes);
                     $model = AbstractModel::getModelByName($model->getInheritance());
                 }
             }
             $thisAttributes = $this->getAttributes();
-            if(count($thisAttributes))
-            {
-                foreach($thisAttributes as $attribute)
-                    array_push($attributes,array(
-                                                'attribute'=>$attribute,
-                                                'model'=>$this));
+            if (count($thisAttributes)) {
+                foreach ($thisAttributes as $attribute) {
+                    array_push($attributes, array('attribute' => $attribute, 'model' => $this));
+                }
             }
             unset($thisAttributes);
         }
         /**
          * Returns the required attributes at first position
          */
-        if($_requiredFirst)
-        {
+        if ($requiredFirst) {
             $requiredAttributes = array();
             $notRequiredAttributes = array();
-            foreach($attributes as $attribute)
-            {
-                $attributeModel = $_includeInheritanceAttributes?$attribute['attribute']:$attribute;
-                if($attributeModel->isRequired())
-                    array_push($requiredAttributes,$attribute);
-                else
-                    array_push($notRequiredAttributes,$attribute);
+            foreach ($attributes as $attribute) {
+                $attributeModel = $includeInheritanceAttributes ? $attribute['attribute'] : $attribute;
+                if ($attributeModel->isRequired()) {
+                    array_push($requiredAttributes, $attribute);
+                } else {
+                    array_push($notRequiredAttributes, $attribute);
+                }
             }
             $attributes = array();
-            foreach($requiredAttributes as $attribute)
-                array_push($attributes,$attribute);
-            foreach($notRequiredAttributes as $attribute)
-                array_push($attributes,$attribute);
-            unset($requiredAttributes,$notRequiredAttributes);
+            foreach ($requiredAttributes as $attribute) {
+                array_push($attributes, $attribute);
+            }
+            foreach ($notRequiredAttributes as $attribute) {
+                array_push($attributes, $attribute);
+            }
+            unset($requiredAttributes, $notRequiredAttributes);
         }
         return $attributes;
     }
@@ -468,39 +438,39 @@ class Struct extends AbstractModel
      */
     public function countOwnAttributes()
     {
-        return count($this->getAttributes(false,false));
+        return count($this->getAttributes(false, false));
     }
     /**
      * Sets the attributes of the struct
      * @param array
      * @return array
      */
-    public function setAttributes(array $_attributes = array())
+    public function setAttributes(array $attributes = array())
     {
-        return ($this->attributes = $_attributes);
+        return ($this->attributes = $attributes);
     }
     /**
      * Adds attribute based on its original name
      * @uses AbstractModel::updateModels()
-     * @param string $_attributeName the attribute name
-     * @param string $_attributeType the attribute type
+     * @param string $attributeName the attribute name
+     * @param string $attributeType the attribute type
      * @return StructAttribute
      */
-    public function addAttribute($_attributeName,$_attributeType)
+    public function addAttribute($attributeName, $attributeType)
     {
-        $this->attributes[$_attributeName] = new StructAttribute($_attributeName,$_attributeType,$this);
+        $this->attributes[$attributeName] = new StructAttribute($attributeName, $attributeType, $this);
         self::updateModels($this);
-        return $this->attributes[$_attributeName];
+        return $this->attributes[$attributeName];
     }
     /**
      * Returns the attribute by its name, otherwise null
      * @uses Struct::getAttributes()
-     * @param string $_attributeName the original attribute name
+     * @param string $attributeName the original attribute name
      * @return StructAttribute|null
      */
-    public function getAttribute($_attributeName)
+    public function getAttribute($attributeName)
     {
-        return array_key_exists($_attributeName,$this->getAttributes())?$this->attributes[$_attributeName]:null;
+        return array_key_exists($attributeName, $this->getAttributes()) ? $this->attributes[$attributeName] : null;
     }
     /**
      * Returns the isRestriction value
@@ -513,14 +483,14 @@ class Struct extends AbstractModel
     /**
      * Sets the isRestriction value
      * @uses AbstractModel::updateModels()
-     * @param bool $_isRestriction
+     * @param bool $isRestriction
      * @return bool
      */
-    public function setIsRestriction($_isRestriction = true)
+    public function setIsRestriction($isRestriction = true)
     {
-        $this->isRestriction = $_isRestriction;
+        $this->isRestriction = $isRestriction;
         self::updateModels($this);
-        return $_isRestriction;
+        return $isRestriction;
     }
     /**
      * Returns the isStruct value
@@ -533,14 +503,14 @@ class Struct extends AbstractModel
     /**
      * Sets the isStruct value
      * @uses AbstractModel::updateModels()
-     * @param bool $_isStruct
+     * @param bool $isStruct
      * @return bool
      */
-    public function setIsStruct($_isStruct = true)
+    public function setIsStruct($isStruct = true)
     {
-        $this->isStruct = $_isStruct;
+        $this->isStruct = $isStruct;
         self::updateModels($this);
-        return $_isStruct;
+        return $isStruct;
     }
     /**
      * Returns the values for an enumeration
@@ -553,41 +523,42 @@ class Struct extends AbstractModel
     /**
      * Sets the values for an enumeration
      * @uses AbstractModel::updateModels()
-     * @param array $_values
+     * @param array $values
      * @return array
      */
-    private function setValues(array $_values = array())
+    private function setValues(array $values = array())
     {
-        $this->values = $_values;
+        $this->values = $values;
         self::updateModels($this);
-        return $_values;
+        return $values;
     }
     /**
      * Adds value to values array
      * @uses AbstractModel::updateModels()
      * @uses Struct::getValue()
      * @uses Struct::getValues()
-     * @param mixed $_value the original value
+     * @param mixed $value the original value
      */
-    public function addValue($_value)
+    public function addValue($value)
     {
-        if(!$this->getValue($_value))
-            array_push($this->values,new StructValue($_value,count($this->getValues()),$this));
+        if (!$this->getValue($value)) {
+            array_push($this->values, new StructValue($value, count($this->getValues()), $this));
+        }
         self::updateModels($this);
     }
     /**
      * Gets the value object for the given value
      * @uses Struct::getValues()
      * @uses AbstractModel::getName()
-     * @param string $_value Value name
+     * @param string $value Value name
      * @return StructValue|null
      */
-    public function getValue($_value)
+    public function getValue($value)
     {
-        foreach($this->getValues() as $value)
-        {
-            if($value->getName() === $_value)
+        foreach ($this->getValues() as $value) {
+            if ($value->getName() === $value) {
                 return $value;
+            }
         }
         return null;
     }
