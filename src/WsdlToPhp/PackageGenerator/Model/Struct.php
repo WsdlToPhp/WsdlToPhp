@@ -9,6 +9,11 @@ use WsdlToPhp\PackageGenerator\Generator\Generator;
  */
 class Struct extends AbstractModel
 {
+    const
+        CONTEXTUAL_PART_STRUCT       = 'Struct',
+        DOC_SUB_PACKAGE_STRUCTS      = 'Structs',
+        CONTEXTUAL_PART_ENUMERATION  = 'Enum',
+        DOC_SUB_PACKAGE_ENUMERATIONS = 'Enumerations';
     /**
      * Attributes of the struct
      * @var array
@@ -344,7 +349,7 @@ class Struct extends AbstractModel
      */
     public function getContextualPart()
     {
-        return $this->getIsRestriction() ? 'Enum' : 'Struct';
+        return $this->getIsRestriction() ? self::CONTEXTUAL_PART_ENUMERATION : self::CONTEXTUAL_PART_STRUCT;
     }
     /**
      * Returns the sub package name which the model belongs to
@@ -355,7 +360,7 @@ class Struct extends AbstractModel
      */
     public function getDocSubPackages()
     {
-        return array($this->getIsRestriction() ? 'Enumerations' : 'Structs');
+        return array($this->getIsRestriction() ? self::DOC_SUB_PACKAGE_ENUMERATIONS : self::DOC_SUB_PACKAGE_STRUCTS);
     }
     /**
      * Returns true if the current struct is a collection of values (like an array)
@@ -514,7 +519,7 @@ class Struct extends AbstractModel
     }
     /**
      * Returns the values for an enumeration
-     * @return array
+     * @return array[StructValue]
      */
     public function getValues()
     {
@@ -555,9 +560,9 @@ class Struct extends AbstractModel
      */
     public function getValue($value)
     {
-        foreach ($this->getValues() as $value) {
-            if ($value->getName() === $value) {
-                return $value;
+        foreach ($this->getValues() as $structValue) {
+            if ($structValue->getName() === $value) {
+                return $structValue;
             }
         }
         return null;
