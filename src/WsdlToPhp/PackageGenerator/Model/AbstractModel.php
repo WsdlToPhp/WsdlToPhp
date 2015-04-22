@@ -2,6 +2,8 @@
 
 namespace WsdlToPhp\PackageGenerator\Model;
 
+use WsdlToPhp\PackageGenerator\ConfigurationReader\ReservedKeywords;
+
 use WsdlToPhp\PackageGenerator\Generator\Generator;
 
 /**
@@ -44,12 +46,6 @@ abstract class AbstractModel
      * @var array
      */
     private static $models = array();
-    /**
-     * Reserved PHP keywords
-     * Plus {PackageName}WsdlClass specific/common methods
-     * @var string
-     */
-    private static $phpReserverKeywords = '__construct|__destruct|__call|__callStatic|__get|__set|__isset|__unset|__sleep|__wakeup|__toString|__invoke|__set_state|__clone|getSoapClient|setSoapClient|initSoapClient|setLocation|getDefaultWsdlOptions|getLastRequest|getLastResponse|getFormatedXml|add|getResult|length|count|current|item|offsetGet|offsetSet|key|last|first|next|offsetExists|offsetUnset|rewind|setResult|toSend|valueIsValid|valid|getLastError|setLastError|saveLastError|getLastErrorForMethod|getInternArrayToIterate|setInternArrayToIterate|getInternArrayToIterateOffset|initInternArrayToIterate|setInternArrayToIterateOffset|getInternArrayToIterateIsArray|setInternArrayToIterateIsArray|getAttributeName|__toString|_set|_get|__halt_compiler|abstract|and|array|as|break|callable|case|catch|class|clone|const|continue|declare|default|die|do|echo|else|elseif|empty|enddeclare|endfor|endforeach|endif|endswitch|endwhile|eval|exit|extends|final|for|foreach|function|global|goto|if|implements|include|include_once|instanceof|insteadof|interface|isset|list|namespace|new|or|print|private|protected|public|require|require_once|return|static|switch|throw|trait|try|unset|use|var|while|xor';
     /**
      * Replaced keywords time in order to generate unique new keyword
      * @var array
@@ -531,15 +527,7 @@ abstract class AbstractModel
     public static function replaceReservedPhpKeyword($_keyword,$_context)
     {
         $phpReservedKeywordFound = '';
-        foreach(explode('|',self::$phpReserverKeywords) as $keyword)
-        {
-            if(strtolower($keyword) == strtolower($_keyword))
-            {
-                $phpReservedKeywordFound = $keyword;
-                break;
-            }
-        }
-        if(!empty($phpReservedKeywordFound))
+        if(ReservedKeywords::instance()->is($_keyword))
         {
             $keywordKey = $phpReservedKeywordFound . '_' . $_context;
             if(!array_key_exists($keywordKey,self::$replacedReservedPhpKeywords))
