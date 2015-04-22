@@ -1842,7 +1842,6 @@ class Generator extends \SoapClient
     protected function manageWsdlNode($wsdlLocation = '', $domNode = null, $fromWsdlLocation = '', $nodeNameMatch = null)
     {
         if (empty($nodeNameMatch)) {
-
             if (stripos($domNode->nodeName, 'import') !== false || stripos($domNode->nodeName, 'include') !== false) {
                 /**
                  * Current node is type of "import" or "include"
