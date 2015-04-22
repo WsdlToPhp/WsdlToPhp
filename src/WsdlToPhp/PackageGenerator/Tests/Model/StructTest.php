@@ -2,9 +2,7 @@
 namespace WsdlToPhp\PackageGenerator\Tests;
 
 use WsdlToPhp\PackageGenerator\Model\StructValue;
-
 use WsdlToPhp\PackageGenerator\Model\Struct;
-use WsdlToPhp\PackageGenerator\Tests\TestCase;
 
 class StructTest extends TestCase
 {

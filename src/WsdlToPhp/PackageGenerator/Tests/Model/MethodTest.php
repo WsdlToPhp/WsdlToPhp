@@ -4,7 +4,6 @@ namespace WsdlToPhp\PackageGenerator\Tests;
 
 use WsdlToPhp\PackageGenerator\Model\Service;
 use WsdlToPhp\PackageGenerator\Model\Method;
-use WsdlToPhp\PackageGenerator\Tests\TestCase;
 
 class MethodTest extends TestCase
 {
