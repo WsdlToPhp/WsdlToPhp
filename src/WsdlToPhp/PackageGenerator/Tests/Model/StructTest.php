@@ -8,6 +8,11 @@ use WsdlToPhp\PackageGenerator\Tests\TestCase;
 
 class StructTest extends TestCase
 {
+    /**
+     * @param string $name
+     * @param bool $isStruct
+     * @return Struct
+     */
     public static function instance($name, $isStruct)
     {
         return new Struct($name, $isStruct);
