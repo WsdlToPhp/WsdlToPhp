@@ -25,6 +25,41 @@ To generate a package, nothing as simple as this:
     $ cd /path/to/where/the/package/must/be/generated/
     $ ls -la => enjoy!
 
+Usage with full options
+-----------------------
+
+To generate a package, nothing as simple as this:
+
+    $ cd /path/to/WsdlToPhp/PackageGenerator/
+    $ composer install
+    $ php console wsdltophp:generate:package -h => display help
+    $ php console wsdltophp:generate:package \
+        --wsdl-urlorpath="http://developer.ebay.com/webservices/latest/ebaySvc.wsdl" \
+        --wsdl-proxy-host="****************************" \
+        --wsdl-proxy-port=*******  \
+        --wsdl-proxy-login="*******" \
+        --wsdl-proxy-password="*******" \
+        --wsdl-destination='/var/www/Api/' \
+        --wsdl-prefix="Api" \
+        --wsdl-category="cat" \
+        --wsdl-subcategory="" \
+        --wsdl-gathermethods="start" \
+        --wsdl-reponseasobj=false \
+        --wsdl-sendarrayparam=false \
+        --wsdl-genautoload=true \
+        --wsdl-genwsdlclass=true \
+        --wsdl-paramsasarray=false \
+        --wsdl-inherits="" \
+        --wsdl-genericconstants=false \
+        --wsdl-gentutorial=true \
+        --wsdl-addcomments="date:2015-04-22" \
+        --wsdl-addcomments="author:Me" \
+        --wsdl-addcomments="release:1.1.0" \
+        --wsdl-addcomments="team:Dream" \
+        --force
+    $ cd /var/www/Api/
+    $ ls -la => enjoy!
+
 Tests
 -----
 
