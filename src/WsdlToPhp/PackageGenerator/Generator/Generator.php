@@ -9,7 +9,7 @@ use WsdlToPhp\PackageGenerator\Model\StructAttribute;
 use WsdlToPhp\PackageGenerator\Model\StructValue;
 use WsdlToPhp\PackageGenerator\Model\Service;
 use WsdlToPhp\PackageGenerator\Model\Method;
-use WsdlToPhp\PackageGenerator\ConfigurationReaders\GeneratorOptions;
+use WsdlToPhp\PackageGenerator\ConfigurationReader\GeneratorOptions;
 
 /**
  * Class Generator

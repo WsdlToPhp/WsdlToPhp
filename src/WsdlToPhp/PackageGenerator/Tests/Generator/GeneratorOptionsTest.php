@@ -3,7 +3,7 @@
 namespace WsdlToPhp\PackageGenerator\Tests\Generator;
 
 use WsdlToPhp\PackageGenerator\Tests\TestCase;
-use WsdlToPhp\PackageGenerator\ConfigurationReaders\GeneratorOptions;
+use WsdlToPhp\PackageGenerator\ConfigurationReader\GeneratorOptions;
 
 class GeneratorOptionsTest extends TestCase
 {

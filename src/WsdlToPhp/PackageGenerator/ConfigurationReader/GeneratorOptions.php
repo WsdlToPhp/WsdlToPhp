@@ -1,6 +1,6 @@
 <?php
 
-namespace WsdlToPhp\PackageGenerator\ConfigurationReaders;
+namespace WsdlToPhp\PackageGenerator\ConfigurationReader;
 
 class GeneratorOptions extends AbstractYamlReader
 {
@@ -31,6 +31,60 @@ class GeneratorOptions extends AbstractYamlReader
         GET_RESPONSE_AS_WSDL_OBJECT = 'response_as_wsdl_object',
         INHERITS_FROM_IDENTIFIER    = 'inherits_from_identifier',
         SEND_PARAMETERS_AS_ARRAY    = 'send_parameters_as_array';
+    /**
+     * Generator's options
+     * @var array
+     */
+    protected $options;
+    /**
+     * @param string $filename
+     */
+    protected function __construct($filename)
+    {
+        $this->options = array();
+        $this->parseOptions($filename);
+    }
+    /**
+     * Parse options for generator
+     * @param string options's file to parse
+     */
+    protected function parseOptions($filename)
+    {
+        $this->options = $this->loadYaml($filename);
+    }
+    /**
+     * Returns the option value
+     * @throws InvalidArgumentException
+     * @param string $optionName
+     * @return string|bool
+     */
+    public function getOptionValue($optionName)
+    {
+        if (!isset($this->options[$optionName])) {
+            throw new \InvalidArgumentException(sprintf('Invalid option name "%s", possible options: %s', $optionName, implode(', ', array_keys($this->options))));
+        }
+        return array_key_exists('value', $this->options[$optionName]) ? $this->options[$optionName]['value'] : $this->options[$optionName]['default'];
+    }
+    /**
+     * Allows to add an option and set its value
+     * @throws InvalidArgumentException
+     * @param string $optionName
+     * @return \WsdlToPhp\Generator\Options
+     */
+    public function setOptionValue($optionName, $optionValue, array $values = array())
+    {
+        if (!isset($this->options[$optionName])) {
+            $this->options[$optionName] = array(
+                    'value'  => $optionValue,
+                    'values' => $values,
+            );
+        } elseif(!empty($this->options[$optionName]['values']) && !in_array($optionValue, $this->options[$optionName]['values'], true)) {
+            throw new \InvalidArgumentException(sprintf('Invalid value "%s" for option "%s", possible values: %s', $optionValue, $optionName, implode(', ', $this->options[$optionName]['values'])));
+        } else {
+            $this->options[$optionName]['value'] = $optionValue;
+        }
+        return $this;
+    }
     /**
      * @param string options's file to parse
      * @return GeneratorOptions
