@@ -710,10 +710,10 @@ class Generator extends \SoapClient
     private function initServices()
     {
         self::auditInit('init_services');
-        $functions = $this->__getFunctions();
-        if (is_array($functions) && count($functions)) {
-            foreach ($functions as $function) {
-                $infos = explode(' ', $function);
+        $methods = $this->__getFunctions();
+        if (is_array($methods) && count($methods)) {
+            foreach ($methods as $method) {
+                $infos = explode(' ', $method);
                 /**
                  * "Regular" SOAP Style
                  */
@@ -734,7 +734,7 @@ class Generator extends \SoapClient
                      * So we define the return type as an array and reset the informations to use to extract method name and parameters
                      */
                     if (stripos($infos[0], 'list(') === 0) {
-                        $infos = explode(' ', preg_replace('/(list\(.*\)\s)/i', '', $function));
+                        $infos = explode(' ', preg_replace('/(list\(.*\)\s)/i', '', $method));
                         array_unshift($infos, 'array');
                     }
                     /**
@@ -1022,10 +1022,10 @@ class Generator extends \SoapClient
      * @uses ReflectionMethod::getName()
      * @uses ReflectionMethod::getParameters()
      * @param string $rootDirectory the direcoty
-     * @param array $functionsClassesFiles the generated class files
+     * @param array $methodsClassesFiles the generated class files
      * @return bool true|false
      */
-    private function generateTutorialFile($rootDirectory, array $functionsClassesFiles = array())
+    private function generateTutorialFile($rootDirectory, array $methodsClassesFiles = array())
     {
         if ($this->getOptionGenerateAutoloadFile() === true) {
             $pathToTutorialTemplate = dirname(__FILE__) . '/../Resources/templates/Default/sample.php';
@@ -1037,10 +1037,10 @@ class Generator extends \SoapClient
             } else {
                 require_once $rootDirectory . '/' . self::getPackageName() . 'Autoload.php';
             }
-            if (class_exists('ReflectionClass') && count($functionsClassesFiles)) {
+            if (class_exists('ReflectionClass') && count($methodsClassesFiles)) {
                 self::auditInit('generate_tutorial');
                 $content = '';
-                foreach ($functionsClassesFiles as $classFilePath) {
+                foreach ($methodsClassesFiles as $classFilePath) {
                     $pathinfo = pathinfo($classFilePath);
                     $className = str_replace('.' . $pathinfo['extension'], '', $pathinfo['filename']);
                     if (class_exists($className)) {
@@ -1370,28 +1370,28 @@ class Generator extends \SoapClient
      * @uses Service::addMethod()
      * @uses Method::setIsUnique()
      * @param string $methodName the original function name
-     * @param string $functionParameter the original parameter name
-     * @param string $functionReturn the original return name
+     * @param string $methodParameter the original parameter name
+     * @param string $methodReturn the original return name
      * @return void
      */
-    private function addService($methodName, $functionParameter, $functionReturn)
+    private function addService($methodName, $methodParameter, $methodReturn)
     {
         $serviceName = $this->getServiceName($methodName);
         if (!$this->getService($serviceName)) {
             $this->services[$serviceName] = new Service($serviceName);
         }
-        $serviceFunction = $this->getServiceMethod($methodName);
+        $serviceMethod = $this->getServiceMethod($methodName);
         /**
-         * Service function does not already exist, register it
+         * Service method does not already exist, register it
          */
-        if (!$serviceFunction) {
-            $this->getService($serviceName)->addMethod($methodName, $functionParameter, $functionReturn);
-        } elseif ($serviceFunction->getParameterType() != $functionParameter) {
+        if (!$serviceMethod) {
+            $this->getService($serviceName)->addMethod($methodName, $methodParameter, $methodReturn);
+        } elseif ($serviceMethod->getParameterType() != $methodParameter) {
             /**
-             * Service function exists with a different signature, register it too by identifying the service functions as non unique functions
+             * Service method exists with a different signature, register it too by identifying the service functions as non unique functions
              */
-            $serviceFunction->setIsUnique(false);
-            $this->getService($serviceName)->addMethod($methodName, $functionParameter, $functionReturn, false);
+            $serviceMethod->setIsUnique(false);
+            $this->getService($serviceName)->addMethod($methodName, $methodParameter, $methodReturn, false);
         }
     }
     /**
@@ -1404,17 +1404,17 @@ class Generator extends \SoapClient
         return array_key_exists($serviceName, $this->getServices()) ? $this->services[$serviceName] : null;
     }
     /**
-     * Returns the function
+     * Returns the method
      * @uses Generator::getServiceName()
      * @uses Generator::getService()
-     * @uses Service::getFunction()
+     * @uses Service::getMethod()
      * @param string $methodName the original function name
-     * @param mixed $functionParameter the original function paramter
+     * @param mixed $methodParameter the original function paramter
      * @return Method|null
      */
     private function getServiceMethod($methodName)
     {
-        return $this->getService($this->getServiceName($methodName)) ? $this->getService($this->getServiceName($methodName))->getFunction($methodName) : null;
+        return $this->getService($this->getServiceName($methodName)) ? $this->getService($this->getServiceName($methodName))->getMethod($methodName) : null;
     }
     /**
      * Sets the service function documentation
@@ -1435,14 +1435,14 @@ class Generator extends \SoapClient
      * @uses Generator::getServiceMethod()
      * @uses AbstractModel::addMeta()
      * @param string $methodName the service name
-     * @param string $functionInfoName the function name
-     * @param string $functionInfoValue the function info value
+     * @param string $methodInfoName the method name
+     * @param string $methodInfoValue the method info value
      * @return void
      */
-    private function addServiceFunctionMeta($methodName, $functionInfoName, $functionInfoValue)
+    private function addServiceFunctionMeta($methodName, $methodInfoName, $methodInfoValue)
     {
         if ($this->getServiceMethod($methodName)) {
-            $this->getServiceMethod($methodName)->addMeta($functionInfoName, $functionInfoValue);
+            $this->getServiceMethod($methodName)->addMeta($methodInfoName, $methodInfoValue);
         }
     }
     /**
@@ -2862,9 +2862,9 @@ class Generator extends \SoapClient
         return Utils::getPart($this->options, $model, GeneratorOptions::GATHER_METHODS);
     }
     /**
-     * Returns the service name associated to the function/operation name in order to gather them in one service class
+     * Returns the service name associated to the method/operation name in order to gather them in one service class
      * @uses Generator::getGather()
-     * @param string $methodName original operation/function anme
+     * @param string $methodName original operation/method name
      * @return string
      */
     private function getServiceName($methodName)

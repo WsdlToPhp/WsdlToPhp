@@ -5,20 +5,20 @@ namespace WsdlToPhp\PackageGenerator\Model;
 use WsdlToPhp\PackageGenerator\Generator\Generator;
 
 /**
- * Class Service stands for an available service containing the functions/operations described in the WSDL
+ * Class Service stands for an available service containing the methods/operations described in the WSDL
  */
 class Service extends AbstractModel
 {
     /**
-     * Store the functions of the service
+     * Store the methods of the service
      * @var array
      */
-    private $functions = array();
+    private $methods = array();
     /**
      * Main constructor
      * @see AbstractModel::__construct()
-     * @uses Service::setFunctions()
-     * @param string $name the function name
+     * @uses Service::setMethods()
+     * @param string $name the service name
      * @return Service
      */
     public function __construct($name)
@@ -52,7 +52,7 @@ class Service extends AbstractModel
      * @uses AbstractModel::getMetaValue()
      * @uses AbstractModel::cleanString()
      * @uses Struct::getContextualPart()
-     * @uses Service::getFunctions()
+     * @uses Service::getMethods()
      * @uses Method::getReturnType()
      * @uses Method::getComment()
      * @uses Method::getBody()
@@ -63,29 +63,29 @@ class Service extends AbstractModel
      */
     public function getClassBody(&$body)
     {
-        if (count($this->getFunctions())) {
+        if (count($this->getMethods())) {
             $returnTypes = array();
             $soapHeaders = array();
             /**
              * Gather informations
              */
-            foreach ($this->getFunctions() as $function) {
+            foreach ($this->getMethods() as $method) {
                 /**
                  * Gather return types
                  */
-                $model = self::getModelByName($function->getReturnType());
+                $model = self::getModelByName($method->getReturnType());
                 if ($model && $model->getIsStruct()) {
                     array_push($returnTypes, $model->getPackagedName());
                     unset($model);
                 } else {
-                    array_push($returnTypes, $function->getReturnType());
+                    array_push($returnTypes, $method->getReturnType());
                 }
                 /**
                  * Gather SoapHeader informations
                  */
-                $soapHeaderNames = $function->getMetaValue('SOAPHeaderNames', array());
-                $soapHeaderTypes = $function->getMetaValue('SOAPHeaderTypes', array());
-                $soapHeaderNameSpaces = $function->getMetaValue('SOAPHeaderNamespaces', '');
+                $soapHeaderNames = $method->getMetaValue('SOAPHeaderNames', array());
+                $soapHeaderTypes = $method->getMetaValue('SOAPHeaderTypes', array());
+                $soapHeaderNameSpaces = $method->getMetaValue('SOAPHeaderNamespaces', '');
                 if (count($soapHeaderNames) && count($soapHeaderNames) == count($soapHeaderTypes)) {
                     foreach ($soapHeaderNames as $index => $soapHeaderName) {
                         $soapHeaderType = str_replace('{@link ', '', $soapHeaderTypes[$index]);
@@ -146,9 +146,9 @@ class Service extends AbstractModel
             /**
              * Generates service methods
              */
-            foreach ($this->getFunctions() as $function) {
-                array_push($body, array('comment' => $function->getComment()));
-                $function->getBody($body);
+            foreach ($this->getMethods() as $method) {
+                array_push($body, array('comment' => $method->getComment()));
+                $method->getBody($body);
             }
             /**
              * Generates the override getResult method if needed
@@ -177,50 +177,50 @@ class Service extends AbstractModel
         }
     }
     /**
-     * Returns the functions of the service
-     * @return array
+     * Returns the methods of the service
+     * @return array[Method]
      */
-    public function getFunctions()
+    public function getMethods()
     {
-        return $this->functions;
+        return $this->methods;
     }
     /**
-     * Sets the functions
-     * @param array $functions
+     * Sets the methods
+     * @param array $methods
      * @return array
      */
-    private function setFunctions(array $functions = array())
+    private function setMethods(array $methods = array())
     {
-        return ($this->functions = $functions);
+        return ($this->methods = $methods);
     }
     /**
-     * Adds a function to the service
+     * Adds a method to the service
      * @uses Method::setIsUnique()
-     * @param string $functionName original function name
-     * @param string $functionParameterType original parameter type/name
-     * @param string $functionReturnType original return type/name
-     * @param bool $functionIsUnique original isUnique value
+     * @param string $methodName original method name
+     * @param string $methodParameterType original parameter type/name
+     * @param string $methodReturnType original return type/name
+     * @param bool $methodIsUnique original isUnique value
      * @return Method
      */
-    public function addMethod($functionName, $functionParameterType, $functionReturnType, $functionIsUnique = true)
+    public function addMethod($methodName, $methodParameterType, $methodReturnType, $methodIsUnique = true)
     {
-        $function = new Method($functionName, $functionParameterType, $functionReturnType, $this);
-        $function->setIsUnique($functionIsUnique);
-        array_push($this->functions, $function);
-        return $function;
+        $method = new Method($methodName, $methodParameterType, $methodReturnType, $this);
+        $method->setIsUnique($methodIsUnique);
+        array_push($this->methods, $method);
+        return $method;
     }
     /**
-     * Returns the function by its original name
-     * @uses Service::getFunctions()
+     * Returns the method by its original name
+     * @uses Service::getMethods()
      * @uses AbstractModel::getName()
-     * @param string $functionName the original function name
+     * @param string $methodName the original method name
      * @return Method|null
      */
-    public function getFunction($functionName)
+    public function getMethod($methodName)
     {
-        foreach ($this->getFunctions() as $function) {
-            if ($function->getName() === $functionName) {
-                return $function;
+        foreach ($this->getMethods() as $method) {
+            if ($method->getName() === $methodName) {
+                return $method;
             }
         }
         return null;
