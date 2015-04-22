@@ -28,16 +28,18 @@ class Utils
                 $mainCatPart = self::getPart($options, $model, GeneratorOptions::CATEGORY);
                 switch ($options->getCategory()) {
                     case GeneratorOptions::VALUE_END:
-                        if ($string != $mainCatPart && strlen($mainCatPart) < strlen($string))
+                        if ($string != $mainCatPart && strlen($mainCatPart) < strlen($string)) {
                             $string = substr($string, 0, strlen($string) - strlen($mainCatPart));
-                        elseif ($string == $mainCatPart)
+                        } elseif ($string == $mainCatPart) {
                             $string = '';
+                        }
                         break;
                     case GeneratorOptions::VALUE_START:
-                        if ($string != $mainCatPart && strlen($mainCatPart) < strlen($string))
+                        if ($string != $mainCatPart && strlen($mainCatPart) < strlen($string)) {
                             $string = substr($string, strlen($mainCatPart));
-                        elseif ($string == $mainCatPart)
+                        } elseif ($string == $mainCatPart) {
                             $string = '';
+                        }
                         break;
                     default:
                         $string = '';
