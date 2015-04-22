@@ -93,12 +93,17 @@ class GeneratePackageCommand extends AbstractCommand
 
         $this->setGenerator($this->getInstanceOfGenerator($wsdlUrl, $wsdlLogin, $wsdlPassword, $wsdlOptions));
 
-        $this->definePackageGenerationOptions();
+        $packageGenerationOptions = $this->definePackageGenerationOptions();
 
         if ($this->canExecute()) {
             $this->getGenerator()->generateClasses($packageName, $packageDestination);
         } else {
             $this->writeLn("  Generation not launched, use --force to force generation");
+            $this->writeLn("  Options used:");
+            array_walk($packageGenerationOptions, function(&$value, $index){
+                $value = sprintf("%s: %s", $index, $value);
+            });
+            $this->writeLn("    " . implode(PHP_EOL . '    ', $packageGenerationOptions));
         }
 
         $this->writeLn(" End");
@@ -157,12 +162,14 @@ class GeneratePackageCommand extends AbstractCommand
      */
     protected function definePackageGenerationOptions()
     {
+        $options = array();
         if ($this->generator instanceof Generator) {
             foreach ($this->getPackageGenerationCommandLineOptions() as $optionName=>$optionMethod) {
-                $optionValue = $this->input->getOption($optionName);
+                $optionValue = $this->formatOptionValue($this->input->getOption($optionName));
                 if ($optionValue !== null) {
                     $setOption = sprintf('setOption%s' , $optionMethod);
                     if (method_exists($this->generator, $setOption)) {
+                        $options[$optionName] = $optionValue;
                         call_user_func_array(array(
                             $this->generator,
                             $setOption,
@@ -173,5 +180,20 @@ class GeneratePackageCommand extends AbstractCommand
                 }
             }
         }
+        return $options;
+    }
+
+    /**
+     * @param mixed $optionValue
+     * @return boolean|mixed
+     */
+    protected function formatOptionValue($optionValue)
+    {
+        if ($optionValue === 'true' || (is_numeric($optionValue) && (int)$optionValue === 1)) {
+            return true;
+        } elseif ($optionValue === 'false' || (is_numeric($optionValue) && (int)$optionValue === 0)) {
+            return false;
+        }
+        return $optionValue;
     }
 }
