@@ -9,7 +9,7 @@ abstract class AbstractYamlReader
     /**
      * @var Options
      */
-    private static $instance;
+    private static $instances;
     /**
      * Path to file to parse
      * @var string
@@ -35,12 +35,12 @@ abstract class AbstractYamlReader
      */
     public static function instance($filename = null)
     {
-        if (!isset(self::$instance)) {
+        if (!isset(self::$instances[get_called_class()])) {
             if (empty($filename) || !is_file($filename)) {
                 throw new \InvalidArgumentException(sprintf('Unable to locate file "%s"', $filename));
             }
-            self::$instance = new static($filename);
+            self::$instances[get_called_class()] = new static($filename);
         }
-        return self::$instance;
+        return self::$instances[get_called_class()];
     }
 }
