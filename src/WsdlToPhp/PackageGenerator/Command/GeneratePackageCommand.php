@@ -13,7 +13,7 @@ class GeneratePackageCommand extends AbstractCommand
      * @var Generator
      */
     protected $generator;
-    
+
     /**
      * @return Generator
      */
@@ -21,7 +21,7 @@ class GeneratePackageCommand extends AbstractCommand
     {
         return $this->generator;
     }
-    
+
     /**
      * @param Generator $generator
      * @return GeneratePackageCommand
@@ -31,7 +31,7 @@ class GeneratePackageCommand extends AbstractCommand
         $this->generator = $generator;
         return $this;
     }
-    
+
     /**
      * @param string $wsdlUrl
      * @param string $wsdlLogin
@@ -43,7 +43,7 @@ class GeneratePackageCommand extends AbstractCommand
     {
         return Generator::instance($wsdlUrl, $wsdlLogin, $wsdlPassword, $wsdlOptions);
     }
-    
+
     /**
      * @see \WsdlToPhp\PackageGenerator\Command\AbstractCommand::configure()
      */
@@ -75,7 +75,7 @@ class GeneratePackageCommand extends AbstractCommand
             ->addOption('wsdl-inherits', 'wsdl-inh', InputOption::VALUE_OPTIONAL, 'Astracts struct base name to identify abtract structs, can be avoided as it will be soon removed')
             ->addOption('wsdl-paramsasarray', 'wsdl-pararray', InputOption::VALUE_OPTIONAL, 'Enable/Disable usage of a \'parameters\' parameter in an array to contain request parameters, disabled in most cases');
     }
-    
+
     /**
      * @see \Sdc\AppBundle\Command\Command::execute()
      */
@@ -90,20 +90,20 @@ class GeneratePackageCommand extends AbstractCommand
         $packageName        = $this->input->getOption('wsdl-prefix');
         $packageDestination = $this->input->getOption('wsdl-destination');
         $wsdlOptions        = $this->defineWsdlOptions();
-        
+
         $this->setGenerator($this->getInstanceOfGenerator($wsdlUrl, $wsdlLogin, $wsdlPassword, $wsdlOptions));
-        
+
         $this->definePackageGenerationOptions();
-        
+
         if ($this->canExecute()) {
             $this->getGenerator()->generateClasses($packageName, $packageDestination);
         } else {
             $this->writeLn("  Generation not launched, use --force to force generation");
         }
-        
+
         $this->writeLn(" End");
     }
-    
+
     /**
      * @return array
      */
@@ -114,7 +114,7 @@ class GeneratePackageCommand extends AbstractCommand
         $wsdlProxyPort  = $this->input->getOption('wsdl-proxy-port');
         $wsdlProxyLogin = $this->input->getOption('wsdl-proxy-login');
         $wsdlProxyPass  = $this->input->getOption('wsdl-proxy-password');
-        
+
         if (!empty($wsdlProxyHost)) {
             $options['proxy_host'] = $wsdlProxyHost;
         }
@@ -127,10 +127,10 @@ class GeneratePackageCommand extends AbstractCommand
         if (!empty($wsdlProxyPass)) {
             $options['proxy_password'] = $wsdlProxyPass;
         }
-        
+
         return $options;
     }
-    
+
     /**
      * @return array
      */
@@ -151,7 +151,7 @@ class GeneratePackageCommand extends AbstractCommand
             'wsdl-paramsasarray'    => 'SendParametersAsArray',
         );
     }
-    
+
     /**
      * @return array
      */
@@ -159,14 +159,15 @@ class GeneratePackageCommand extends AbstractCommand
     {
         if ($this->generator instanceof Generator) {
             foreach ($this->getPackageGenerationCommandLineOptions() as $optionName=>$optionMethod) {
-                if ($this->input->hasOption($optionName)) {
+                $optionValue = $this->input->getOption($optionName);
+                if ($optionValue !== null) {
                     $setOption = sprintf('setOption%s' , $optionMethod);
                     if (method_exists($this->generator, $setOption)) {
                         call_user_func_array(array(
-                            $this->generator, 
+                            $this->generator,
                             $setOption,
                         ), array(
-                            $this->input->getOption($optionName),
+                            $optionValue,
                         ));
                     }
                 }
