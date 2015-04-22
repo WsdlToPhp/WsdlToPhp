@@ -69,6 +69,9 @@ class Method extends AbstractModel
         $methodName = self::replaceReservedPhpKeyword($methodName, $this->getOwner()->getPackagedName());
         return self::uniqueName($methodName, $this->getOwner()->getPackagedName());
     }
+    public function getClassBody(&$class)
+    {
+    }
     /**
      * Returns the comment lines for this function
      * @see AbstractModel::getComment()
@@ -220,8 +223,9 @@ class Method extends AbstractModel
                 unset($model);
             }
             $soapParametersStart = implode(', ', $soapParametersStart);
-        } else
+        } else {
             $soapParametersStart = $soapParametersEnd = '';
+        }
         /**
          * Soap call
          */
@@ -233,8 +237,9 @@ class Method extends AbstractModel
         if (!empty($soapParametersStart) && $this->nameIsClean()) {
             $sendParametersAsArrayStart = (Generator::instance()->getOptionSendParametersAsArray() ? 'array(\'parameters\'=>' : '');
             $sendParametersAsArrayEnd = (Generator::instance()->getOptionSendParametersAsArray() ? ')' : '');
-        } else
+        } else {
             $sendParametersAsArrayStart = $sendParametersAsArrayEnd = '';
+        }
         /**
          * Send an array
          */

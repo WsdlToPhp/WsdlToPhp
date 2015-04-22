@@ -12,4 +12,7 @@ class EmptyModel extends AbstractModel
     {
         return 'EmptyModel';
     }
+    public function getClassBody(&$class)
+    {
+    }
 }

@@ -28,6 +28,9 @@ class StructAttribute extends AbstractModel
         $this->setType($type);
         $this->setOwner($struct);
     }
+    public function getClassBody(&$class)
+    {
+    }
     /**
      * Returns the comment lines for this attribute
      * @see AbstractModel::getComment()

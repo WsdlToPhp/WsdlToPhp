@@ -84,6 +84,9 @@ class StructValue extends AbstractModel
     {
         return ($this->index = $index);
     }
+    public function getClassBody(&$class)
+    {
+    }
     /**
      * Returns the comment lines for this value
      * @see AbstractModel::getComment()

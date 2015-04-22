@@ -215,9 +215,7 @@ abstract class AbstractModel
      * @param array
      * @return void
      */
-    public function getClassBody(&$class)
-    {
-    }
+    abstract public function getClassBody(&$class);
     /**
      * Returns the name of the class the current class inherits from
      * @return string
