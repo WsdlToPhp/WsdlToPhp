@@ -499,8 +499,9 @@ class Generator extends \SoapClient
                 $this->generateTutorialFile($rootDirectory, $servicesClassesFiles);
             }
             return self::audit('generate_classes', $wsdl);
-        } else
+        } else {
             return !self::audit('generate_classes', $wsdl);
+        }
     }
     /**
      * Initialize structs defined in WSDL :
@@ -564,8 +565,9 @@ class Generator extends \SoapClient
                  */
                 $struct = $typeDef[0];
                 if ($struct != 'struct') {
-                    if (!empty($typeDef[1]))
+                    if (!empty($typeDef[1])) {
                         $this->addVirtualStruct($typeDef[1]);
+                    }
                     continue;
                 }
                 /**
@@ -579,8 +581,9 @@ class Generator extends \SoapClient
                  * - struct Create { ArrayOfDetailItem Details; string UserID; string Password; string TestMode; etc. }
                  * This will generate a Struct class containing the merge of all the different structures
                  */
-                if (in_array($typeSignature, $structsDefined))
+                if (in_array($typeSignature, $structsDefined)) {
                     continue;
+                }
                 /**
                  * Collect struct params
                  */
@@ -621,8 +624,9 @@ class Generator extends \SoapClient
                             $then = true;
                         }
                     }
-                } else
+                } else {
                     $this->addStruct($structName, $structParamName, $structParamType);
+                }
             }
             return self::audit('init_structs');
         } else
@@ -656,14 +660,16 @@ class Generator extends \SoapClient
              */
             $structsToGenerateDone = array();
             foreach ($structs as $struct) {
-                if (!array_key_exists($struct->getName(), $structsToGenerateDone))
+                if (!array_key_exists($struct->getName(), $structsToGenerateDone)) {
                     $structsToGenerateDone[$struct->getName()] = 0;
+                }
                 $model = AbstractModel::getModelByName($struct->getInheritance());
                 while ($model && $model->getIsStruct()) {
-                    if (!array_key_exists($model->getName(), $structsToGenerateDone))
+                    if (!array_key_exists($model->getName(), $structsToGenerateDone)) {
                         $structsToGenerateDone[$model->getName()] = 1;
-                    else
+                    } else {
                         $structsToGenerateDone[$model->getName()]++;
+                    }
                     $model = AbstractModel::getModelByName($model->getInheritance());
                 }
             }
@@ -677,8 +683,9 @@ class Generator extends \SoapClient
                 $structs[$structName] = $structTmp[$structName];
             unset($structTmp, $structsToGenerateDone);
             foreach ($structs as $structName => $struct) {
-                if (!$struct->getIsStruct())
+                if (!$struct->getIsStruct()) {
                     continue;
+                }
                 $elementFolder = $this->getDirectory($rootDirectory, $rootDirectoryRights, $struct);
                 array_push($structsClassesFiles, $structClassFileName = $elementFolder . $struct->getPackagedName() . '.php');
                 /**
@@ -717,13 +724,12 @@ class Generator extends \SoapClient
                         $parameterType = null;
                     } else
                         list($methodName, $parameterType) = explode('(', $infos[1]);
-                    if (!empty($returnType) && !empty($methodName))
+                    if (!empty($returnType) && !empty($methodName)) {
                         $this->addService($methodName, $parameterType, $returnType);
-                } /**
-                   * RPC SOAP Style
-                   */
- elseif (count($infos) > 3) {
+                    }
+                } elseif (count($infos) > 3) {
                     /**
+                     * RPC SOAP Style
                      * Some RPC WS defines the return type as a list of values
                      * So we define the return type as an array and reset the informations to use to extract method name and parameters
                      */
@@ -747,8 +753,9 @@ class Generator extends \SoapClient
                         $infosCount = count($infos);
                         for ($i = $start; $i < $infosCount; $i += 2) {
                             $info = str_replace(array(', ', '(', ')', '$'), '', trim($infos[$i]));
-                            if (!empty($info))
+                            if (!empty($info)) {
                                 $methodParameters = array_merge($methodParameters, array($info => $i == $start ? $firstParameterType : $infos[$i - 1]));
+                            }
                         }
                         $this->addService($methodName, $methodParameters, empty($returnType) ? 'unknown' : $returnType);
                     }
@@ -812,17 +819,17 @@ class Generator extends \SoapClient
                 array_push($content, str_repeat($indentationString, $indentationLevel) . ' */');
             } elseif (is_string($declaration)) {
                 switch ($declaration) {
-                case '{':
-                    array_push($content, str_repeat($indentationString, $indentationLevel) . $declaration);
-                    $indentationLevel++;
-                    break;
-                case '}':
-                    $indentationLevel--;
-                    array_push($content, str_repeat($indentationString, $indentationLevel) . $declaration);
-                    break;
-                default:
-                    array_push($content, str_repeat($indentationString, $indentationLevel) . $declaration);
-                    break;
+                    case '{':
+                        array_push($content, str_repeat($indentationString, $indentationLevel) . $declaration);
+                        $indentationLevel++;
+                        break;
+                    case '}':
+                        $indentationLevel--;
+                        array_push($content, str_repeat($indentationString, $indentationLevel) . $declaration);
+                        break;
+                    default:
+                        array_push($content, str_repeat($indentationString, $indentationLevel) . $declaration);
+                        break;
                 }
             }
         }
@@ -854,16 +861,18 @@ class Generator extends \SoapClient
         array_push($comments, 'File for the class which returns the class map definition');
         array_push($comments, '@package ' . self::getPackageName());
         if (count($this->getOptionAddComments())) {
-            foreach ($this->getOptionAddComments() as $tagName => $tagValue)
+            foreach ($this->getOptionAddComments() as $tagName => $tagValue) {
                 array_push($comments, "@$tagName $tagValue");
+            }
         }
         array_push($classMapDeclaration, array('comment' => $comments));
         $comments = array();
         array_push($comments, 'Class which returns the class map definition by the static method ' . self::getPackageName() . 'ClassMap::classMap()');
         array_push($comments, '@package ' . self::getPackageName());
         if (count($this->getOptionAddComments())) {
-            foreach ($this->getOptionAddComments() as $tagName => $tagValue)
+            foreach ($this->getOptionAddComments() as $tagName => $tagValue) {
                 array_push($comments, "@$tagName $tagValue");
+            }
         }
         array_push($classMapDeclaration, array('comment' => $comments));
         /**
@@ -887,8 +896,9 @@ class Generator extends \SoapClient
         $structs = $this->getStructs();
         $classesToMap = array();
         foreach ($structs as $struct) {
-            if ($struct->getIsStruct())
+            if ($struct->getIsStruct()) {
                 $classesToMap[$struct->getName()] = $struct->getPackagedName();
+            }
         }
         ksort($classesToMap);
         array_push($classMapDeclaration, 'return ' . var_export($classesToMap, true) . ';');
@@ -930,13 +940,15 @@ class Generator extends \SoapClient
             $comments = array();
             array_push($comments, 'Includes for all generated classes files');
             if (count($this->getOptionAddComments())) {
-                foreach ($this->getOptionAddComments() as $tagName => $tagValue)
+                foreach ($this->getOptionAddComments() as $tagName => $tagValue) {
                     array_push($comments, "@$tagName $tagValue");
+                }
             }
             array_push($autoloadDeclaration, array('comment' => $comments));
             foreach ($classesFiles as $classFile) {
-                if (is_file($classFile))
+                if (is_file($classFile)) {
                     array_push($autoloadDeclaration, 'require_once ' . str_replace($rootDirectory, 'dirname(__FILE__) . \'/', $classFile) . '\';');
+                }
             }
             self::populateFile($rootDirectory . '/' . self::getPackageName() . 'Autoload.php', $autoloadDeclaration);
             unset($autoloadDeclaration, $comments);
@@ -965,24 +977,28 @@ class Generator extends \SoapClient
                 $content = array();
                 $counter = 2;
                 foreach ($file as $line) {
-                    if (empty($line))
+                    if (empty($line)) {
                         continue;
+                    }
                     if (strpos($line, ' */') === 0 && $counter) {
-                        foreach ($this->getOptionAddComments() as $tagName => $tagValue)
+                        foreach ($this->getOptionAddComments() as $tagName => $tagValue) {
                             array_push($content, " * @$tagName $tagValue\n");
+                        }
                         $counter--;
                     }
                     array_push($content, $line);
                 }
                 $content = implode('', $content);
-            } else
+            } else {
                 $content = file_get_contents($pathToWsdlClassTemplate);
+            }
             $metaInformation = '';
             foreach ($this->wsdls as $wsdlinfos) {
                 foreach ($wsdlinfos['meta'] as $metaName => $metaValue) {
                     $metaValueCleaned = AbstractModel::cleanComment($metaValue);
-                    if ($metaValueCleaned === '')
+                    if ($metaValueCleaned === '') {
                         continue;
+                    }
                     $metaInformation .= (!empty($metaInformation) ? "\n * " : '') . ucfirst($metaName) . " : $metaValueCleaned";
                 }
             }
@@ -990,8 +1006,9 @@ class Generator extends \SoapClient
             file_put_contents($rootDirectory . self::getPackageName() . 'WsdlClass.php', $content);
             self::audit('generate_wsdlclass');
             return array($rootDirectory . self::getPackageName() . 'WsdlClass.php');
-        } else
+        } else {
             return array();
+        }
     }
     /**
      * Generates tutorial file
@@ -1067,10 +1084,10 @@ class Generator extends \SoapClient
                                 if ($isSetSoapHeaderMethod) {
                                     $content .= " in order to initialize required SoapHeader";
                                     $content .= "\n\$$classNameVar->" . $classMethod->getName() . '(' . implode(', ', $parameters) . ');';
-                                } /**
-                                   * Operation call
-                                   */
- else {
+                                } else {
+                                    /**
+                                     * Operation call
+                                     */
                                     $content .= "\nif(\$$classNameVar->" . $classMethod->getName() . '(' . implode(', ', $parameters) . '))';
                                     $content .= "\n    " . 'print_r($' . $classNameVar . '->getResult());';
                                     $content .= "\nelse";
@@ -1089,8 +1106,9 @@ class Generator extends \SoapClient
                         $fileContent = array();
                         $counter = 1;
                         foreach ($file as $line) {
-                            if (empty($line))
+                            if (empty($line)) {
                                 continue;
+                            }
                             if (strpos($line, ' */') === 0 && $counter) {
                                 foreach ($this->getOptionAddComments() as $tagName => $tagValue) {
                                     array_push($fileContent, " * @$tagName $tagValue\n");
@@ -1115,7 +1133,7 @@ class Generator extends \SoapClient
     }
     /**
      * Returns the structs
-     * @return array
+     * @return array[Struct]
      */
     public function getStructs()
     {
@@ -1151,10 +1169,12 @@ class Generator extends \SoapClient
      */
     private function addStruct($structName, $attributeName, $attributeType)
     {
-        if ($this->getStruct($structName) === null)
+        if ($this->getStruct($structName) === null) {
             $this->structs[$structName] = new Struct($structName);
-        if (!empty($attributeName) && !empty($attributeType))
+        }
+        if (!empty($attributeName) && !empty($attributeType)) {
             $this->getStruct($structName)->addAttribute($attributeName, $attributeType);
+        }
     }
     /**
      * Adds an info to the struct
@@ -1167,8 +1187,9 @@ class Generator extends \SoapClient
      */
     private function addStructMeta($structName, $structInfoName, $structInfoValue)
     {
-        if ($this->getStruct($structName))
+        if ($this->getStruct($structName)) {
             $this->getStruct($structName)->addMeta($structInfoName, $structInfoValue);
+        }
     }
     /**
      * Sets struct inheritance value
@@ -1180,8 +1201,9 @@ class Generator extends \SoapClient
      */
     private function setStructInheritance($structName, $inherits)
     {
-        if ($this->getStruct($structName))
+        if ($this->getStruct($structName)) {
             $this->getStruct($structName)->setInheritance($inherits);
+        }
     }
     /**
      * Adds struct documentation info
@@ -1193,8 +1215,9 @@ class Generator extends \SoapClient
      */
     private function setStructDocumentation($structName, $documentation)
     {
-        if ($this->getStruct($structName))
+        if ($this->getStruct($structName)) {
             $this->getStruct($structName)->setDocumentation($documentation);
+        }
     }
     /**
      * Sets the struct as a restriction, which means it contains the enumeration values
@@ -1205,8 +1228,9 @@ class Generator extends \SoapClient
      */
     private function setStructIsRestriction($structName)
     {
-        if ($this->getStruct($structName))
+        if ($this->getStruct($structName)) {
             $this->getStruct($structName)->setIsRestriction(true);
+        }
     }
     /**
      * Sets the struct as a srtuct, which means it has to be generated as a class
@@ -1217,8 +1241,9 @@ class Generator extends \SoapClient
      */
     private function setStructIsStruct($structName)
     {
-        if ($this->getStruct($structName))
+        if ($this->getStruct($structName)) {
             $this->getStruct($structName)->setIsStruct(true);
+        }
     }
     /**
      * Gets the struct by its name
@@ -1244,8 +1269,9 @@ class Generator extends \SoapClient
      */
     private function addStructAttributeMeta($structName, $attributeName, $attributeInfoName, $attributeInfoValue)
     {
-        if ($this->getStructAttribute($structName, $attributeName))
+        if ($this->getStructAttribute($structName, $attributeName)) {
             $this->getStructAttribute($structName, $attributeName)->addMeta($attributeInfoName, $attributeInfoValue);
+        }
     }
     /**
      * Adds struct documentation info
@@ -1258,8 +1284,9 @@ class Generator extends \SoapClient
      */
     private function setStructAttributeDocumentation($structName, $attributeName, $documentation)
     {
-        if ($this->getStructAttribute($structName, $attributeName))
+        if ($this->getStructAttribute($structName, $attributeName)) {
             $this->getStructAttribute($structName, $attributeName)->setDocumentation($documentation);
+        }
     }
     /**
      * Gets the struct value by its name
@@ -1302,8 +1329,9 @@ class Generator extends \SoapClient
      */
     private function setStructValueDocumentation($structName, $valueName, $documentation)
     {
-        if ($this->getStructValue($structName, $valueName))
+        if ($this->getStructValue($structName, $valueName)) {
             $this->getStructValue($structName, $valueName)->setDocumentation($documentation);
+        }
     }
     /**
      * Adds a virtual struct
@@ -1313,12 +1341,13 @@ class Generator extends \SoapClient
      */
     private function addVirtualStruct($structName)
     {
-        if ($this->getStruct($structName) === null)
+        if ($this->getStruct($structName) === null) {
             $this->structs[$structName] = new Struct($structName, false);
+        }
     }
     /**
      * Returns the services
-     * @return array
+     * @return array[Service]
      */
     public function getServices()
     {
@@ -1348,18 +1377,19 @@ class Generator extends \SoapClient
     private function addService($methodName, $functionParameter, $functionReturn)
     {
         $serviceName = $this->getServiceName($methodName);
-        if (!$this->getService($serviceName))
+        if (!$this->getService($serviceName)) {
             $this->services[$serviceName] = new Service($serviceName);
+        }
         $serviceFunction = $this->getServiceMethod($methodName);
         /**
          * Service function does not already exist, register it
          */
-        if (!$serviceFunction)
+        if (!$serviceFunction) {
             $this->getService($serviceName)->addMethod($methodName, $functionParameter, $functionReturn);
-        /**
-         * Service function exists with a different signature, register it too by identifying the service functions as non unique functions
-         */
-        elseif ($serviceFunction->getParameterType() != $functionParameter) {
+        } elseif ($serviceFunction->getParameterType() != $functionParameter) {
+            /**
+             * Service function exists with a different signature, register it too by identifying the service functions as non unique functions
+             */
             $serviceFunction->setIsUnique(false);
             $this->getService($serviceName)->addMethod($methodName, $functionParameter, $functionReturn, false);
         }
@@ -1396,8 +1426,9 @@ class Generator extends \SoapClient
      */
     private function setServiceFunctionDocumentation($methodName, $documentation)
     {
-        if ($this->getServiceMethod($methodName))
+        if ($this->getServiceMethod($methodName)) {
             $this->getServiceMethod($methodName)->setDocumentation($documentation);
+        }
     }
     /**
      * Adds the service function a meta information
@@ -1410,8 +1441,9 @@ class Generator extends \SoapClient
      */
     private function addServiceFunctionMeta($methodName, $functionInfoName, $functionInfoValue)
     {
-        if ($this->getServiceMethod($methodName))
+        if ($this->getServiceMethod($methodName)) {
             $this->getServiceMethod($methodName)->addMeta($functionInfoName, $functionInfoValue);
+        }
     }
     /**
      * Sets the optionCategory value
@@ -1696,13 +1728,14 @@ class Generator extends \SoapClient
         /**
          * Not empty location
          */
-        if (!empty($wsdlLocation))
+        if (!empty($wsdlLocation)) {
             $this->manageWsdlLocation($wsdlLocation, $domNode, $fromWsdlLocation, $nodeNameMatch);
-        /**
-         * New node to browse
-         */
-        elseif ($domNode instanceof \DOMElement)
+        } elseif ($domNode instanceof \DOMElement) {
+            /**
+             * New node to browse
+             */
             $this->manageWsdlNode($wsdlLocation, $domNode, $fromWsdlLocation, $nodeNameMatch);
+        }
     }
     /**
      * Method called when wsdls are loaded and all the structs/operations are loaded
@@ -1744,8 +1777,9 @@ class Generator extends \SoapClient
             array_push($tags, 'output');
             foreach ($tags as $tagName) {
                 foreach (array_keys($this->getWsdls()) as $wsdlLocation) {
-                    if (is_string($wsdlLocation) && !empty($wsdlLocation))
+                    if (is_string($wsdlLocation) && !empty($wsdlLocation)) {
                         $this->manageWsdlLocation($wsdlLocation, null, '', $tagName);
+                    }
                 }
             }
         }
@@ -1808,46 +1842,48 @@ class Generator extends \SoapClient
     protected function manageWsdlNode($wsdlLocation = '', $domNode = null, $fromWsdlLocation = '', $nodeNameMatch = null)
     {
         if (empty($nodeNameMatch)) {
-            /**
-             * Current node is type of "import" or "include"
-             */
-            if (stripos($domNode->nodeName, 'import') !== false || stripos($domNode->nodeName, 'include') !== false)
+
+            if (stripos($domNode->nodeName, 'import') !== false || stripos($domNode->nodeName, 'include') !== false) {
+                /**
+                 * Current node is type of "import" or "include"
+                 */
                 $this->manageWsdlNodeImport($wsdlLocation, $domNode, $fromWsdlLocation);
-            /**
-             * Restriction
-             */
-            elseif (stripos($domNode->nodeName, 'restriction') !== false)
+            } elseif (stripos($domNode->nodeName, 'restriction') !== false) {
+                /**
+                 * Restriction
+                 */
                 $this->manageWsdlNodeRestriction($wsdlLocation, $domNode, $fromWsdlLocation);
-            /**
-             * Enumeration value
-             */
-            elseif (stripos($domNode->nodeName, 'enumeration') !== false)
+            } elseif (stripos($domNode->nodeName, 'enumeration') !== false) {
+                /**
+                 * Enumeration value
+                 */
                 $this->manageWsdlNodeEnumeration($wsdlLocation, $domNode, $fromWsdlLocation);
-            /**
-             * Element's, part of a struct called attribute
-             */
-            elseif ($domNode->hasAttribute('name') && $domNode->getAttribute('name') != '' && $domNode->hasAttribute('type') && $domNode->getAttribute('type') != '')
+            } elseif ($domNode->hasAttribute('name') && $domNode->getAttribute('name') != '' && $domNode->hasAttribute('type') && $domNode->getAttribute('type') != '') {
+                /**
+                 * Element's, part of a struct called attribute
+                 */
                 $this->manageWsdlNodeAttribute($wsdlLocation, $domNode, $fromWsdlLocation);
-            /**
-             * Element
-             */
-            elseif (stripos($domNode->nodeName, 'element') !== false || stripos($domNode->nodeName, 'complextype') !== false)
+            } elseif (stripos($domNode->nodeName, 'element') !== false || stripos($domNode->nodeName, 'complextype') !== false) {
+                /**
+                 * Element
+                 */
                 $this->manageWsdlNodeElement($wsdlLocation, $domNode, $fromWsdlLocation);
-            /**
-             * Documentation's
-             */
-            elseif (stripos($domNode->nodeName, 'documentation') !== false && !empty($domNode->nodeValue))
+            } elseif (stripos($domNode->nodeName, 'documentation') !== false && !empty($domNode->nodeValue)) {
+                /**
+                 * Documentation's
+                 */
                 $this->manageWsdlNodeDocumentation($wsdlLocation, $domNode, $fromWsdlLocation);
-            /**
-             * Extension of struct
-             */
-            elseif (stripos($domNode->nodeName, 'extension') !== false && $domNode->hasAttribute('base') && $domNode->getAttribute('base') != '')
+            } elseif (stripos($domNode->nodeName, 'extension') !== false && $domNode->hasAttribute('base') && $domNode->getAttribute('base') != '') {
+                /**
+                 * Extension of struct
+                 */
                 $this->manageWsdlNodeExtension($wsdlLocation, $domNode, $fromWsdlLocation);
-            /**
-             * Undefined node
-             */
-            else
+            } else {
+                /**
+                 * Undefined node
+                 */
                 $this->manageWsdlNodeUndefined($wsdlLocation, $domNode, $fromWsdlLocation);
+            }
         } elseif (is_string($nodeNameMatch) && stripos($domNode->nodeName, $nodeNameMatch) !== false) {
             $manageWsdlNodeMethodName = 'manageWsdlNode' . ucfirst($nodeNameMatch);
             if (method_exists($this, $manageWsdlNodeMethodName)) {
@@ -1863,8 +1899,9 @@ class Generator extends \SoapClient
             $childNodes = $domNode->childNodes;
             $childNodesLength = $childNodes->length;
             for ($i = 0; $i < $childNodesLength; $i++) {
-                if ($childNodes->item($i))
+                if ($childNodes->item($i)) {
                     $this->loadWsdls('', $childNodes->item($i), !empty($wsdlLocation) ? $wsdlLocation : $fromWsdlLocation, $nodeNameMatch);
+                }
             }
         }
     }
@@ -1896,14 +1933,16 @@ class Generator extends \SoapClient
     {
         self::auditInit('managewsdlnode_import', !empty($wsdlLocation) ? $wsdlLocation : $fromWsdlLocation);
         $location = '';
-        if ($domNode->hasAttribute('location'))
+        if ($domNode->hasAttribute('location')) {
             $location = $domNode->getAttribute('location');
-        elseif ($domNode->hasAttribute('schemaLocation'))
+        } elseif ($domNode->hasAttribute('schemaLocation')) {
             $location = $domNode->getAttribute('schemaLocation');
-        elseif ($domNode->hasAttribute('schemalocation'))
+        } elseif ($domNode->hasAttribute('schemalocation')) {
             $location = $domNode->getAttribute('schemalocation');
-        if (substr($location, 0, 2) == './')
+        }
+        if (substr($location, 0, 2) == './') {
             $location = substr($location, 2);
+        }
         /**
          * Define valid location
          */
@@ -1923,25 +1962,27 @@ class Generator extends \SoapClient
                 $locationToParseParts = explode('/', $location);
                 $pathParts = explode('/', $path);
                 foreach ($locationToParseParts as $locationPart) {
-                    if ($locationPart == '..')
+                    if ($locationPart == '..') {
                         $pathParts = count($pathParts) >= 2 ? array_slice($pathParts, 0, count($pathParts) - 2) : $pathParts;
-                    else
+                    } else {
                         array_push($cleanLocation, $locationPart);
+                    }
                 }
                 $port = (is_array($parts) && array_key_exists('port', $parts)) ? $parts['port'] : '';
                 /**
                  * Remote file
                  */
-                if (!empty($scheme) && !empty($host))
+                if (!empty($scheme) && !empty($host)) {
                     array_push($locations, str_replace('urn', 'http', $scheme) . '://' . $host . (!empty($port) ? ':' . $port : '') . (count($pathParts) ? str_replace('//', '/', '/' . implode('/', $pathParts) . '/') : '/') . implode('/', $cleanLocation));
-                /**
-                 * Local file
-                 */
-                elseif (empty($scheme) && empty($host) && count($pathParts)) {
+                } elseif (empty($scheme) && empty($host) && count($pathParts)) {
+                    /**
+                     * Local file
+                     */
                     $localPath = str_replace('//', '/', implode('/', $pathParts) . '/');
                     $localFile = $localPath . implode('/', $cleanLocation);
-                    if (is_file($localFile))
+                    if (is_file($localFile)) {
                         array_push($locations, $localFile);
+                    }
                 }
             }
         } elseif (!empty($location))
@@ -1994,8 +2035,9 @@ class Generator extends \SoapClient
              */
             if ($domNode->hasAttribute('base')) {
                 $type = explode(':', $domNode->getAttribute('base'));
-                if (count($type) && !empty($type[count($type) - 1]) && $type[count($type) - 1] != $parentNode->getAttribute('name'))
+                if (count($type) && !empty($type[count($type) - 1]) && $type[count($type) - 1] != $parentNode->getAttribute('name')) {
                     $this->setStructInheritance($parentNode->getAttribute('name'), $type[count($type) - 1]);
+                }
             }
             /**
              * Meta informations about struct
@@ -2004,8 +2046,8 @@ class Generator extends \SoapClient
                 $childNodes = $domNode->childNodes;
                 $childNodesLength = $childNodes->length;
                 $firstValidNodePos = 0;
-                while (!(($childNodes->item($firstValidNodePos) instanceof \DOMNode) && $childNodes->item($firstValidNodePos)->nodeType === XML_ELEMENT_NODE) && $firstValidNodePos++ < $childNodesLength)
-                    ;
+                do {
+                } while (!(($childNodes->item($firstValidNodePos) instanceof \DOMNode) && $childNodes->item($firstValidNodePos)->nodeType === XML_ELEMENT_NODE) && $firstValidNodePos++ < $childNodesLength);
                 if ($childNodes->item($firstValidNodePos)) {
                     $this->addVirtualStruct($parentNode->getAttribute('name'));
                     for ($i = 0; $i < $childNodesLength; $i++) {
@@ -2055,8 +2097,9 @@ class Generator extends \SoapClient
         self::auditInit('managewsdlnode_enumeration', !empty($wsdlLocation) ? $wsdlLocation : $fromWsdlLocation);
         $parentNode = self::findSuitableParent($domNode);
         if ($parentNode && $domNode->hasAttribute('value')) {
-            if ($this->getStruct($parentNode->getAttribute('name')) && !$this->getStruct($parentNode->getAttribute('name'))->getFromSchema())
+            if ($this->getStruct($parentNode->getAttribute('name')) && !$this->getStruct($parentNode->getAttribute('name'))->getFromSchema()) {
                 $this->getStruct($parentNode->getAttribute('name'))->setFromSchema(!empty($wsdlLocation) ? $wsdlLocation : $fromWsdlLocation);
+            }
             $this->addRestrictionValue($parentNode->getAttribute('name'), $domNode->getAttribute('value'));
         }
         self::audit('managewsdlnode_enumeration', !empty($wsdlLocation) ? $wsdlLocation : $fromWsdlLocation);
@@ -2077,8 +2120,9 @@ class Generator extends \SoapClient
     protected function manageWsdlNodeElement($wsdlLocation = '', \DOMNode $domNode, $fromWsdlLocation = '')
     {
         self::auditInit('managewsdlnode_element', !empty($wsdlLocation) ? $wsdlLocation : $fromWsdlLocation);
-        if ($this->getStruct($domNode->getAttribute('name')))
+        if ($this->getStruct($domNode->getAttribute('name'))) {
             $this->getStruct($domNode->getAttribute('name'))->setFromSchema(!empty($wsdlLocation) ? $wsdlLocation : $fromWsdlLocation);
+        }
         self::audit('managewsdlnode_element', !empty($wsdlLocation) ? $wsdlLocation : $fromWsdlLocation);
     }
     /**
@@ -2122,39 +2166,37 @@ class Generator extends \SoapClient
              * Finds parent node of this enumeration node
              */
             $upParentNode = self::findSuitableParent($enumerationNode);
-            if ($upParentNode)
+            if ($upParentNode) {
                 $this->setStructValueDocumentation($upParentNode->getAttribute('name'), $enumerationNode->getAttribute('value'), $documentation);
-        } /**
-           * is it an attributeGroup element, nothing yet but need to be catched here
-           */
- elseif ($attributeGroupNode && stripos($attributeGroupNode->nodeName, 'attributeGroup') !== false) {
-        } /**
-           * is it an element ? part of a struct
-           */
- elseif ($anyNode && (stripos($anyNode->nodeName, 'element') !== false || stripos($anyNode->nodeName, 'attribute') !== false) && $anyNode->hasAttribute('type')) {
+            }
+        } elseif ($attributeGroupNode && stripos($attributeGroupNode->nodeName, 'attributeGroup') !== false) {
+        } elseif ($anyNode && (stripos($anyNode->nodeName, 'element') !== false || stripos($anyNode->nodeName, 'attribute') !== false) && $anyNode->hasAttribute('type')) {
             /**
+             * is it an element ? part of a struct
              * Finds parent node of this documentation node
              */
             $upParentNode = self::findSuitableParent($anyNode);
-            if ($upParentNode)
+            if ($upParentNode) {
                 $this->setStructAttributeDocumentation($upParentNode->getAttribute('name'), $anyNode->getAttribute('name'), $documentation);
-            elseif (stripos($anyNode->nodeName, 'element') !== false)
+            } elseif (stripos($anyNode->nodeName, 'element') !== false) {
                 $this->setStructDocumentation($anyNode->getAttribute('name'), $documentation);
-        } /**
-           * is it a struct ?
-           */
- elseif ($anyNode && (stripos($anyNode->nodeName, 'element') !== false || stripos($anyNode->nodeName, 'complextype') !== false || stripos($anyNode->nodeName, 'simpletype') !== false || stripos($anyNode->nodeName, 'attribute') !== false))
+            }
+        } elseif ($anyNode && (stripos($anyNode->nodeName, 'element') !== false || stripos($anyNode->nodeName, 'complextype') !== false || stripos($anyNode->nodeName, 'simpletype') !== false || stripos($anyNode->nodeName, 'attribute') !== false)) {
+            /**
+             * is it a struct ?
+             */
             $this->setStructDocumentation($anyNode->getAttribute('name'), $documentation);
-        /**
-         * is it an operation ?
-         */
-        elseif ($anyNode && stripos($anyNode->nodeName, 'operation') !== false)
+        } elseif ($anyNode && stripos($anyNode->nodeName, 'operation') !== false) {
+            /**
+             * is it an operation ?
+             */
             $this->setServiceFunctionDocumentation($anyNode->getAttribute('name'), $documentation);
-        /**
-         * is it the definitions node of the WSDL
-         */
-        elseif ($definitionsNode && stripos($definitionsNode->nodeName, 'definitions') !== false)
+        } elseif ($definitionsNode && stripos($definitionsNode->nodeName, 'definitions') !== false) {
+            /**
+             * is it the definitions node of the WSDL
+             */
             $this->addWsdlMeta('documentation', $documentation);
+        }
         self::audit('managewsdlnode_documentation', !empty($wsdlLocation) ? $wsdlLocation : $fromWsdlLocation);
     }
     /**
@@ -2194,8 +2236,9 @@ class Generator extends \SoapClient
                      * </xs:complexType>
                      * </code>
                      */
-                    if ($inheritsName !== $parentNode->getAttribute('name'))
+                    if ($inheritsName !== $parentNode->getAttribute('name')) {
                         $this->setStructInheritance($parentNode->getAttribute('name'), $inheritsName);
+                    }
                 }
             }
         }
@@ -2249,15 +2292,17 @@ class Generator extends \SoapClient
                     $attributes = $domNode->attributes;
                     $attributesCount = $attributes->length;
                     for ($i = 0; $i < $attributesCount; $i++) {
-                        if ($attributes->item($i) && stripos($attributes->item($i)->nodeName, 'required') !== false)
+                        if ($attributes->item($i) && stripos($attributes->item($i)->nodeName, 'required') !== false) {
                             $notRequired |= ($attributes->item($i)->nodeValue === 0 || $attributes->item($i)->nodeValue === 'false' || $attributes->item($i)->nodeValue === false || $attributes->item($i)->nodeValue === 'non' || $attributes->item($i)->nodeValue === 'no');
+                        }
                     }
                     /**
                      * Header Namespace ?
                      */
                     $namespace = '';
-                    if ($domNode->hasAttribute('namespace') && $domNode->getAttribute('namespace') != '')
+                    if ($domNode->hasAttribute('namespace') && $domNode->getAttribute('namespace') != '') {
                         $namespace = $domNode->getAttribute('namespace');
+                    }
                     $globalHeaderTypeKey = __METHOD__ . '_' . $headerMessage . '_' . $headerName . '_type';
                     $globalHeaderNameKey = __METHOD__ . '_' . $headerMessage . '_' . $headerName . '_name';
                     $globalHeaderNamespaceKey = __METHOD__ . '_' . $headerMessage . '_' . $headerName . '_namespace';
@@ -2303,21 +2348,23 @@ class Generator extends \SoapClient
                                                  * Namespace value
                                                  */
                                                 $definitions = self::findSuitableParent($part, false, array('definitions'));
-                                                if ($definitions && $definitions->hasAttribute('xmlns:' . $partNamespace) && $definitions->getAttribute('xmlns:' . $partNamespace) != '')
+                                                if ($definitions && $definitions->hasAttribute('xmlns:' . $partNamespace) && $definitions->getAttribute('xmlns:' . $partNamespace) != '') {
                                                     $namespace = $definitions->getAttribute('xmlns:' . $partNamespace);
+                                                }
                                                 /**
                                                  * Header type value
                                                  */
                                                 $nodes = self::executeDomXPathQuery($domDocument, "//*[@name='$partElement']");
                                                 $nodesLength = $nodes->length;
                                                 $nodeIndex = 0;
-                                                while ($nodeIndex < $nodesLength && (!($nodes->item($nodeIndex) instanceof \DOMElement) || (($nodes->item($nodeIndex) instanceof \DOMElement) && (!$nodes->item($nodeIndex)->hasAttribute('type') || ($nodes->item($nodeIndex)->hasAttribute('type') && $nodes->item($nodeIndex)->getAttribute('type') === '')))) && $nodeIndex++)
-                                                    ;
+                                                do {
+                                                } while ($nodeIndex < $nodesLength && (!($nodes->item($nodeIndex) instanceof \DOMElement) || (($nodes->item($nodeIndex) instanceof \DOMElement) && (!$nodes->item($nodeIndex)->hasAttribute('type') || ($nodes->item($nodeIndex)->hasAttribute('type') && $nodes->item($nodeIndex)->getAttribute('type') === '')))) && $nodeIndex++);
                                                 if ($nodeIndex <= $nodesLength && ($nodes->item($nodeIndex) instanceof \DOMElement) && $nodes->item($nodeIndex)->hasAttribute('type') && $nodes->item($nodeIndex)->getAttribute('type') != '') {
                                                     $headerType = explode(':', $nodes->item($nodeIndex)->getAttribute('type'));
                                                     $headerType = $headerType[count($headerType) - 1];
-                                                    if ($this->getStruct($headerType) && $this->getStruct($headerType)->getIsStruct())
+                                                    if ($this->getStruct($headerType) && $this->getStruct($headerType)->getIsStruct()) {
                                                         $headerType = '{@link ' . $this->getStruct($headerType)->getPackagedName() . '}';
+                                                    }
                                                     break;
                                                 }
                                             }
@@ -2331,8 +2378,9 @@ class Generator extends \SoapClient
                                 }
                             }
                             self::setGlobal($globalHeaderNameKey, $headerName);
-                            if (!empty($namespace))
+                            if (!empty($namespace)) {
                                 self::setGlobal($globalHeaderNamespaceKey, $namespace);
+                            }
                             if (!empty($headerType)) {
                                 self::setGlobal($globalHeaderTypeKey, $headerType);
                                 break;
@@ -2389,10 +2437,11 @@ class Generator extends \SoapClient
                     $type = explode(':', $domNode->getAttribute('type'));
                     $typeModel = AbstractModel::getModelByName($type[count($type) - 1]);
                     if ($attributeModel && (!$attributeModel->getType() || strtolower($attributeModel->getType()) == 'unknown') && $typeModel) {
-                        if ($typeModel->getIsRestriction())
+                        if ($typeModel->getIsRestriction()) {
                             $attributeModel->setType($typeModel->getName());
-                        elseif (!$typeModel->getIsStruct() && $typeModel->getInheritance())
+                        } elseif (!$typeModel->getIsStruct() && $typeModel->getInheritance()) {
                             $attributeModel->setType($typeModel->getInheritance());
+                        }
                     }
                 }
             }
@@ -2403,14 +2452,16 @@ class Generator extends \SoapClient
              */
             $parentNode = self::findSuitableParent($domNode);
             if ($parentNode) {
-                if ($this->getStruct($parentNode->getAttribute('name')) && !$this->getStruct($parentNode->getAttribute('name'))->getFromSchema())
+                if ($this->getStruct($parentNode->getAttribute('name')) && !$this->getStruct($parentNode->getAttribute('name'))->getFromSchema()) {
                     $this->getStruct($parentNode->getAttribute('name'))->setFromSchema(!empty($wsdlLocation) ? $wsdlLocation : $fromWsdlLocation);
+                }
                 $attributes = $domNode->attributes;
                 $attributesLength = $attributes->length;
                 for ($i = 0; $i < $attributesLength; $i++) {
                     $attribute = $attributes->item($i);
-                    if ($attribute && $attribute->nodeName != 'name' && $attribute->nodeName != 'type')
+                    if ($attribute && $attribute->nodeName != 'name' && $attribute->nodeName != 'type') {
                         $this->addStructAttributeMeta($parentNode->getAttribute('name'), $domNode->getAttribute('name'), $attribute->nodeName, $attribute->nodeValue);
+                    }
                 }
             }
             self::audit('managewsdlnode_attribute', !empty($wsdlLocation) ? $wsdlLocation : $fromWsdlLocation);
@@ -2464,15 +2515,17 @@ class Generator extends \SoapClient
                                             if (!$newNodeValueTypeModel)
                                                 $nodeValueType = $nodeValueTypeModel->getInheritance();
                                             $nodeValueTypeModel = $newNodeValueTypeModel;
-                                        } else
+                                        } else {
                                             $nodeValueTypeModel = null;
+                                        }
                                     }
                                     array_push($nodeValueTypes, $nodeValueType);
                                 }
                             }
                             $nodeValueTypes = array_unique($nodeValueTypes);
-                            if (count($nodeValueTypes) && $parentNodeStruct && !$parentNodeStruct->getInheritance())
+                            if (count($nodeValueTypes) && $parentNodeStruct && !$parentNodeStruct->getInheritance()) {
                                 $this->setStructInheritance($parentNodeStruct->getName(), implode(', ', $nodeValueTypes));
+                            }
                         }
                     }
                 }
@@ -2505,8 +2558,9 @@ class Generator extends \SoapClient
                     $attribute = $attributes->item($i);
                     if ($attribute && stripos($attribute->nodeName, 'itemType') !== false) {
                         $nodeValue = trim($attribute->nodeValue);
-                        if ($this->getStruct($nodeValue))
+                        if ($this->getStruct($nodeValue)) {
                             $this->setStructInheritance($parentNode->getAttribute('name'), 'array of ' . $this->getStruct($nodeValue)->getName());
+                        }
                     }
                 }
             }
@@ -2566,17 +2620,19 @@ class Generator extends \SoapClient
             if (!empty($messageName) && $parentNode) {
                 $operationName = $parentNode->getAttribute('name');
                 if ($this->getServiceMethod($operationName)) {
-                    if ($nodeNameMatch == 'input')
+                    if ($nodeNameMatch == 'input') {
                         $operationParameterReturnType = $this->getServiceMethod($operationName)->getParameterType();
-                    else
+                    } else {
                         $operationParameterReturnType = $this->getServiceMethod($operationName)->getReturnType();
+                    }
                     $operationParameterReturnTypeKnown = true;
                     if (is_string($operationParameterReturnType) && (empty($operationParameterReturnType) || strtolower($operationParameterReturnType) === 'unknown')) {
                         $operationParameterReturnTypeKnown = false;
                         $operationParameterReturnTypeFound = '';
                     } elseif (is_array($operationParameterReturnType)) {
-                        foreach ($operationParameterReturnType as $parameterType)
+                        foreach ($operationParameterReturnType as $parameterType) {
                             $operationParameterReturnTypeKnown &= (!empty($parameterType) && !(strtolower($parameterType) === 'unknown'));
+                        }
                         $operationParameterReturnTypeFound = array();
                     }
                     /**
@@ -2590,8 +2646,8 @@ class Generator extends \SoapClient
                                 $nodes = self::executeDomXPathQuery($domDocument, "//*[@name='$messageName']");
                                 $nodesLength = $nodes->length;
                                 $nodeIndex = 0;
-                                while ($nodeIndex < $nodesLength && (!($nodes->item($nodeIndex) instanceof \DOMElement) || (($nodes->item($nodeIndex) instanceof \DOMElement) && stripos($nodes->item($nodeIndex)->nodeName, 'message') === false)) && $nodeIndex++)
-                                    ;
+                                do {
+                                } while ($nodeIndex < $nodesLength && (!($nodes->item($nodeIndex) instanceof \DOMElement) || (($nodes->item($nodeIndex) instanceof \DOMElement) && stripos($nodes->item($nodeIndex)->nodeName, 'message') === false)) && $nodeIndex++);
                                 /**
                                  * Message definition found, then find its corresponding element
                                  */
@@ -2607,8 +2663,9 @@ class Generator extends \SoapClient
                                                 if ($child->hasAttribute($partAttributeName)) {
                                                     $partElements = explode(':', $child->getAttribute($partAttributeName));
                                                     $partElement = count($partElements) ? $partElements[count($partElements) - 1] : '';
-                                                    if (!empty($partElement))
+                                                    if (!empty($partElement)) {
                                                         break;
+                                                    }
                                                 }
                                             }
                                             if (!empty($partElement)) {
@@ -2621,8 +2678,8 @@ class Generator extends \SoapClient
                                                         $nodes = self::executeDomXPathQuery($domDocument, "//*[@name='$partElement']");
                                                         $nodesLength = $nodes->length;
                                                         $nodeIndex = 0;
-                                                        while ($nodeIndex < $nodesLength && (!($nodes->item($nodeIndex) instanceof \DOMElement) || (($nodes->item($nodeIndex) instanceof \DOMElement) && (!$nodes->item($nodeIndex)->hasAttribute('type') || ($nodes->item($nodeIndex)->hasAttribute('type') && $nodes->item($nodeIndex)->getAttribute('type') === '')))) && $nodeIndex++)
-                                                            ;
+                                                        do {
+                                                        } while ($nodeIndex < $nodesLength && (!($nodes->item($nodeIndex) instanceof \DOMElement) || (($nodes->item($nodeIndex) instanceof \DOMElement) && (!$nodes->item($nodeIndex)->hasAttribute('type') || ($nodes->item($nodeIndex)->hasAttribute('type') && $nodes->item($nodeIndex)->getAttribute('type') === '')))) && $nodeIndex++);
                                                         if ($nodeIndex <= $nodesLength && ($nodes->item($nodeIndex) instanceof \DOMElement) && $nodes->item($nodeIndex)->hasAttribute('type') && $nodes->item($nodeIndex)->getAttribute('type') != '') {
                                                             $parameterType = explode(':', $nodes->item($nodeIndex)->getAttribute('type'));
                                                             $parameterType = $parameterType[count($parameterType) - 1];
@@ -2648,27 +2705,31 @@ class Generator extends \SoapClient
                                                             }
                                                         }
                                                     }
-                                                    if ($operationParameterReturnTypeDefined)
+                                                    if ($operationParameterReturnTypeDefined) {
                                                         break;
+                                                    }
                                                 }
                                             }
                                         }
-                                        if ($operationParameterReturnTypeDefined)
+                                        if ($operationParameterReturnTypeDefined) {
                                             break;
+                                        }
                                     }
                                 }
                             }
-                            if ($operationParameterReturnTypeDefined)
+                            if ($operationParameterReturnTypeDefined) {
                                 break;
+                            }
                         }
                         /**
                          * Operation parameter type found, then define it
                          */
                         if ($operationParameterReturnTypeDefined) {
-                            if ($nodeNameMatch == 'input')
+                            if ($nodeNameMatch == 'input') {
                                 $this->getServiceMethod($operationName)->setParameterType($operationParameterReturnTypeFound);
-                            else
+                            } else {
                                 $this->getServiceMethod($operationName)->setReturnType($operationParameterReturnTypeFound);
+                            }
                         }
                     }
                 }
@@ -2693,8 +2754,9 @@ class Generator extends \SoapClient
         self::auditInit(__METHOD__, $domNode->nodeName);
         $parentTags = array_merge(array('element', 'complexType', 'simpleType', 'attribute'), $parentTags);
         $parentNode = $domNode->parentNode;
-        while ($maxDeep-- > 0 && ($parentNode instanceof \DOMElement) && $parentNode->nodeName && (!preg_match('/' . implode('|', $parentTags) . '/i', $parentNode->nodeName) || ($checkName && preg_match('/' . implode('|', $parentTags) . '/i', $parentNode->nodeName) && (!$parentNode->hasAttribute('name') || $parentNode->getAttribute('name') == ''))))
+        while ($maxDeep-- > 0 && ($parentNode instanceof \DOMElement) && $parentNode->nodeName && (!preg_match('/' . implode('|', $parentTags) . '/i', $parentNode->nodeName) || ($checkName && preg_match('/' . implode('|', $parentTags) . '/i', $parentNode->nodeName) && (!$parentNode->hasAttribute('name') || $parentNode->getAttribute('name') == '')))) {
             $parentNode = $parentNode->parentNode;
+        }
         self::audit(__METHOD__, $domNode->nodeName);
         return ($parentNode instanceof \DOMElement) ? $parentNode : null;
     }
@@ -2840,12 +2902,14 @@ class Generator extends \SoapClient
      */
     private static function setGlobal($globalKey, $globalValue)
     {
-        if (!is_scalar($globalKey))
+        if (!is_scalar($globalKey)) {
             return null;
-        if (array_key_exists(self::WSDL_TO_PHP_GENERATOR_GLOBAL_KEY, self::$globals))
+        }
+        if (array_key_exists(self::WSDL_TO_PHP_GENERATOR_GLOBAL_KEY, self::$globals)) {
             return (self::$globals[self::WSDL_TO_PHP_GENERATOR_GLOBAL_KEY][$globalKey] = $globalValue);
-        else
+        } else {
             return null;
+        }
     }
     /**
      * Gets a global value
@@ -2856,12 +2920,14 @@ class Generator extends \SoapClient
      */
     private static function getGlobal($globalKey, $globalFallback = null)
     {
-        if (!is_scalar($globalKey))
+        if (!is_scalar($globalKey)) {
             return $globalFallback;
-        if (array_key_exists(self::WSDL_TO_PHP_GENERATOR_GLOBAL_KEY, self::$globals) && array_key_exists($globalKey, self::$globals[self::WSDL_TO_PHP_GENERATOR_GLOBAL_KEY]))
+        }
+        if (array_key_exists(self::WSDL_TO_PHP_GENERATOR_GLOBAL_KEY, self::$globals) && array_key_exists($globalKey, self::$globals[self::WSDL_TO_PHP_GENERATOR_GLOBAL_KEY])) {
             return self::$globals[self::WSDL_TO_PHP_GENERATOR_GLOBAL_KEY][$globalKey];
-        else
+        } else {
             return $globalFallback;
+        }
     }
     /**
      * Method to store audit timing during the process
@@ -2876,8 +2942,9 @@ class Generator extends \SoapClient
      */
     private static function audit($auditName, $auditElement = '', $spentTime = 0, $createOnly = false)
     {
-        if (!is_scalar($auditName) || empty($auditName))
+        if (!is_scalar($auditName) || empty($auditName)) {
             return false;
+        }
         /**
          * Current time used
          */
@@ -2897,39 +2964,44 @@ class Generator extends \SoapClient
             $mainAuditName = '';
             $mainAuditName = implode('', array_slice(explode('_', $auditName), 0, 1));
             if (!empty($mainAuditName)) {
-                if (!array_key_exists($mainAuditName, $audit))
+                if (!array_key_exists($mainAuditName, $audit)) {
                     $audit[$mainAuditName] = $variables;
-                elseif (!$createOnly) {
+                } elseif (!$createOnly) {
                     $audit[$mainAuditName]['spent_time'] += $spentTime > 0 ? $spentTime : ($time - $audit[$mainAuditName]['last_time']);
                     $audit[$mainAuditName]['last_time'] = $time;
                     $audit[$mainAuditName]['calls']++;
-                } else
+                } else {
                     $audit[$mainAuditName]['last_time'] = $time;
+                }
             }
         }
         /**
          * Current audit name
          */
-        if (!array_key_exists($auditName, $audit))
+        if (!array_key_exists($auditName, $audit)) {
             $audit[$auditName] = array('own' => $variables, 'elements' => array());
+        }
         elseif (!$createOnly) {
             $audit[$auditName]['own']['spent_time'] += $spentTime > 0 ? $spentTime : ($time - $audit[$auditName]['own']['last_time']);
             $audit[$auditName]['own']['last_time'] = $time;
             $audit[$auditName]['own']['calls']++;
-        } else
+        } else {
             $audit[$auditName]['own']['last_time'] = $time;
+        }
         /**
          * Current audit element
          */
         if (!empty($auditElement)) {
-            if (!array_key_exists($auditElement, $audit[$auditName]['elements']))
+            if (!array_key_exists($auditElement, $audit[$auditName]['elements'])) {
                 $audit[$auditName]['elements'][$auditElement] = $variables;
+            }
             elseif (!$createOnly) {
                 $audit[$auditName]['elements'][$auditElement]['spent_time'] += $spentTime > 0 ? $spentTime : ($time - $audit[$auditName]['elements'][$auditElement]['last_time']);
                 $audit[$auditName]['elements'][$auditElement]['last_time'] = $time;
                 $audit[$auditName]['elements'][$auditElement]['calls']++;
-            } else
+            } else {
                 $audit[$auditName]['elements'][$auditElement]['last_time'] = $time;
+            }
         }
         /**
          * Update global audit
