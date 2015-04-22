@@ -1603,6 +1603,15 @@ class Generator extends \SoapClient
         return $this->options->getGetResponseAsWsdlObject();
     }
     /**
+     * Sets the optionResponseAsWsdlObject value
+     * @param bool
+     * @return GeneratorOptions
+     */
+    public function setOptionGetResponseAsWsdlObject($responseAsWsdlObject)
+    {
+        return $this->options->setGetResponseAsWsdlObject($responseAsWsdlObject);
+    }
+    /**
      * Gets the optionResponseAsWsdlObject value
      * @return bool
      */
