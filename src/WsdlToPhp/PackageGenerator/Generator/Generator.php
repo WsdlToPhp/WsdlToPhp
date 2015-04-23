@@ -722,8 +722,9 @@ class Generator extends \SoapClient
                     if (count($infos) < 3 && strpos($infos[1], '()') !== false && array_key_exists(1, $infos)) {
                         $methodName = trim(str_replace('()', '', $infos[1]));
                         $parameterType = null;
-                    } else
+                    } else {
                         list($methodName, $parameterType) = explode('(', $infos[1]);
+                    }
                     if (!empty($returnType) && !empty($methodName)) {
                         $this->addService($methodName, $parameterType, $returnType);
                     }
@@ -933,8 +934,9 @@ class Generator extends \SoapClient
             array_push($comments, 'File to load generated classes once at once time');
             array_push($comments, '@package ' . self::getPackageName());
             if (count($this->getOptionAddComments())) {
-                foreach ($this->getOptionAddComments() as $tagName => $tagValue)
+                foreach ($this->getOptionAddComments() as $tagName => $tagValue) {
                     array_push($comments, "@$tagName $tagValue");
+                }
             }
             array_push($autoloadDeclaration, array('comment' => $comments));
             $comments = array();
@@ -1984,8 +1986,9 @@ class Generator extends \SoapClient
                     }
                 }
             }
-        } elseif (!empty($location))
+        } elseif (!empty($location)) {
             array_push($locations, $location);
+        }
         /**
          * New WSDL
          */
@@ -2371,8 +2374,9 @@ class Generator extends \SoapClient
                                         /**
                                          * Element type not found, then it's maybe an already known struct ?
                                          */
-                                        if (empty($headerType) && $this->getStruct($partElement) && $this->getStruct($partElement)->getIsStruct())
+                                        if (empty($headerType) && $this->getStruct($partElement) && $this->getStruct($partElement)->getIsStruct()) {
                                             $headerType = '{@link ' . $this->getStruct($partElement)->getPackagedName() . '}';
+                                        }
                                     }
                                 }
                             }
