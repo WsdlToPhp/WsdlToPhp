@@ -15,4 +15,11 @@ abstract class AbstractNodeHandler
     {
         $this->node = $node;
     }
+    /**
+     * @return \DOMNode
+     */
+    public function getNode()
+    {
+        return $this->node;
+    }
 }
