@@ -1,6 +1,8 @@
 <?php
-namespace WsdlToPhp\PackageGenerator\Tests;
 
+namespace WsdlToPhp\PackageGenerator\Tests\Model;
+
+use WsdlToPhp\PackageGenerator\Tests\TestCase;
 use WsdlToPhp\PackageGenerator\Model\EmptyModel;
 
 class ModelTest extends TestCase
