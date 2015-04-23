@@ -5,9 +5,9 @@ Package Generator eases the creation of a PHP package in order to call any SOAP 
 
 Its purpose is to provide a full OOP approach to send SOAP requests without needing any third party library.
 
-The generated package is a standalone. It's only based on native PHP SoapClient class. After its generation, you can move it anywhere you want.
+The generated package is a standalone wihtout any dependencies. It's only based on native PHP SoapClient class. After its generation, you can move it anywhere you want and use it right away.
 
-It does not need PEAR nor NuSOAP nor anything else, at least PHP 5.3.3, SoapClient and DOM (which are natively installed from this PHP version)! 
+The generated package does not need PEAR nor NuSOAP nor anything else, at least PHP 5.3.3, SoapClient and DOM (which are natively installed from this PHP version)! 
 
 Usage
 -----
