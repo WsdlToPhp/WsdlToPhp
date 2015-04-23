@@ -7,30 +7,31 @@ use WsdlToPhp\PackageGenerator\DomHandler\DomDocumentHandler;
 
 class DomDocumentHandlerTest extends TestCase
 {
-    protected static $instance;
+    protected static $ebayInstance;
+    protected static $bingInstance;
     /**
      * @return DomDocumentHandler
      */
     public static function eBayInstance()
     {
-        if (!isset(self::$instance)) {
+        if (!isset(self::$ebayInstance)) {
             $doc = new \DOMDocument('1.0', 'utf-8');
             $doc->load(dirname(__FILE__) . '/../resources/ebaySvc.wsdl');
-            self::$instance = new DomDocumentHandler($doc);
+            self::$ebayInstance = new DomDocumentHandler($doc);
         }
-        return self::$instance;
+        return self::$ebayInstance;
     }
     /**
      * @return DomDocumentHandler
      */
     public static function bingInstance()
     {
-        if (!isset(self::$instance)) {
+        if (!isset(self::$bingInstance)) {
             $doc = new \DOMDocument('1.0', 'utf-8');
             $doc->load(dirname(__FILE__) . '/../resources/bingsearch.wsdl');
-            self::$instance = new DomDocumentHandler($doc);
+            self::$bingInstance = new DomDocumentHandler($doc);
         }
-        return self::$instance;
+        return self::$bingInstance;
     }
     /**
      *
