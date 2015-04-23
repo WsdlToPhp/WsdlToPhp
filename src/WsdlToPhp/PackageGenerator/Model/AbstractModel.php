@@ -561,25 +561,6 @@ abstract class AbstractModel
         return $uniqueName;
     }
     /**
-     * Returns the value with good type
-     * @param mixed $value the value
-     * @return mixed
-     */
-    public static function getValueWithinItsType($value, $knownType = null)
-    {
-        if (is_int($value) || (!is_null($value) && in_array($knownType, array('time', 'positiveInteger', 'unsignedLong', 'unsignedInt', 'short', 'long', 'int', 'integer')))) {
-            return intval($value);
-        } elseif (is_float($value) || (!is_null($value) && in_array($knownType, array('float', 'double', 'decimal')))) {
-            return floatval($value);
-        } elseif (is_numeric($value)) {
-            return intval($value) == $value ? intval($value) : floatval($value);
-        } elseif (is_bool($value) || (!is_null($value) && in_array($knownType, array('bool', 'boolean')))) {
-            return ($value === 'true' || $value === true || $value === 1 || $value === '1');
-        } else {
-            return $value;
-        }
-    }
-    /**
      * Clean comment
      * @param string $comment the comment to clean
      * @param string $glueSeparator ths string to use when gathering values

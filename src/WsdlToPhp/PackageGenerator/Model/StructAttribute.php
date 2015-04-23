@@ -2,6 +2,8 @@
 
 namespace WsdlToPhp\PackageGenerator\Model;
 
+use WsdlToPhp\PackageGenerator\Generator\Utils;
+
 /**
  * Class StructAttribute stands for an available struct attribute described in the WSDL
  */
@@ -255,13 +257,13 @@ class StructAttribute extends AbstractModel
     /**
      * Returns potential default value
      * @uses AbstractModel::getMetaValueFirstSet()
-     * @uses AbstractModel::getValueWithinItsType()
+     * @uses Utils::getValueWithinItsType()
      * @uses StructAttribute::getType()
      * @return mixed
      */
     public function getDefaultValue()
     {
-        return self::getValueWithinItsType($this->getMetaValueFirstSet(array('default', 'Default', 'DefaultValue', 'defaultValue', 'defaultvalue')), $this->getType());
+        return Utils::getValueWithinItsType($this->getMetaValueFirstSet(array('default', 'Default', 'DefaultValue', 'defaultValue', 'defaultvalue')), $this->getType());
     }
     /**
      * Returns true or false depending on minOccurs information associated to the attribute

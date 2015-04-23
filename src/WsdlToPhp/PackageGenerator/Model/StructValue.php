@@ -3,6 +3,7 @@
 namespace WsdlToPhp\PackageGenerator\Model;
 
 use WsdlToPhp\PackageGenerator\Generator\Generator;
+use WsdlToPhp\PackageGenerator\Generator\Utils;
 
 /**
  * Class StructValue stands for an enumeration value
@@ -60,12 +61,12 @@ class StructValue extends AbstractModel
     /**
      * Returns the value with good type
      * @uses AbstractModel::getName()
-     * @uses AbstractModel::getValueWithinItsType()
+     * @uses Utils::getValueWithinItsType()
      * @return mixed
      */
     public function getValue()
     {
-        return self::getValueWithinItsType($this->getName());
+        return Utils::getValueWithinItsType($this->getName());
     }
     /**
      * Gets the index attribute value
