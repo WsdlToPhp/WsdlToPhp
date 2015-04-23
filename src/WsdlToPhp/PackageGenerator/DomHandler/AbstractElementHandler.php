@@ -30,4 +30,20 @@ class AbstractElementHandler extends AbstractNodeHandler
     {
         return $this->getNode();
     }
+    /**
+     * @param string $name
+     * @return boolean
+     */
+    public function hasAttribute($name)
+    {
+        return $this->getElement()->hasAttribute($name);
+    }
+    /**
+     * @param string $name
+     * @return null|AbstractAttributeHandler
+     */
+    public function getAttribute($name)
+    {
+        return $this->hasAttribute($name) ? $this->getDomDocumentHandler()->getHandler($this->getNode()->getAttributeNode($name)) : null;
+    }
 }
