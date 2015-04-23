@@ -1,6 +1,6 @@
 <?php
 
-namespace WsdlToPhp\PackageGenerator\Tests\DomHandler;
+namespace WsdlToPhp\PackageGenerator\DomHandler;
 
 use WsdlToPhp\PackageGenerator\DomHandler\AbstractNodeHandler;
 
