@@ -33,6 +33,16 @@ abstract class AbstractNodeHandler
         return $this->node;
     }
     /**
+     * @return AbstractNodeHandler
+     */
+    public function getParent()
+    {
+        if ($this->getNode()->parentNode instanceof \DOMNode) {
+            return $this->getDomDocumentHandler()->getHandler($this->getNode()->parentNode);
+        }
+        return null;
+    }
+    /**
      * @return int
      */
     public function getIndex()
@@ -76,6 +86,19 @@ abstract class AbstractNodeHandler
     public function hasAttributes()
     {
         return $this->getNode()->hasAttributes();
+    }
+    /**
+     * @return array[AbstractAttributeHandler]
+     */
+    public function getAttributes()
+    {
+        $attributes = array();
+        if ($this->hasAttributes()) {
+            foreach ($this->getNode()->attributes as $index=>$attribute) {
+                $attributes[] = $this->getDomDocumentHandler()->getHandler($attribute, $index);
+            }
+        }
+        return $attributes;
     }
     /**
      * @return boolean

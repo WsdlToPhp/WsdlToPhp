@@ -50,6 +50,24 @@ class NodeHandlerTest extends TestCase
     /**
      *
      */
+    public function testGetAttributes()
+    {
+        $domDocument = DomDocumentHandlerTest::bingInstance();
+
+        // first schema tag
+        $schema = $domDocument->getNodeByName('schema');
+        // first element tag
+        $element = $domDocument->getNodeByName('element');
+        // first sequence tag
+        $sequence = $domDocument->getNodeByName('sequence');
+
+        $this->assertContainsOnlyInstancesOf('\\WsdlToPhp\\PackageGenerator\\DomHandler\\AbstractAttributeHandler', $schema->getAttributes());
+        $this->assertContainsOnlyInstancesOf('\\WsdlToPhp\\PackageGenerator\\DomHandler\\AbstractAttributeHandler', $element->getAttributes());
+        $this->assertEmpty($sequence->getAttributes());
+    }
+    /**
+     *
+     */
     public function testHasChildren()
     {
         $domDocument = DomDocumentHandlerTest::bingInstance();
@@ -77,5 +95,22 @@ class NodeHandlerTest extends TestCase
         $this->assertNotEmpty($schema->getChildren());
         $this->assertContainsOnlyInstancesOf('\\WsdlToPhp\\PackageGenerator\\DomHandler\\AbstractNodeHandler', $schema->getChildren());
         $this->assertEmpty($element->getChildren());
+    }
+    /**
+     *
+     */
+    public function testGetParent()
+    {
+        $domDocument = DomDocumentHandlerTest::bingInstance();
+
+        // first schema tag
+        $schema = $domDocument->getNodeByName('schema');
+        // first element tag
+        $element = $domDocument->getNodeByName('element');
+
+        $this->assertInstanceOf('\\WsdlToPhp\\PackageGenerator\\DomHandler\\AbstractNodeHandler', $schema->getParent());
+        $this->assertInstanceOf('\\WsdlToPhp\\PackageGenerator\\DomHandler\\AbstractNodeHandler', $element->getParent());
+        $this->assertSame('sequence', $element->getParent()->getName());
+        $this->assertInstanceOf('\\WsdlToPhp\\PackageGenerator\\DomHandler\\AbstractNodeHandler', $domDocument->getRootNode()->getParent());
     }
 }
