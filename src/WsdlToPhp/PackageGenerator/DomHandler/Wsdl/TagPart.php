@@ -2,6 +2,6 @@
 
 namespace WsdlToPhp\PackageGenerator\DomHandler\Wsdl;
 
-class Restriction extends AbstractElement
+class TagPart extends AbstractElement
 {
 }

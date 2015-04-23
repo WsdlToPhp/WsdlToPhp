@@ -2,6 +2,6 @@
 
 namespace WsdlToPhp\PackageGenerator\DomHandler\Wsdl;
 
-class Import extends AbstractElement
+class TagList extends AbstractElement
 {
 }

@@ -2,6 +2,6 @@
 
 namespace WsdlToPhp\PackageGenerator\DomHandler\Wsdl;
 
-class Enumeration extends AbstractElement
+class TagMessage extends AbstractElement
 {
 }

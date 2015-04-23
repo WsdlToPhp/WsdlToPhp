@@ -9,21 +9,24 @@ use WsdlToPhp\PackageGenerator\DomHandler\AbstractDomDocumentHandler;
 class AbstractWsdl extends DomDocumentHandler
 {
     const
-        TAG_PART         = 'part',
-        TAG_BODY         = 'body',
-        TAG_INPUT        = 'input',
-        TAG_IMPORT       = 'import',
-        TAG_HEADER       = 'header',
-        TAG_OUTPUT       = 'output',
-        TAG_INCLUDE      = 'include',
-        TAG_ELEMENT      = 'element',
-        TAG_MESSAGE      = 'message',
-        TAG_OPERATION    = 'operation',
-        TAG_ATTRIBUTE    = 'attribute',
-        TAG_SIMPLE_TYPE  = 'simpleType',
-        TAG_ENUMERATION  = 'enumeration',
-        TAG_RESTRICTION  = 'restriction',
-        TAG_COMPLEX_TYPE = 'complexType';
+        TAG_LIST           = 'list',
+        TAG_PART           = 'part',
+        TAG_BODY           = 'body',
+        TAG_INPUT          = 'input',
+        TAG_IMPORT         = 'import',
+        TAG_HEADER         = 'header',
+        TAG_OUTPUT         = 'output',
+        TAG_INCLUDE        = 'include',
+        TAG_ELEMENT        = 'element',
+        TAG_MESSAGE        = 'message',
+        TAG_OPERATION      = 'operation',
+        TAG_ATTRIBUTE      = 'attribute',
+        TAG_EXTENSION      = 'extension',
+        TAG_SIMPLE_TYPE    = 'simpleType',
+        TAG_ENUMERATION    = 'enumeration',
+        TAG_RESTRICTION    = 'restriction',
+        TAG_COMPLEX_TYPE   = 'complexType',
+        TAG_DOCUMENTATION  = 'documentation';
     /**
      * @var string
      */
@@ -38,11 +41,11 @@ class AbstractWsdl extends DomDocumentHandler
         switch ($this->currentTag) {
             case self::TAG_INCLUDE:
             case self::TAG_IMPORT:
-                $handlerName = __NAMESPACE__ . '\\Import';
+                $handlerName = __NAMESPACE__ . '\\TagImport';
                 break;
             case self::TAG_COMPLEX_TYPE:
             case self::TAG_SIMPLE_TYPE:
-                $handlerName = sprintf('%s\\%s',
+                $handlerName = sprintf('%s\\Tag%s',
                                         __NAMESPACE__,
                                         ucfirst(strtolower(str_replace('Type', '', $this->currentTag))));
                 break;
@@ -57,7 +60,8 @@ class AbstractWsdl extends DomDocumentHandler
             case self::TAG_OPERATION:
             case self::TAG_RESTRICTION:
             case self::TAG_ENUMERATION:
-                $handlerName = sprintf('%s\\%s', __NAMESPACE__, ucfirst(strtolower($this->currentTag)));
+            case self::TAG_DOCUMENTATION:
+                $handlerName = sprintf('%s\\Tag%s', __NAMESPACE__, ucfirst(strtolower($this->currentTag)));
                 break;
             default:
                 $handlerName = '\\WsdlToPhp\\PackageGenerator\\DomHandler\\ElementHandler';
@@ -70,7 +74,7 @@ class AbstractWsdl extends DomDocumentHandler
     }
     /**
      * @param array $tags
-     * @return array[AbstractElement]
+     * @return array[TagAbstractElement]
      */
     protected function getElementsByTags(array $tags)
     {
@@ -83,7 +87,7 @@ class AbstractWsdl extends DomDocumentHandler
         return $elements;
     }
     /**
-     * @return array[Import]
+     * @return array[TagImport]
      */
     public function getImports()
     {
@@ -93,7 +97,7 @@ class AbstractWsdl extends DomDocumentHandler
         ));
     }
     /**
-     * @return array[Complex]
+     * @return array[TagComplex]
      */
     public function getComplexTypes()
     {
@@ -102,7 +106,7 @@ class AbstractWsdl extends DomDocumentHandler
         ));
     }
     /**
-     * @return array[Simple]
+     * @return array[TagSimple]
      */
     public function getSimpleTypes()
     {
@@ -111,7 +115,7 @@ class AbstractWsdl extends DomDocumentHandler
         ));
     }
     /**
-     * @return array[Element]
+     * @return array[TagElement]
      */
     public function getElements()
     {
@@ -120,7 +124,7 @@ class AbstractWsdl extends DomDocumentHandler
         ));
     }
     /**
-     * @return array[Restriction]
+     * @return array[TagRestriction]
      */
     public function getRestrictions()
     {
@@ -129,7 +133,7 @@ class AbstractWsdl extends DomDocumentHandler
         ));
     }
     /**
-     * @return array[Enumeration]
+     * @return array[TagEnumeration]
      */
     public function getEnumerations()
     {
@@ -138,7 +142,7 @@ class AbstractWsdl extends DomDocumentHandler
         ));
     }
     /**
-     * @return array[Input]
+     * @return array[TagInput]
      */
     public function getInputs()
     {
@@ -147,7 +151,7 @@ class AbstractWsdl extends DomDocumentHandler
         ));
     }
     /**
-     * @return array[Ouput]
+     * @return array[TagOuput]
      */
     public function getOutputs()
     {
@@ -156,7 +160,7 @@ class AbstractWsdl extends DomDocumentHandler
         ));
     }
     /**
-     * @return array[Bodies]
+     * @return array[TagBodies]
      */
     public function getBodies()
     {
@@ -165,7 +169,7 @@ class AbstractWsdl extends DomDocumentHandler
         ));
     }
     /**
-     * @return array[Bodies]
+     * @return array[TagBodies]
      */
     public function getHeaders()
     {
@@ -174,7 +178,7 @@ class AbstractWsdl extends DomDocumentHandler
         ));
     }
     /**
-     * @return array[Message]
+     * @return array[TagMessage]
      */
     public function getMessages()
     {
@@ -183,7 +187,7 @@ class AbstractWsdl extends DomDocumentHandler
         ));
     }
     /**
-     * @return array[Part]
+     * @return array[TagPart]
      */
     public function getParts()
     {
@@ -192,7 +196,7 @@ class AbstractWsdl extends DomDocumentHandler
         ));
     }
     /**
-     * @return array[Operation]
+     * @return array[TagOperation]
      */
     public function getOperations()
     {
@@ -201,12 +205,39 @@ class AbstractWsdl extends DomDocumentHandler
         ));
     }
     /**
-     * @return array[Attribute]
+     * @return array[TagAttribute]
      */
     public function getAttributes()
     {
         return $this->getElementsByTags(array(
             self::TAG_ATTRIBUTE,
+        ));
+    }
+    /**
+     * @return array[TagDocumentation]
+     */
+    public function getDocumentations()
+    {
+        return $this->getElementsByTags(array(
+            self::TAG_DOCUMENTATION,
+        ));
+    }
+    /**
+     * @return array[TagExtension]
+     */
+    public function getExtensions()
+    {
+        return $this->getElementsByTags(array(
+            self::TAG_EXTENSION,
+        ));
+    }
+    /**
+     * @return array[TagList]
+     */
+    public function getLists()
+    {
+        return $this->getElementsByTags(array(
+            self::TAG_LIST,
         ));
     }
 }
