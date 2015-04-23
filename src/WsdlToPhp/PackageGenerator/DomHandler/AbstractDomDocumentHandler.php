@@ -51,6 +51,9 @@ abstract class AbstractDomDocumentHandler
             case XML_ELEMENT_NODE:
                 return $this->getElementHandler($node, $this, $index);
                 break;
+            case XML_ATTRIBUTE_NODE:
+                return $this->getAttributeHandler($node, $this, $index);
+                break;
             default:
                 return $this->getNodeHandler($node, $this, $index);
                 break;
@@ -70,6 +73,13 @@ abstract class AbstractDomDocumentHandler
      * @return AbstractElementHandler
      */
     abstract protected function getElementHandler(\DOMElement $element, AbstractDomDocumentHandler $domDocument, $index = -1);
+    /**
+     * @param \DOMAttr $element
+     * @param AbstractDomDocumentHandler $domDocument
+     * @param int $index
+     * @return AbstractAttributeHandler
+     */
+    abstract protected function getAttributeHandler(\DOMAttr $attribute, AbstractDomDocumentHandler $domDocument, $index = -1);
     /**
      * @param string $name
      * @return AbstractNodeHandler
