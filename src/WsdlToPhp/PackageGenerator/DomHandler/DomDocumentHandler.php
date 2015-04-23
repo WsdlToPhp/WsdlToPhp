@@ -10,9 +10,16 @@ class DomDocumentHandler extends AbstractDomDocumentHandler
      * @see \WsdlToPhp\PackageGenerator\DomHandler\AbstractDomDocumentHandler::getNodeHandler()
      * @return NodeHandler
      */
-    protected function getNodeHandler(\DOMNode $node)
+    protected function getNodeHandler(\DOMNode $node, AbstractDomDocumentHandler $domDocument, $index = -1)
     {
-        return new NodeHandler($node);
+        return new NodeHandler($node, $domDocument, $index);
+    }/**
+     * @see \WsdlToPhp\PackageGenerator\DomHandler\AbstractDomDocumentHandler::getElementHandler()
+     * @return ElementHandler
+     */
+    protected function getElementHandler(\DOMElement $element, AbstractDomDocumentHandler $domDocument, $index = -1)
+    {
+        return new ElementHandler($element, $domDocument, $index);
     }
     /**
      * @return NodeHandler

@@ -11,7 +11,7 @@ class DomDocumentHandlerTest extends TestCase
     /**
      * @return DomDocumentHandler
      */
-    public static function instance()
+    public static function eBayInstance()
     {
         if (!isset(self::$instance)) {
             $doc = new \DOMDocument('1.0', 'utf-8');
@@ -21,11 +21,23 @@ class DomDocumentHandlerTest extends TestCase
         return self::$instance;
     }
     /**
+     * @return DomDocumentHandler
+     */
+    public static function bingInstance()
+    {
+        if (!isset(self::$instance)) {
+            $doc = new \DOMDocument('1.0', 'utf-8');
+            $doc->load(dirname(__FILE__) . '/../resources/bingsearch.wsdl');
+            self::$instance = new DomDocumentHandler($doc);
+        }
+        return self::$instance;
+    }
+    /**
      *
      */
     public function testGetNodeByName()
     {
-        $instance = self::instance();
+        $instance = self::bingInstance();
 
         $this->assertInstanceOf('\\WsdlToPhp\\PackageGenerator\\DomHandler\\NodeHandler', $instance->getNodeByName('types'));
         $this->assertInstanceOf('\\WsdlToPhp\\PackageGenerator\\DomHandler\\NodeHandler', $instance->getNodeByName('definitions'));
@@ -36,7 +48,7 @@ class DomDocumentHandlerTest extends TestCase
      */
     public function testGetNodesByName()
     {
-        $instance = self::instance();
+        $instance = self::bingInstance();
 
         $this->assertNotEmpty($instance->getNodesByName('element'));
         $this->assertEmpty($instance->getNodesByName('foo'));
