@@ -36,4 +36,39 @@ class AttributeHandlerTest extends TestCase
         $this->assertSame('Version', $element->getAttribute('name')->getValue());
         $this->assertSame(2.2, $element->getAttribute('default')->getValue());
     }
+    /**
+     *
+     */
+    public function testGetValueNamespace()
+    {
+        $domDocument = DomDocumentHandlerTest::bingInstance();
+
+        $sequence = $domDocument->getElementByName('sequence');
+        $elements = $sequence->getChildrenByName('element');
+
+        $namespaces = array(
+            'xsd',
+            'xsd',
+            'xsd',
+            'xsd',
+            'xsd',
+            'tns',
+            'xsd',
+            'xsd',
+            'xsd',
+            'tns',
+            'tns',
+            'tns',
+            'tns',
+            'tns',
+            'tns',
+            'tns',
+            'tns',
+            'tns',
+        );
+
+        foreach ($elements as $index=>$element) {
+            $this->assertSame($namespaces[$index], $element->getAttribute('type')->getValueNamespace());
+        }
+    }
 }

@@ -48,4 +48,16 @@ class AbstractAttributeHandler extends AbstractNodeHandler
         }
         return $value;
     }
+    /**
+     * @return null|string
+     */
+    public function getValueNamespace()
+    {
+        $value     = $this->getAttribute()->value;
+        $namespace = null;
+        if (strpos($value, ':') !== false) {
+            $namespace = implode('', array_slice(explode(':', $value), 0, -1));
+        }
+        return $namespace;
+    }
 }

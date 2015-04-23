@@ -41,4 +41,19 @@ class ElementHandlerTest extends TestCase
         $this->assertInstanceOf('\\WsdlToPhp\\PackageGenerator\\DomHandler\\AttributeHandler', $element->getAttribute('name'));
         $this->assertEmpty($schema->getAttribute('foo'));
     }
+    /**
+     *
+     */
+    public function testGetChildrenByName()
+    {
+        $domDocument = DomDocumentHandlerTest::bingInstance();
+
+        // first sequence tag
+        $sequence = $domDocument->getElementByName('sequence');
+
+        $childrenByName = $sequence->getChildrenByName('element');
+        foreach ($childrenByName as $child) {
+            $this->assertSame('element', $child->getName());
+        }
+    }
 }

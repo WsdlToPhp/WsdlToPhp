@@ -46,4 +46,18 @@ class AbstractElementHandler extends AbstractNodeHandler
     {
         return $this->hasAttribute($name) ? $this->getDomDocumentHandler()->getHandler($this->getNode()->getAttributeNode($name)) : null;
     }
+    /**
+     * @param string $name
+     * @return array[AbstractNodeHandler]|array[AbstractElementHandler]
+     */
+    public function getChildrenByName($name)
+    {
+        $children = array();
+        if ($this->hasChildren()) {
+            foreach ($this->getElement()->getElementsByTagName($name) as $index=>$node) {
+                $children[] = $this->getDomDocumentHandler()->getHandler($node, $index);
+            }
+        }
+        return $children;
+    }
 }
