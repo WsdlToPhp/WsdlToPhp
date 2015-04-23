@@ -38,8 +38,7 @@ class DomDocumentHandlerTest extends TestCase
     {
         $instance = self::instance();
 
-        $this->assertNotEmpty(is_array($instance->getNodesByName('element')));
-        $this->assertNotEmpty($instance->getNodesByName('restriction'));
-        $this->assertNotEmpty($instance->getNodesByName('annotation'));
+        $this->assertNotEmpty($instance->getNodesByName('element'));
+        $this->assertEmpty($instance->getNodesByName('foo'));
     }
 }
