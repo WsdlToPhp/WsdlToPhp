@@ -9,6 +9,7 @@ class WsdlHandlerTest extends TestCase
 {
     protected static $ebayInstance;
     protected static $bingInstance;
+    protected static $partnerInstance;
     /**
      * @return WsdlHandler
      */
@@ -34,15 +35,29 @@ class WsdlHandlerTest extends TestCase
         return self::$bingInstance;
     }
     /**
+     * @return WsdlHandler
+     */
+    public static function partnerInstance()
+    {
+        if (!isset(self::$partnerInstance)) {
+            $doc = new \DOMDocument('1.0', 'utf-8');
+            $doc->load(dirname(__FILE__) . '/../../resources/PartnerService.wsdl');
+            self::$partnerInstance = new Wsdl($doc);
+        }
+        return self::$partnerInstance;
+    }
+    /**
      *
      */
     public function testGetImports()
     {
         $ebay = self::eBayInstance();
         $bing = self::bingInstance();
+        $partner = self::partnerInstance();
 
-        $this->assertContainsOnlyInstancesOf('\\WsdlToPhp\\PackageGenerator\\DomHandler\\Wsdl\\TagImport', $ebay->getImports());
+        $this->assertContainsOnlyInstancesOf('\\WsdlToPhp\\PackageGenerator\\DomHandler\\Wsdl\\TagImport', $partner->getImports());
         $this->assertEmpty($bing->getImports());
+        $this->assertEmpty($ebay->getImports());
     }
     /**
      *
@@ -190,6 +205,6 @@ class WsdlHandlerTest extends TestCase
     {
         $bing = self::bingInstance();
 
-        $this->assertContainsOnlyInstancesOf('\\WsdlToPhp\\PackageGenerator\\DomHandler\\Wsdl\\TagUnion', $bing->getunions());
+        $this->assertContainsOnlyInstancesOf('\\WsdlToPhp\\PackageGenerator\\DomHandler\\Wsdl\\TagUnion', $bing->getUnions());
     }
 }
