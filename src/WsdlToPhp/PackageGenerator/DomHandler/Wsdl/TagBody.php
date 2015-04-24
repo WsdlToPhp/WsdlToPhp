@@ -2,6 +2,6 @@
 
 namespace WsdlToPhp\PackageGenerator\DomHandler\Wsdl;
 
-class TagBody extends AbstractOperationElement
+class TagBody extends AbstractTagOperationElement
 {
 }

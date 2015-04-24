@@ -12,6 +12,7 @@ class AbstractWsdl extends DomDocumentHandler
         TAG_LIST           = 'list',
         TAG_PART           = 'part',
         TAG_BODY           = 'body',
+        TAG_UNION          = 'union',
         TAG_INPUT          = 'input',
         TAG_IMPORT         = 'import',
         TAG_HEADER         = 'header',
@@ -39,10 +40,6 @@ class AbstractWsdl extends DomDocumentHandler
     {
         $handlerName = '';
         switch ($this->currentTag) {
-            case self::TAG_INCLUDE:
-            case self::TAG_IMPORT:
-                $handlerName = __NAMESPACE__ . '\\TagImport';
-                break;
             case self::TAG_COMPLEX_TYPE:
             case self::TAG_SIMPLE_TYPE:
                 $handlerName = sprintf('%s\\Tag%s',
@@ -52,9 +49,12 @@ class AbstractWsdl extends DomDocumentHandler
             case self::TAG_BODY:
             case self::TAG_PART:
             case self::TAG_INPUT:
+            case self::TAG_UNION:
             case self::TAG_HEADER:
+            case self::TAG_IMPORT:
             case self::TAG_OUTPUT:
             case self::TAG_ELEMENT:
+            case self::TAG_INCLUDE:
             case self::TAG_MESSAGE:
             case self::TAG_ATTRIBUTE:
             case self::TAG_OPERATION:
@@ -238,6 +238,15 @@ class AbstractWsdl extends DomDocumentHandler
     {
         return $this->getElementsByTags(array(
             self::TAG_LIST,
+        ));
+    }
+    /**
+     * @return array[TagUnion]
+     */
+    public function getunions()
+    {
+        return $this->getElementsByTags(array(
+            self::TAG_UNION,
         ));
     }
 }

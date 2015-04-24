@@ -2,6 +2,6 @@
 
 namespace WsdlToPhp\PackageGenerator\DomHandler\Wsdl;
 
-class TagExtension extends AbstractElement
+class TagExtension extends AbstractTag
 {
 }

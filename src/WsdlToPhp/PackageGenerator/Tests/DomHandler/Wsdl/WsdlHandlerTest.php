@@ -183,4 +183,13 @@ class WsdlHandlerTest extends TestCase
 
         $this->assertContainsOnlyInstancesOf('\\WsdlToPhp\\PackageGenerator\\DomHandler\\Wsdl\\TagList', $bing->getLists());
     }
+    /**
+     *
+     */
+    public function testGetUnions()
+    {
+        $bing = self::bingInstance();
+
+        $this->assertContainsOnlyInstancesOf('\\WsdlToPhp\\PackageGenerator\\DomHandler\\Wsdl\\TagUnion', $bing->getunions());
+    }
 }
