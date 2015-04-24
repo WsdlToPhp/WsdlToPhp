@@ -9,25 +9,29 @@ use WsdlToPhp\PackageGenerator\DomHandler\AbstractDomDocumentHandler;
 class AbstractWsdl extends DomDocumentHandler
 {
     const
-        TAG_LIST           = 'list',
-        TAG_PART           = 'part',
-        TAG_BODY           = 'body',
-        TAG_UNION          = 'union',
-        TAG_INPUT          = 'input',
-        TAG_IMPORT         = 'import',
-        TAG_HEADER         = 'header',
-        TAG_OUTPUT         = 'output',
-        TAG_INCLUDE        = 'include',
-        TAG_ELEMENT        = 'element',
-        TAG_MESSAGE        = 'message',
-        TAG_OPERATION      = 'operation',
-        TAG_ATTRIBUTE      = 'attribute',
-        TAG_EXTENSION      = 'extension',
-        TAG_SIMPLE_TYPE    = 'simpleType',
-        TAG_ENUMERATION    = 'enumeration',
-        TAG_RESTRICTION    = 'restriction',
-        TAG_COMPLEX_TYPE   = 'complexType',
-        TAG_DOCUMENTATION  = 'documentation';
+        TAG_LIST            = 'list',
+        TAG_PART            = 'part',
+        TAG_BODY            = 'body',
+        TAG_UNION           = 'union',
+        TAG_INPUT           = 'input',
+        TAG_IMPORT          = 'import',
+        TAG_HEADER          = 'header',
+        TAG_OUTPUT          = 'output',
+        TAG_INCLUDE         = 'include',
+        TAG_ELEMENT         = 'element',
+        TAG_MESSAGE         = 'message',
+        TAG_SEQUENCE        = 'sequence',
+        TAG_OPERATION       = 'operation',
+        TAG_ATTRIBUTE       = 'attribute',
+        TAG_EXTENSION       = 'extension',
+        TAG_SIMPLE_TYPE     = 'simpleType',
+        TAG_ENUMERATION     = 'enumeration',
+        TAG_RESTRICTION     = 'restriction',
+        TAG_COMPLEX_TYPE    = 'complexType',
+        TAG_MEMBER_TYPES    = 'memberTypes',
+        TAG_DOCUMENTATION   = 'documentation',
+        TAG_SIMPLE_CONTENT  = 'simpleContent',
+        TAG_COMPLEX_CONTENT = 'complexContent';
     /**
      * @var string
      */
@@ -40,12 +44,6 @@ class AbstractWsdl extends DomDocumentHandler
     {
         $handlerName = '';
         switch ($this->currentTag) {
-            case self::TAG_COMPLEX_TYPE:
-            case self::TAG_SIMPLE_TYPE:
-                $handlerName = sprintf('%s\\Tag%s',
-                                        __NAMESPACE__,
-                                        ucfirst(strtolower(str_replace('Type', '', $this->currentTag))));
-                break;
             case self::TAG_BODY:
             case self::TAG_PART:
             case self::TAG_INPUT:
@@ -58,10 +56,15 @@ class AbstractWsdl extends DomDocumentHandler
             case self::TAG_MESSAGE:
             case self::TAG_ATTRIBUTE:
             case self::TAG_OPERATION:
+            case self::TAG_SIMPLE_TYPE:
             case self::TAG_RESTRICTION:
             case self::TAG_ENUMERATION:
+            case self::TAG_COMPLEX_TYPE:
+            case self::TAG_MEMBER_TYPES:
             case self::TAG_DOCUMENTATION:
-                $handlerName = sprintf('%s\\Tag%s', __NAMESPACE__, ucfirst(strtolower($this->currentTag)));
+            case self::TAG_SIMPLE_CONTENT:
+            case self::TAG_COMPLEX_CONTENT:
+                $handlerName = sprintf('%s\\Tag%s', __NAMESPACE__, ucfirst($this->currentTag));
                 break;
             default:
                 $handlerName = '\\WsdlToPhp\\PackageGenerator\\DomHandler\\ElementHandler';
@@ -243,10 +246,37 @@ class AbstractWsdl extends DomDocumentHandler
     /**
      * @return array[TagUnion]
      */
-    public function getunions()
+    public function getUnions()
     {
         return $this->getElementsByTags(array(
             self::TAG_UNION,
+        ));
+    }
+    /**
+     * @return array[TagComplexContent]
+     */
+    public function getComplexContents()
+    {
+        return $this->getElementsByTags(array(
+            self::TAG_COMPLEX_CONTENT,
+        ));
+    }
+    /**
+     * @return array[TagSimpleContent]
+     */
+    public function getSimpleContents()
+    {
+        return $this->getElementsByTags(array(
+            self::TAG_SIMPLE_CONTENT,
+        ));
+    }
+    /**
+     * @return array[TagSequence]
+     */
+    public function getSequnces()
+    {
+        return $this->getElementsByTags(array(
+            self::TAG_SEQUENCE,
         ));
     }
 }
