@@ -9,29 +9,45 @@ use WsdlToPhp\PackageGenerator\DomHandler\AbstractDomDocumentHandler;
 class AbstractWsdl extends DomDocumentHandler
 {
     const
-        TAG_LIST            = 'list',
-        TAG_PART            = 'part',
-        TAG_BODY            = 'body',
-        TAG_UNION           = 'union',
-        TAG_INPUT           = 'input',
-        TAG_IMPORT          = 'import',
-        TAG_HEADER          = 'header',
-        TAG_OUTPUT          = 'output',
-        TAG_INCLUDE         = 'include',
-        TAG_ELEMENT         = 'element',
-        TAG_MESSAGE         = 'message',
-        TAG_SEQUENCE        = 'sequence',
-        TAG_OPERATION       = 'operation',
+        TAG_ALL             = 'all',
+        TAG_ANNOTATION      = 'annotation',
+        TAG_ANY             = 'any',
+        TAG_ANY_ATTRIBUTE   = 'anyAttribute',
+        TAG_APPINFO         = 'appinfo',
         TAG_ATTRIBUTE       = 'attribute',
-        TAG_EXTENSION       = 'extension',
-        TAG_SIMPLE_TYPE     = 'simpleType',
-        TAG_ENUMERATION     = 'enumeration',
-        TAG_RESTRICTION     = 'restriction',
+        TAG_ATTRIBUTE_GROUP = 'attributeGroup',
+        TAG_BODY            = 'body',
+        TAG_CHOICE          = 'choice',
+        TAG_COMPLEX_CONTENT = 'complexContent',
         TAG_COMPLEX_TYPE    = 'complexType',
-        TAG_MEMBER_TYPES    = 'memberTypes',
         TAG_DOCUMENTATION   = 'documentation',
+        TAG_ELEMENT         = 'element',
+        TAG_ENUMERATION     = 'enumeration',
+        TAG_EXTENSION       = 'extension',
+        TAG_FIELD           = 'field',
+        TAG_GROUP           = 'group',
+        TAG_HEADER          = 'header',
+        TAG_IMPORT          = 'import',
+        TAG_INCLUDE         = 'include',
+        TAG_INPUT           = 'input',
+        TAG_KEY             = 'key',
+        TAG_KEYREF          = 'keyref',
+        TAG_LIST            = 'list',
+        TAG_MEMBER_TYPES    = 'memberTypes',
+        TAG_MESSAGE         = 'message',
+        TAG_NOTATION        = 'notation',
+        TAG_OPERATION       = 'operation',
+        TAG_OUTPUT          = 'output',
+        TAG_PART            = 'part',
+        TAG_REDEFINE        = 'redefine',
+        TAG_RESTRICTION     = 'restriction',
+        TAG_SELECTOR        = 'selector',
+        TAG_SEQUENCE        = 'sequence',
+        TAG_SCHEMA          = 'schema',
         TAG_SIMPLE_CONTENT  = 'simpleContent',
-        TAG_COMPLEX_CONTENT = 'complexContent';
+        TAG_SIMPLE_TYPE     = 'simpleType',
+        TAG_UNION           = 'union',
+        TAG_UNIQUE          = 'unique';
     /**
      * @var string
      */
@@ -42,42 +58,16 @@ class AbstractWsdl extends DomDocumentHandler
      */
     protected function getElementHandler(\DOMElement $element, AbstractDomDocumentHandler $domDocument, $index = -1)
     {
-        $handlerName = '';
-        switch ($this->currentTag) {
-            case self::TAG_BODY:
-            case self::TAG_PART:
-            case self::TAG_INPUT:
-            case self::TAG_UNION:
-            case self::TAG_HEADER:
-            case self::TAG_IMPORT:
-            case self::TAG_OUTPUT:
-            case self::TAG_ELEMENT:
-            case self::TAG_INCLUDE:
-            case self::TAG_MESSAGE:
-            case self::TAG_ATTRIBUTE:
-            case self::TAG_OPERATION:
-            case self::TAG_SIMPLE_TYPE:
-            case self::TAG_RESTRICTION:
-            case self::TAG_ENUMERATION:
-            case self::TAG_COMPLEX_TYPE:
-            case self::TAG_MEMBER_TYPES:
-            case self::TAG_DOCUMENTATION:
-            case self::TAG_SIMPLE_CONTENT:
-            case self::TAG_COMPLEX_CONTENT:
-                $handlerName = sprintf('%s\\Tag%s', __NAMESPACE__, ucfirst($this->currentTag));
-                break;
-            default:
-                $handlerName = '\\WsdlToPhp\\PackageGenerator\\DomHandler\\ElementHandler';
-                break;
+        $handlerName = '\\WsdlToPhp\\PackageGenerator\\DomHandler\\ElementHandler';
+        $tagClass    = sprintf('%s\\Tag\\Tag%s', __NAMESPACE__, ucfirst($this->currentTag));
+        if (class_exists($tagClass)) {
+            $handlerName = $tagClass;
         }
-        if (!empty($handlerName)) {
-            return new $handlerName($element, $domDocument, $index);
-        }
-        return null;
+        return new $handlerName($element, $domDocument, $index);
     }
     /**
      * @param array $tags
-     * @return array[TagAbstractElement]
+     * @return array[WsdlToPhp\PackageGenerator\DomHandler\Wsdl\Tag\TagAbstractElement]
      */
     protected function getElementsByTags(array $tags)
     {
@@ -90,7 +80,7 @@ class AbstractWsdl extends DomDocumentHandler
         return $elements;
     }
     /**
-     * @return array[TagImport]
+     * @return array[WsdlToPhp\PackageGenerator\DomHandler\Wsdl\Tag\TagImport]
      */
     public function getImports()
     {
@@ -100,7 +90,7 @@ class AbstractWsdl extends DomDocumentHandler
         ));
     }
     /**
-     * @return array[TagComplex]
+     * @return array[WsdlToPhp\PackageGenerator\DomHandler\Wsdl\Tag\TagComplex]
      */
     public function getComplexTypes()
     {
@@ -109,7 +99,7 @@ class AbstractWsdl extends DomDocumentHandler
         ));
     }
     /**
-     * @return array[TagSimple]
+     * @return array[WsdlToPhp\PackageGenerator\DomHandler\Wsdl\Tag\TagSimple]
      */
     public function getSimpleTypes()
     {
@@ -118,7 +108,7 @@ class AbstractWsdl extends DomDocumentHandler
         ));
     }
     /**
-     * @return array[TagElement]
+     * @return array[WsdlToPhp\PackageGenerator\DomHandler\Wsdl\Tag\TagElement]
      */
     public function getElements()
     {
@@ -127,7 +117,7 @@ class AbstractWsdl extends DomDocumentHandler
         ));
     }
     /**
-     * @return array[TagRestriction]
+     * @return array[WsdlToPhp\PackageGenerator\DomHandler\Wsdl\Tag\TagRestriction]
      */
     public function getRestrictions()
     {
@@ -136,7 +126,7 @@ class AbstractWsdl extends DomDocumentHandler
         ));
     }
     /**
-     * @return array[TagEnumeration]
+     * @return array[WsdlToPhp\PackageGenerator\DomHandler\Wsdl\Tag\TagEnumeration]
      */
     public function getEnumerations()
     {
@@ -145,7 +135,7 @@ class AbstractWsdl extends DomDocumentHandler
         ));
     }
     /**
-     * @return array[TagInput]
+     * @return array[WsdlToPhp\PackageGenerator\DomHandler\Wsdl\Tag\TagInput]
      */
     public function getInputs()
     {
@@ -154,7 +144,7 @@ class AbstractWsdl extends DomDocumentHandler
         ));
     }
     /**
-     * @return array[TagOuput]
+     * @return array[WsdlToPhp\PackageGenerator\DomHandler\Wsdl\Tag\TagOuput]
      */
     public function getOutputs()
     {
@@ -163,7 +153,7 @@ class AbstractWsdl extends DomDocumentHandler
         ));
     }
     /**
-     * @return array[TagBodies]
+     * @return array[WsdlToPhp\PackageGenerator\DomHandler\Wsdl\Tag\TagBodies]
      */
     public function getBodies()
     {
@@ -172,7 +162,7 @@ class AbstractWsdl extends DomDocumentHandler
         ));
     }
     /**
-     * @return array[TagBodies]
+     * @return array[WsdlToPhp\PackageGenerator\DomHandler\Wsdl\Tag\TagBodies]
      */
     public function getHeaders()
     {
@@ -181,7 +171,7 @@ class AbstractWsdl extends DomDocumentHandler
         ));
     }
     /**
-     * @return array[TagMessage]
+     * @return array[WsdlToPhp\PackageGenerator\DomHandler\Wsdl\Tag\TagMessage]
      */
     public function getMessages()
     {
@@ -190,7 +180,7 @@ class AbstractWsdl extends DomDocumentHandler
         ));
     }
     /**
-     * @return array[TagPart]
+     * @return array[WsdlToPhp\PackageGenerator\DomHandler\Wsdl\Tag\TagPart]
      */
     public function getParts()
     {
@@ -199,7 +189,7 @@ class AbstractWsdl extends DomDocumentHandler
         ));
     }
     /**
-     * @return array[TagOperation]
+     * @return array[WsdlToPhp\PackageGenerator\DomHandler\Wsdl\Tag\TagOperation]
      */
     public function getOperations()
     {
@@ -208,7 +198,7 @@ class AbstractWsdl extends DomDocumentHandler
         ));
     }
     /**
-     * @return array[TagAttribute]
+     * @return array[WsdlToPhp\PackageGenerator\DomHandler\Wsdl\Tag\TagAttribute]
      */
     public function getAttributes()
     {
@@ -217,7 +207,7 @@ class AbstractWsdl extends DomDocumentHandler
         ));
     }
     /**
-     * @return array[TagDocumentation]
+     * @return array[WsdlToPhp\PackageGenerator\DomHandler\Wsdl\Tag\TagDocumentation]
      */
     public function getDocumentations()
     {
@@ -226,7 +216,7 @@ class AbstractWsdl extends DomDocumentHandler
         ));
     }
     /**
-     * @return array[TagExtension]
+     * @return array[WsdlToPhp\PackageGenerator\DomHandler\Wsdl\Tag\TagExtension]
      */
     public function getExtensions()
     {
@@ -235,7 +225,7 @@ class AbstractWsdl extends DomDocumentHandler
         ));
     }
     /**
-     * @return array[TagList]
+     * @return array[WsdlToPhp\PackageGenerator\DomHandler\Wsdl\Tag\TagList]
      */
     public function getLists()
     {
@@ -244,7 +234,7 @@ class AbstractWsdl extends DomDocumentHandler
         ));
     }
     /**
-     * @return array[TagUnion]
+     * @return array[WsdlToPhp\PackageGenerator\DomHandler\Wsdl\Tag\TagUnion]
      */
     public function getUnions()
     {
@@ -253,7 +243,7 @@ class AbstractWsdl extends DomDocumentHandler
         ));
     }
     /**
-     * @return array[TagComplexContent]
+     * @return array[WsdlToPhp\PackageGenerator\DomHandler\Wsdl\Tag\TagComplexContent]
      */
     public function getComplexContents()
     {
@@ -262,7 +252,7 @@ class AbstractWsdl extends DomDocumentHandler
         ));
     }
     /**
-     * @return array[TagSimpleContent]
+     * @return array[WsdlToPhp\PackageGenerator\DomHandler\Wsdl\Tag\TagSimpleContent]
      */
     public function getSimpleContents()
     {
@@ -271,12 +261,156 @@ class AbstractWsdl extends DomDocumentHandler
         ));
     }
     /**
-     * @return array[TagSequence]
+     * @return array[WsdlToPhp\PackageGenerator\DomHandler\Wsdl\Tag\TagSequence]
      */
-    public function getSequnces()
+    public function getSequences()
     {
         return $this->getElementsByTags(array(
             self::TAG_SEQUENCE,
+        ));
+    }
+    /**
+     * @return array[WsdlToPhp\PackageGenerator\DomHandler\Wsdl\Tag\TagAll]
+     */
+    public function getAlls()
+    {
+        return $this->getElementsByTags(array(
+            self::TAG_ALL,
+        ));
+    }
+    /**
+     * @return array[WsdlToPhp\PackageGenerator\DomHandler\Wsdl\Tag\TagAnnotation]
+     */
+    public function getAnnotations()
+    {
+        return $this->getElementsByTags(array(
+            self::TAG_ANNOTATION,
+        ));
+    }
+    /**
+     * @return array[WsdlToPhp\PackageGenerator\DomHandler\Wsdl\Tag\TagAny]
+     */
+    public function getAnys()
+    {
+        return $this->getElementsByTags(array(
+            self::TAG_ANY,
+        ));
+    }
+    /**
+     * @return array[WsdlToPhp\PackageGenerator\DomHandler\Wsdl\Tag\TagAnyAttribute]
+     */
+    public function getAnyAttributes()
+    {
+        return $this->getElementsByTags(array(
+            self::TAG_ANY_ATTRIBUTE,
+        ));
+    }
+    /**
+     * @return array[WsdlToPhp\PackageGenerator\DomHandler\Wsdl\Tag\TagAppinfo]
+     */
+    public function getAppinfos()
+    {
+        return $this->getElementsByTags(array(
+            self::TAG_APPINFO,
+        ));
+    }
+    /**
+     * @return array[WsdlToPhp\PackageGenerator\DomHandler\Wsdl\Tag\TagAttributeGroup]
+     */
+    public function getAttributeGroups()
+    {
+        return $this->getElementsByTags(array(
+            self::TAG_ATTRIBUTE_GROUP,
+        ));
+    }
+    /**
+     * @return array[WsdlToPhp\PackageGenerator\DomHandler\Wsdl\Tag\TagChoice]
+     */
+    public function getChoices()
+    {
+        return $this->getElementsByTags(array(
+            self::TAG_CHOICE,
+        ));
+    }
+    /**
+     * @return array[WsdlToPhp\PackageGenerator\DomHandler\Wsdl\Tag\TagField]
+     */
+    public function getFields()
+    {
+        return $this->getElementsByTags(array(
+            self::TAG_FIELD,
+        ));
+    }
+    /**
+     * @return array[WsdlToPhp\PackageGenerator\DomHandler\Wsdl\Tag\TagGroup]
+     */
+    public function getGroups()
+    {
+        return $this->getElementsByTags(array(
+            self::TAG_GROUP,
+        ));
+    }
+    /**
+     * @return array[WsdlToPhp\PackageGenerator\DomHandler\Wsdl\Tag\TagKey]
+     */
+    public function getKeys()
+    {
+        return $this->getElementsByTags(array(
+            self::TAG_KEY,
+        ));
+    }
+    /**
+     * @return array[WsdlToPhp\PackageGenerator\DomHandler\Wsdl\Tag\TagKeyref]
+     */
+    public function getKeyrefs()
+    {
+        return $this->getElementsByTags(array(
+            self::TAG_KEYREF,
+        ));
+    }
+    /**
+     * @return array[WsdlToPhp\PackageGenerator\DomHandler\Wsdl\Tag\TagNotation]
+     */
+    public function getNotations()
+    {
+        return $this->getElementsByTags(array(
+            self::TAG_NOTATION,
+        ));
+    }
+    /**
+     * @return array[WsdlToPhp\PackageGenerator\DomHandler\Wsdl\Tag\TagRedefine]
+     */
+    public function getRedefines()
+    {
+        return $this->getElementsByTags(array(
+            self::TAG_REDEFINE,
+        ));
+    }
+    /**
+     * @return array[WsdlToPhp\PackageGenerator\DomHandler\Wsdl\Tag\TagSchema]
+     */
+    public function getSchemas()
+    {
+        return $this->getElementsByTags(array(
+            self::TAG_SCHEMA,
+        ));
+    }
+    /**
+     * @return array[WsdlToPhp\PackageGenerator\DomHandler\Wsdl\Tag\TagSelector]
+     */
+    public function getSelectors()
+    {
+        return $this->getElementsByTags(array(
+            self::TAG_SELECTOR,
+        ));
+    }
+    /**
+     * @return array[WsdlToPhp\PackageGenerator\DomHandler\Wsdl\Tag\TagUnique]
+     */
+    public function getUniques()
+    {
+        return $this->getElementsByTags(array(
+            self::TAG_UNIQUE,
         ));
     }
 }

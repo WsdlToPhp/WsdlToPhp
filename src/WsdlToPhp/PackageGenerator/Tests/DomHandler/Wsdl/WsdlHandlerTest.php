@@ -68,7 +68,7 @@ class WsdlHandlerTest extends TestCase
         $bing = self::bingInstance();
         $partner = self::partnerInstance();
 
-        $this->assertContainsOnlyInstancesOf('\\WsdlToPhp\\PackageGenerator\\DomHandler\\Wsdl\\TagImport', $partner->getImports());
+        $this->assertContainsOnlyInstancesOf('\\WsdlToPhp\\PackageGenerator\\DomHandler\\Wsdl\\Tag\\TagImport', $partner->getImports());
         $this->assertEmpty($bing->getImports());
         $this->assertEmpty($ebay->getImports());
     }
@@ -80,8 +80,8 @@ class WsdlHandlerTest extends TestCase
         $ebay = self::eBayInstance();
         $bing = self::bingInstance();
 
-        $this->assertContainsOnlyInstancesOf('\\WsdlToPhp\\PackageGenerator\\DomHandler\\Wsdl\\TagComplexType', $ebay->getComplexTypes());
-        $this->assertContainsOnlyInstancesOf('\\WsdlToPhp\\PackageGenerator\\DomHandler\\Wsdl\\TagComplexType', $bing->getComplexTypes());
+        $this->assertContainsOnlyInstancesOf('\\WsdlToPhp\\PackageGenerator\\DomHandler\\Wsdl\\Tag\\TagComplexType', $ebay->getComplexTypes());
+        $this->assertContainsOnlyInstancesOf('\\WsdlToPhp\\PackageGenerator\\DomHandler\\Wsdl\\Tag\\TagComplexType', $bing->getComplexTypes());
     }
     /**
      *
@@ -91,8 +91,8 @@ class WsdlHandlerTest extends TestCase
         $ebay = self::eBayInstance();
         $bing = self::bingInstance();
 
-        $this->assertContainsOnlyInstancesOf('\\WsdlToPhp\\PackageGenerator\\DomHandler\\Wsdl\\TagSimpleType', $ebay->getSimpleTypes());
-        $this->assertContainsOnlyInstancesOf('\\WsdlToPhp\\PackageGenerator\\DomHandler\\Wsdl\\TagSimpleType', $bing->getSimpleTypes());
+        $this->assertContainsOnlyInstancesOf('\\WsdlToPhp\\PackageGenerator\\DomHandler\\Wsdl\\Tag\\TagSimpleType', $ebay->getSimpleTypes());
+        $this->assertContainsOnlyInstancesOf('\\WsdlToPhp\\PackageGenerator\\DomHandler\\Wsdl\\Tag\\TagSimpleType', $bing->getSimpleTypes());
     }
     /**
      *
@@ -101,7 +101,7 @@ class WsdlHandlerTest extends TestCase
     {
         $bing = self::bingInstance();
 
-        $this->assertContainsOnlyInstancesOf('\\WsdlToPhp\\PackageGenerator\\DomHandler\\Wsdl\\TagElement', $bing->getElements());
+        $this->assertContainsOnlyInstancesOf('\\WsdlToPhp\\PackageGenerator\\DomHandler\\Wsdl\\Tag\\TagElement', $bing->getElements());
     }
     /**
      *
@@ -110,7 +110,7 @@ class WsdlHandlerTest extends TestCase
     {
         $bing = self::bingInstance();
 
-        $this->assertContainsOnlyInstancesOf('\\WsdlToPhp\\PackageGenerator\\DomHandler\\Wsdl\\TagRestriction', $bing->getRestrictions());
+        $this->assertContainsOnlyInstancesOf('\\WsdlToPhp\\PackageGenerator\\DomHandler\\Wsdl\\Tag\\TagRestriction', $bing->getRestrictions());
     }
     /**
      *
@@ -119,7 +119,7 @@ class WsdlHandlerTest extends TestCase
     {
         $bing = self::bingInstance();
 
-        $this->assertContainsOnlyInstancesOf('\\WsdlToPhp\\PackageGenerator\\DomHandler\\Wsdl\\TagEnumeration', $bing->getEnumerations());
+        $this->assertContainsOnlyInstancesOf('\\WsdlToPhp\\PackageGenerator\\DomHandler\\Wsdl\\Tag\\TagEnumeration', $bing->getEnumerations());
     }
     /**
      *
@@ -128,7 +128,7 @@ class WsdlHandlerTest extends TestCase
     {
         $bing = self::bingInstance();
 
-        $this->assertContainsOnlyInstancesOf('\\WsdlToPhp\\PackageGenerator\\DomHandler\\Wsdl\\TagInput', $bing->getInputs());
+        $this->assertContainsOnlyInstancesOf('\\WsdlToPhp\\PackageGenerator\\DomHandler\\Wsdl\\Tag\\TagInput', $bing->getInputs());
     }
     /**
      *
@@ -137,7 +137,7 @@ class WsdlHandlerTest extends TestCase
     {
         $bing = self::bingInstance();
 
-        $this->assertContainsOnlyInstancesOf('\\WsdlToPhp\\PackageGenerator\\DomHandler\\Wsdl\\TagOutput', $bing->getOutputs());
+        $this->assertContainsOnlyInstancesOf('\\WsdlToPhp\\PackageGenerator\\DomHandler\\Wsdl\\Tag\\TagOutput', $bing->getOutputs());
     }
     /**
      *
@@ -146,7 +146,7 @@ class WsdlHandlerTest extends TestCase
     {
         $bing = self::bingInstance();
 
-        $this->assertContainsOnlyInstancesOf('\\WsdlToPhp\\PackageGenerator\\DomHandler\\Wsdl\\TagBody', $bing->getBodies());
+        $this->assertContainsOnlyInstancesOf('\\WsdlToPhp\\PackageGenerator\\DomHandler\\Wsdl\\Tag\\TagBody', $bing->getBodies());
     }
     /**
      *
@@ -155,7 +155,7 @@ class WsdlHandlerTest extends TestCase
     {
         $ebay = self::eBayInstance();
 
-        $this->assertContainsOnlyInstancesOf('\\WsdlToPhp\\PackageGenerator\\DomHandler\\Wsdl\\TagHeader', $ebay->getHeaders());
+        $this->assertContainsOnlyInstancesOf('\\WsdlToPhp\\PackageGenerator\\DomHandler\\Wsdl\\Tag\\TagHeader', $ebay->getHeaders());
     }
     /**
      *
@@ -164,7 +164,7 @@ class WsdlHandlerTest extends TestCase
     {
         $bing = self::bingInstance();
 
-        $this->assertContainsOnlyInstancesOf('\\WsdlToPhp\\PackageGenerator\\DomHandler\\Wsdl\\TagMessage', $bing->getMessages());
+        $this->assertContainsOnlyInstancesOf('\\WsdlToPhp\\PackageGenerator\\DomHandler\\Wsdl\\Tag\\TagMessage', $bing->getMessages());
     }
     /**
      *
@@ -173,7 +173,7 @@ class WsdlHandlerTest extends TestCase
     {
         $bing = self::bingInstance();
 
-        $this->assertContainsOnlyInstancesOf('\\WsdlToPhp\\PackageGenerator\\DomHandler\\Wsdl\\TagPart', $bing->getParts());
+        $this->assertContainsOnlyInstancesOf('\\WsdlToPhp\\PackageGenerator\\DomHandler\\Wsdl\\Tag\\TagPart', $bing->getParts());
     }
     /**
      *
@@ -182,7 +182,7 @@ class WsdlHandlerTest extends TestCase
     {
         $bing = self::bingInstance();
 
-        $this->assertContainsOnlyInstancesOf('\\WsdlToPhp\\PackageGenerator\\DomHandler\\Wsdl\\TagOperation', $bing->getOperations());
+        $this->assertContainsOnlyInstancesOf('\\WsdlToPhp\\PackageGenerator\\DomHandler\\Wsdl\\Tag\\TagOperation', $bing->getOperations());
     }
     /**
      *
@@ -191,7 +191,7 @@ class WsdlHandlerTest extends TestCase
     {
         $ebay = self::eBayInstance();
 
-        $this->assertContainsOnlyInstancesOf('\\WsdlToPhp\\PackageGenerator\\DomHandler\\Wsdl\\TagDocumentation', $ebay->getDocumentations());
+        $this->assertContainsOnlyInstancesOf('\\WsdlToPhp\\PackageGenerator\\DomHandler\\Wsdl\\Tag\\TagDocumentation', $ebay->getDocumentations());
     }
     /**
      *
@@ -200,19 +200,25 @@ class WsdlHandlerTest extends TestCase
     {
         $ebay = self::eBayInstance();
 
-        $this->assertContainsOnlyInstancesOf('\\WsdlToPhp\\PackageGenerator\\DomHandler\\Wsdl\\TagExtension', $ebay->getExtensions());
+        $this->assertContainsOnlyInstancesOf('\\WsdlToPhp\\PackageGenerator\\DomHandler\\Wsdl\\Tag\\TagExtension', $ebay->getExtensions());
     }
     /**
      *
      */
     public function testGetLists()
     {
+        $aukro = self::aukroInstance();
+
+        $aukro->getLists();
     }
     /**
      *
      */
     public function testGetUnions()
     {
+        $aukro = self::aukroInstance();
+
+        $aukro->getUnions();
     }
     /**
      *
@@ -221,19 +227,26 @@ class WsdlHandlerTest extends TestCase
     {
         $aukro = self::aukroInstance();
 
-        $this->assertContainsOnlyInstancesOf('\\WsdlToPhp\\PackageGenerator\\DomHandler\\Wsdl\\TagComplexContent', $aukro->getComplexContents());
+        $this->assertContainsOnlyInstancesOf('\\WsdlToPhp\\PackageGenerator\\DomHandler\\Wsdl\\Tag\\TagComplexContent', $aukro->getComplexContents());
     }
     /**
      *
      */
     public function testGetSimpleContents()
     {
+
+        $aukro = self::aukroInstance();
+
+        $aukro->getSimpleContents();
     }
     /**
      *
      */
     public function testGetSequences()
     {
+        $aukro = self::aukroInstance();
+
+        $aukro->getSequences();
     }
     /**
      *
@@ -242,7 +255,134 @@ class WsdlHandlerTest extends TestCase
     {
         $aukro = self::aukroInstance();
 
-        $this->assertContainsOnlyInstancesOf('\\WsdlToPhp\\PackageGenerator\\DomHandler\\Wsdl\\TagAttribute', $aukro->getAttributes());
+        $this->assertContainsOnlyInstancesOf('\\WsdlToPhp\\PackageGenerator\\DomHandler\\Wsdl\\Tag\\TagAttribute', $aukro->getAttributes());
+    }
+    /**
+     *
+     */
+    public function testGetAlls()
+    {
+        $aukro = self::aukroInstance();
+
+        $aukro->getAlls();
+    }
+    /**
+     *
+     */
+    public function testGetAnnotations()
+    {
+        $aukro = self::aukroInstance();
+
+        $aukro->getAnnotations();
+    }
+    /**
+     *
+     */
+    public function testGetAnys()
+    {
+        $aukro = self::aukroInstance();
+
+        $aukro->getAnys();
+    }
+    /**
+     *
+     */
+    public function testGetAppinfos()
+    {
+        $aukro = self::aukroInstance();
+
+        $aukro->getAppinfos();
+    }
+    /**
+     *
+     */
+    public function testGetAnyAttributes()
+    {
+        $aukro = self::aukroInstance();
+
+        $aukro->getAnyAttributes();
+    }
+    /**
+     *
+     */
+    public function testGetAttributeGroups()
+    {
+
+        $aukro = self::aukroInstance();
+
+        $aukro->getAttributeGroups();
+    }
+    /**
+     *
+     */
+    public function testGetChoices()
+    {
+        $aukro = self::aukroInstance();
+
+        $aukro->getChoices();
+    }
+    /**
+     *
+     */
+    public function testGetFields()
+    {
+        $aukro = self::aukroInstance();
+
+        $aukro->getFields();
+    }
+    /**
+     *
+     */
+    public function testGetGroups()
+    {
+        $aukro = self::aukroInstance();
+
+        $aukro->getGroups();
+    }
+    /**
+     *
+     */
+    public function testGetKeys()
+    {
+        $aukro = self::aukroInstance();
+
+        $aukro->getKeys();
+    }
+    /**
+     *
+     */
+    public function testGetNotations()
+    {
+        $aukro = self::aukroInstance();
+
+        $aukro->getNotations();
+    }
+    /**
+     *
+     */
+    public function testGetSchemas()
+    {
+        $aukro = self::aukroInstance();
+
+        $aukro->getSchemas();
+    }
+    /**
+     *
+     */
+    public function testGetSelectors()
+    {
+        $aukro = self::aukroInstance();
+
+        $aukro->getSelectors();
+    }
+    /**
+     *
+     */
+    public function testGetUniques()
+    {
+        $aukro = self::aukroInstance();
+
+        $aukro->getUniques();
     }
     public static function assertContainsOnlyInstancesOf($classname, $haystack, $message = '')
     {
