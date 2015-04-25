@@ -384,6 +384,42 @@ class WsdlHandlerTest extends TestCase
 
         $aukro->getUniques();
     }
+    /**
+     *
+     */
+    public function testGetPortTypes()
+    {
+        $aukro = self::aukroInstance();
+
+        $aukro->getPortTypes();
+    }
+    /**
+     *
+     */
+    public function testGetBindings()
+    {
+        $aukro = self::aukroInstance();
+
+        $aukro->getBindings();
+    }
+    /**
+     *
+     */
+    public function testGetPorts()
+    {
+        $aukro = self::aukroInstance();
+
+        $aukro->getPorts();
+    }
+    /**
+     *
+     */
+    public function testGetAddresses()
+    {
+        $aukro = self::aukroInstance();
+
+        $aukro->getAddresses();
+    }
     public static function assertContainsOnlyInstancesOf($classname, $haystack, $message = '')
     {
         return parent::assertNotEmpty($haystack) && parent::assertContainsOnlyInstancesOf($classname, $haystack, $message);

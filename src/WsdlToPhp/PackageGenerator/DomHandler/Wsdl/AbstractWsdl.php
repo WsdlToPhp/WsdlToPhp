@@ -9,6 +9,7 @@ use WsdlToPhp\PackageGenerator\DomHandler\AbstractDomDocumentHandler;
 class AbstractWsdl extends DomDocumentHandler
 {
     const
+        TAG_ADDRESS         = 'address',
         TAG_ALL             = 'all',
         TAG_ANNOTATION      = 'annotation',
         TAG_ANY             = 'any',
@@ -16,6 +17,7 @@ class AbstractWsdl extends DomDocumentHandler
         TAG_APPINFO         = 'appinfo',
         TAG_ATTRIBUTE       = 'attribute',
         TAG_ATTRIBUTE_GROUP = 'attributeGroup',
+        TAG_BINDING         = 'binding',
         TAG_BODY            = 'body',
         TAG_CHOICE          = 'choice',
         TAG_COMPLEX_CONTENT = 'complexContent',
@@ -39,6 +41,8 @@ class AbstractWsdl extends DomDocumentHandler
         TAG_OPERATION       = 'operation',
         TAG_OUTPUT          = 'output',
         TAG_PART            = 'part',
+        TAG_PORT            = 'port',
+        TAG_PORT_TYPE       = 'portType',
         TAG_REDEFINE        = 'redefine',
         TAG_RESTRICTION     = 'restriction',
         TAG_SELECTOR        = 'selector',
@@ -411,6 +415,42 @@ class AbstractWsdl extends DomDocumentHandler
     {
         return $this->getElementsByTags(array(
             self::TAG_UNIQUE,
+        ));
+    }
+    /**
+     * @return array[WsdlToPhp\PackageGenerator\DomHandler\Wsdl\Tag\TagPortType]
+     */
+    public function getPortTypes()
+    {
+        return $this->getElementsByTags(array(
+            self::TAG_PORT_TYPE,
+        ));
+    }
+    /**
+     * @return array[WsdlToPhp\PackageGenerator\DomHandler\Wsdl\Tag\TagBinding]
+     */
+    public function getBindings()
+    {
+        return $this->getElementsByTags(array(
+            self::TAG_BINDING,
+        ));
+    }
+    /**
+     * @return array[WsdlToPhp\PackageGenerator\DomHandler\Wsdl\Tag\TagPort]
+     */
+    public function getPorts()
+    {
+        return $this->getElementsByTags(array(
+            self::TAG_PORT,
+        ));
+    }
+    /**
+     * @return array[WsdlToPhp\PackageGenerator\DomHandler\Wsdl\Tag\TagAddress]
+     */
+    public function getAddresses()
+    {
+        return $this->getElementsByTags(array(
+            self::TAG_ADDRESS,
         ));
     }
 }
