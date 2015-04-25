@@ -10,6 +10,10 @@ use WsdlToPhp\PackageGenerator\Model\StructValue;
 use WsdlToPhp\PackageGenerator\Model\Service;
 use WsdlToPhp\PackageGenerator\Model\Method;
 use WsdlToPhp\PackageGenerator\ConfigurationReader\GeneratorOptions;
+use WsdlToPhp\PackageGenerator\ModelContainer\StructContainer;
+use WsdlToPhp\PackageGenerator\SoapClientParser\SoapClientStructsParser;
+use WsdlToPhp\PackageGenerator\ModelContainer\ServiceContainer;
+use WsdlToPhp\PackageGenerator\SoapClientParser\SoapClientFunctionsParser;
 
 /**
  * Class Generator
@@ -309,13 +313,13 @@ class Generator extends \SoapClient
      */
     const WSDL_TO_PHP_GENERATOR_AUDIT_KEY = '__GeneratorAuditKey__';
     /**
-     * Structs array
-     * @var array
+     * Structs
+     * @var StructContainer
      */
     private $structs;
     /**
-     * Services arrays
-     * @var array
+     * Services
+     * @var ServiceContainer
      */
     private $services;
     /**
@@ -370,8 +374,6 @@ class Generator extends \SoapClient
             $options['login'] = $login;
             $options['password'] = $password;
         }
-        $this->setStructs();
-        $this->setServices();
         $this->setWsdls();
         /**
          * Construct
@@ -388,6 +390,8 @@ class Generator extends \SoapClient
         }
         $this->addWsdl($pathToWsdl);
         $this->setOptions(GeneratorOptions::instance());
+        $this->setStructs(new StructContainer());
+        $this->setServices(new ServiceContainer());
     }
     /**
      * @param string options's file to parse
@@ -454,12 +458,12 @@ class Generator extends \SoapClient
              * Initialize elements
              */
             $init = false;
-            if (!count($this->getStructs())) {
+            if ($this->getStructs()->count() === 0) {
                 $this->initStructs();
             } else {
                 $init = true;
             }
-            if (!count($this->getServices())) {
+            if ($this->getServices()->count() === 0) {
                 $this->initServices();
             }
             if (!$init && count($this->wsdls)) {
@@ -508,129 +512,16 @@ class Generator extends \SoapClient
      * - Get structs defined
      * - Parse each struct definition
      * - Analyze each struct paramaters
-     * @uses \SoapClient::__getTypes()
-     * @uses Generator::addStruct()
-     * @uses Generator::addVirtualStruct()
      * @uses Generator::auditInit()
      * @uses Generator::audit()
-     * @tutorial restriction aren't get with structs, see loadWsdls :
-     * <xsd:simpleType name="SearchOption">
-     * --<xsd:restriction base="xsd:string">
-     * ----<xsd:enumeration value="DisableLocationDetection"/>
-     * ----<xsd:enumeration value="EnableHighlighting"/>
-     * --</xsd:restriction>
-     * </xsd:simpleType>
-     * Example on how to send them : http://msdn.microsoft.com/en-us/library/dd250961
      * @return bool true|false depending on the well types catching from the WSDL
      */
     private function initStructs()
     {
         self::auditInit('init_structs');
-        $types = $this->__getTypes();
-        if (is_array($types) && count($types)) {
-            $structsDefined = array();
-            foreach ($types as $type) {
-                $typeSignature = md5($type);
-                /**
-                 * Remove useless break line, tabs
-                 */
-                $type = str_replace("\r", '', $type);
-                $type = str_replace("\n", '', $type);
-                $type = str_replace("\t", '', $type);
-                /**
-                 * Remove curly braces
-                 */
-                $type = str_replace("{", '', $type);
-                $type = str_replace("}", '', $type);
-                /**
-                 * Remove brackets
-                 */
-                $type = str_replace("[", '', $type);
-                $type = str_replace("]", '', $type);
-                /**
-                 * Adds space to parse it
-                 */
-                $type = str_replace(';', ' ;', $type);
-                /**
-                 * Remove duplicate spaces
-                 */
-                $type = preg_replace('/[\s]+/', ' ', $type);
-                /**
-                 * Explode definition based on format :
-                 * struct {struct_name} {paramName} {paramValue} ;[{paramName} {paramValue} ;]+
-                 */
-                $typeDef = explode(' ', $type);
-                /**
-                 * Gets struct definition start
-                 */
-                $struct = $typeDef[0];
-                if ($struct != 'struct') {
-                    if (!empty($typeDef[1])) {
-                        $this->addVirtualStruct($typeDef[1]);
-                    }
-                    continue;
-                }
-                /**
-                 * Catch struct name
-                 */
-                $structName = $typeDef[1];
-                /**
-                 * Struct already known? If not, then parse it and add attributes to it. We don't parse twice the same struct.
-                 * This test now lets pass identically named elements with different structure such as the two followings:
-                 * - struct Create { Create request; }
-                 * - struct Create { ArrayOfDetailItem Details; string UserID; string Password; string TestMode; etc. }
-                 * This will generate a Struct class containing the merge of all the different structures
-                 */
-                if (in_array($typeSignature, $structsDefined)) {
-                    continue;
-                }
-                /**
-                 * Collect struct params
-                 */
-                $start = false;
-                $then = false;
-                $end = false;
-                $structParamName = '';
-                $structParamType = '';
-                $typeDefCount = count($typeDef);
-                if ($typeDefCount > 3) {
-                    for ($i = 2; $i < $typeDefCount; $i++) {
-                        $typeVal = $typeDef[$i];
-                        if ($typeVal != '{' && is_string($typeVal) && !empty($typeVal) && !$start) {
-                            $end = false;
-                            $then = false;
-                            $start = true;
-                        }
-                        if ($typeVal === ';') {
-                            $end = true;
-                            $then = false;
-                            $start = false;
-                        }
-                        if ($then) {
-                            $structParamName = $typeVal;
-                            if (!empty($structParamType) && !empty($structParamName) && !empty($structName)) {
-                                $this->addStruct($structName, $structParamName, $structParamType);
-                                array_push($structsDefined, $typeSignature);
-                                $structParamName = '';
-                                $structParamType = '';
-                            }
-                        }
-                        if ($start && !$then) {
-                            /**
-                             * Replace some weird definition to known valid type
-                             */
-                            $typeVal = str_replace('<anyXML>', '\DOMDocument', $typeVal);
-                            $structParamType = $typeVal;
-                            $then = true;
-                        }
-                    }
-                } else {
-                    $this->addStruct($structName, $structParamName, $structParamType);
-                }
-            }
-            return self::audit('init_structs');
-        } else
-            return !self::audit('init_structs');
+        $structsParser = new SoapClientStructsParser($this);
+        $structsParser->parse();
+        return self::audit('init_structs');
     }
     /**
      * Generates structs classes based on structs collected
@@ -701,8 +592,6 @@ class Generator extends \SoapClient
      * Initialize functions :
      * - Get structs defined
      * - Parse each struct definition
-     * @uses \SoapClient::__getFunctions()
-     * @uses Generator::addService()
      * @uses Generator::auditInit()
      * @uses Generator::audit()
      * @return bool true|false depending on the well functions catching from the WSDL
@@ -710,61 +599,9 @@ class Generator extends \SoapClient
     private function initServices()
     {
         self::auditInit('init_services');
-        $methods = $this->__getFunctions();
-        if (is_array($methods) && count($methods)) {
-            foreach ($methods as $method) {
-                $infos = explode(' ', $method);
-                /**
-                 * "Regular" SOAP Style
-                 */
-                if (count($infos) <= 3) {
-                    $returnType = $infos[0];
-                    if (count($infos) < 3 && strpos($infos[1], '()') !== false && array_key_exists(1, $infos)) {
-                        $methodName = trim(str_replace('()', '', $infos[1]));
-                        $parameterType = null;
-                    } else {
-                        list($methodName, $parameterType) = explode('(', $infos[1]);
-                    }
-                    if (!empty($returnType) && !empty($methodName)) {
-                        $this->addService($methodName, $parameterType, $returnType);
-                    }
-                } elseif (count($infos) > 3) {
-                    /**
-                     * RPC SOAP Style
-                     * Some RPC WS defines the return type as a list of values
-                     * So we define the return type as an array and reset the informations to use to extract method name and parameters
-                     */
-                    if (stripos($infos[0], 'list(') === 0) {
-                        $infos = explode(' ', preg_replace('/(list\(.*\)\s)/i', '', $method));
-                        array_unshift($infos, 'array');
-                    }
-                    /**
-                     * Returns type is not defined in some case
-                     */
-                    $returnType = strpos($infos[0], '(') === false ? $infos[0] : '';
-                    if (empty($returnType) && strpos($infos[0], '(') !== false) {
-                        $start = 1;
-                        list($methodName, $firstParameterType) = explode('(', $infos[0]);
-                    } elseif (strpos($infos[1], '(') !== false) {
-                        $start = 2;
-                        list($methodName, $firstParameterType) = explode('(', $infos[1]);
-                    }
-                    if (!empty($methodName)) {
-                        $methodParameters = array();
-                        $infosCount = count($infos);
-                        for ($i = $start; $i < $infosCount; $i += 2) {
-                            $info = str_replace(array(', ', '(', ')', '$'), '', trim($infos[$i]));
-                            if (!empty($info)) {
-                                $methodParameters = array_merge($methodParameters, array($info => $i == $start ? $firstParameterType : $infos[$i - 1]));
-                            }
-                        }
-                        $this->addService($methodName, $methodParameters, empty($returnType) ? 'unknown' : $returnType);
-                    }
-                }
-            }
-            return self::audit('init_services');
-        } else
-            return !self::audit('init_services');
+        $servicesParser = new SoapClientFunctionsParser($this);
+        $servicesParser->parse();
+        return !self::audit('init_services');
     }
     /**
      * Generates methods by class
@@ -1134,23 +971,6 @@ class Generator extends \SoapClient
         }
     }
     /**
-     * Returns the structs
-     * @return array[Struct]
-     */
-    public function getStructs()
-    {
-        return $this->structs;
-    }
-    /**
-     * Sets the structs
-     * @param array
-     * @return array
-     */
-    protected function setStructs(array $structs = array())
-    {
-        return ($this->structs = $structs);
-    }
-    /**
      * Gets the struct by its name
      * @uses Generator::getStructs()
      * @param string $structName the original struct name
@@ -1159,24 +979,6 @@ class Generator extends \SoapClient
     public function getStruct($structName)
     {
         return array_key_exists($structName, $this->getStructs()) ? $this->structs[$structName] : null;
-    }
-    /**
-     * Adds type to structs
-     * @uses Generator::getStruct()
-     * @uses Struct::addAttribute()
-     * @param string $structName the original struct name
-     * @param string $attributeName the attribute name
-     * @param string $attributeType the attribute type
-     * @return void
-     */
-    private function addStruct($structName, $attributeName, $attributeType)
-    {
-        if ($this->getStruct($structName) === null) {
-            $this->structs[$structName] = new Struct($structName);
-        }
-        if (!empty($attributeName) && !empty($attributeType)) {
-            $this->getStruct($structName)->addAttribute($attributeName, $attributeType);
-        }
     }
     /**
      * Adds an info to the struct
@@ -1333,67 +1135,6 @@ class Generator extends \SoapClient
     {
         if ($this->getStructValue($structName, $valueName)) {
             $this->getStructValue($structName, $valueName)->setDocumentation($documentation);
-        }
-    }
-    /**
-     * Adds a virtual struct
-     * @uses Generator::getStruct()
-     * @param string $structName the original struct name
-     * @return void
-     */
-    private function addVirtualStruct($structName)
-    {
-        if ($this->getStruct($structName) === null) {
-            $this->structs[$structName] = new Struct($structName, false);
-        }
-    }
-    /**
-     * Returns the services
-     * @return array[Service]
-     */
-    public function getServices()
-    {
-        return $this->services;
-    }
-    /**
-     * Sets the services
-     * @param array
-     * @return array
-     */
-    protected function setServices(array $services = array())
-    {
-        return ($this->services = $services);
-    }
-    /**
-     * Adds a service
-     * @uses Generator::getServiceName()
-     * @uses Generator::getService()
-     * @uses Generator::getServiceMethod()
-     * @uses Service::addMethod()
-     * @uses Method::setIsUnique()
-     * @param string $methodName the original function name
-     * @param string $methodParameter the original parameter name
-     * @param string $methodReturn the original return name
-     * @return void
-     */
-    private function addService($methodName, $methodParameter, $methodReturn)
-    {
-        $serviceName = $this->getServiceName($methodName);
-        if (!$this->getService($serviceName)) {
-            $this->services[$serviceName] = new Service($serviceName);
-        }
-        $serviceMethod = $this->getServiceMethod($methodName);
-        /**
-         * Service method does not already exist, register it
-         */
-        if (!$serviceMethod) {
-            $this->getService($serviceName)->addMethod($methodName, $methodParameter, $methodReturn);
-        } elseif ($serviceMethod->getParameterType() != $methodParameter) {
-            /**
-             * Service method exists with a different signature, register it too by identifying the service functions as non unique functions
-             */
-            $serviceMethod->setIsUnique(false);
-            $this->getService($serviceName)->addMethod($methodName, $methodParameter, $methodReturn, false);
         }
     }
     /**
@@ -2871,7 +2612,7 @@ class Generator extends \SoapClient
      * @param string $methodName original operation/method name
      * @return string
      */
-    private function getServiceName($methodName)
+    public function getServiceName($methodName)
     {
         return ucfirst($this->getGather(new EmptyModel($methodName)));
     }
@@ -3037,7 +2778,7 @@ class Generator extends \SoapClient
      * @param GeneratorOptions $options
      * @return Generator
      */
-    public function setOptions(GeneratorOptions $options)
+    protected function setOptions(GeneratorOptions $options)
     {
         $this->options = $options;
         return $this;
@@ -3048,6 +2789,38 @@ class Generator extends \SoapClient
     public function getOptions()
     {
         return $this->options;
+    }
+    /**
+     * @param StructContainer $structContainer
+     * @return Generator
+     */
+    protected function setStructs(StructContainer $structContainer)
+    {
+        $this->structs = $structContainer;
+        return $this;
+    }
+    /**
+     * @return StructContainer
+     */
+    public function getStructs()
+    {
+        return $this->structs;
+    }
+    /**
+     * @return ServiceContainer
+     */
+    public function getServices()
+    {
+        return $this->services;
+    }
+    /**
+     * @param ServiceContainer $serviceContainer
+     * @return Generator
+     */
+    protected function setServices(ServiceContainer $serviceContainer)
+    {
+        $this->services = $serviceContainer;
+        return $this;
     }
     /**
      * @param string $url

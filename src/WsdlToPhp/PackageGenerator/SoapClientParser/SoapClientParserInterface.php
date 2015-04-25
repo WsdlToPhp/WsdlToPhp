@@ -1,6 +1,8 @@
 <?php
 
-namespace WsdlToPhp\PackageGenerator\Generator;
+namespace WsdlToPhp\PackageGenerator\SoapClientParser;
+
+use WsdlToPhp\PackageGenerator\Generator\Generator;
 
 interface SoapClientParserInterface
 {
