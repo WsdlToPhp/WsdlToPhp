@@ -27,16 +27,14 @@ abstract class AbstractDomDocumentHandler
     protected function initRootNode()
     {
         if ($this->domDocument->hasChildNodes()) {
-            $index = 0;
             foreach ($this->domDocument->childNodes as $node) {
                 if ($node instanceof \DOMElement) {
-                    $this->rootNode = $this->getNodeHandler($node, $this, $index);
-                    $index++;
+                    $this->rootNode = $this->getNodeHandler($node, $this);
                     break;
                 }
             }
         } else {
-            throw new \InvalidArgumentException('Document seems to be empty');
+            throw new \InvalidArgumentException('Document seems to be invalid');
         }
     }
     /**
