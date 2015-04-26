@@ -50,6 +50,7 @@ class AbstractWsdl extends DomDocumentHandler
         TAG_SCHEMA          = 'schema',
         TAG_SIMPLE_CONTENT  = 'simpleContent',
         TAG_SIMPLE_TYPE     = 'simpleType',
+        TAG_TYPES           = 'types',
         TAG_UNION           = 'union',
         TAG_UNIQUE          = 'unique';
     /**
@@ -451,6 +452,15 @@ class AbstractWsdl extends DomDocumentHandler
     {
         return $this->getElementsByTags(array(
             self::TAG_ADDRESS,
+        ));
+    }
+    /**
+     * @return array[WsdlToPhp\PackageGenerator\DomHandler\Wsdl\Tag\TagType]
+     */
+    public function getTypes()
+    {
+        return $this->getElementsByTags(array(
+            self::TAG_TYPES,
         ));
     }
 }

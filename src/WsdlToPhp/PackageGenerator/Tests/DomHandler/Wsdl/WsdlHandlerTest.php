@@ -420,6 +420,15 @@ class WsdlHandlerTest extends TestCase
 
         $aukro->getAddresses();
     }
+    /**
+     *
+     */
+    public function testGetTypes()
+    {
+        $aukro = self::aukroInstance();
+
+        $aukro->getTypes();
+    }
     public static function assertContainsOnlyInstancesOf($classname, $haystack, $message = '')
     {
         return parent::assertNotEmpty($haystack) && parent::assertContainsOnlyInstancesOf($classname, $haystack, $message);
