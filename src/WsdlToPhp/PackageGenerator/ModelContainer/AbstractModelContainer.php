@@ -147,4 +147,32 @@ abstract class AbstractModelContainer implements \ArrayAccess, \Iterator, \Count
         }
         return null;
     }
+    /**
+     * @param array $properties
+     * @throws \InvalidArgumentException
+     * @return AbstractModel|null
+     */
+    public function getAs(array $properties)
+    {
+        if ($this->count() > 0) {
+            foreach ($this->models as $model) {
+                $same = true;
+                foreach ($properties as $name=>$value) {
+                    $get = sprintf('get%s', ucfirst($name));
+                    if (!method_exists($model, $get)) {
+                        throw new \InvalidArgumentException(sprintf('Property "%s" does not exist or its getter does not exist', $name));
+                    }
+                    $propertyValue = call_user_func(array(
+                        $model,
+                        $get,
+                    ));
+                    $same &= $propertyValue === $value;
+                }
+                if ((bool)$same === true) {
+                    return $model;
+                }
+            }
+        }
+        return null;
+    }
 }
