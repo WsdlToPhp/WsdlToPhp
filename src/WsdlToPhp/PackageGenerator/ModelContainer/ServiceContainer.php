@@ -18,7 +18,7 @@ class ServiceContainer extends ModelContainer
      * @param string $methodReturn the original return name
      * @return ServiceContainer
      */
-    private function addService($serviceName, $methodName, $methodParameter, $methodReturn)
+    public function addService($serviceName, $methodName, $methodParameter, $methodReturn)
     {
         if ($this->get($serviceName) === null) {
             $this->add(new Service($serviceName));
