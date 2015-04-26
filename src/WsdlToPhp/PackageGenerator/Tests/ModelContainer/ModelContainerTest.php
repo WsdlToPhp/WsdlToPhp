@@ -7,6 +7,9 @@ use WsdlToPhp\PackageGenerator\Model\Struct;
 use WsdlToPhp\PackageGenerator\Model\EmptyModel;
 use WsdlToPhp\PackageGenerator\ModelContainer\ModelContainer;
 use WsdlToPhp\PackageGenerator\Tests\TestCase;
+use WsdlToPhp\PackageGenerator\Model\Method;
+use WsdlToPhp\PackageGenerator\Model\Service;
+use WsdlToPhp\PackageGenerator\ModelContainer\MethodContainer;
 
 class ModelContainerTest extends TestCase
 {
@@ -56,5 +59,29 @@ class ModelContainerTest extends TestCase
         $modelContainer->add(new EmptyModel('Bar'));
 
         $modelContainer->get('Foo', 'bar');
+    }
+    /**
+     *
+     */
+    public function testGetAs()
+    {
+        $methodContainer = new MethodContainer();
+
+        $service = new Service('Bar');
+        $foo = new Method('Foo', 'string', 'int', $service);
+        $bar = new Method('Bar', 'string', 'int', $service);
+        $methodContainer->add($foo);
+        $methodContainer->add($bar);
+
+        $this->assertSame($foo, $methodContainer->getAs(array(
+            'name'          => 'Foo',
+            'parameterType' => 'string',
+            'returnType'    => 'int',
+        )));
+
+        $this->assertSame($bar, $methodContainer->getAs(array(
+            'name'          => 'Bar',
+            'parameterType' => 'string',
+        )));
     }
 }
