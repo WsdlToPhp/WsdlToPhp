@@ -1017,7 +1017,7 @@ class Generator extends \SoapClient
      * @param mixed $structInfoValue the struct info value
      * @return void
      */
-    private function addStructMeta($structName, $structInfoName, $structInfoValue)
+    public function addStructMeta($structName, $structInfoName, $structInfoValue)
     {
         if ($this->getStruct($structName) !== null) {
             $this->getStruct($structName)->addMeta($structInfoName, $structInfoValue);
@@ -1142,7 +1142,7 @@ class Generator extends \SoapClient
      * @param mixed $value the value
      * @return void
      */
-    private function addRestrictionValue($structName, $value)
+    public function addRestrictionValue($structName, $value)
     {
         if ($this->getStruct($structName) !== null) {
             $this->setStructIsRestriction($structName);
