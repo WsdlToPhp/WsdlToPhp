@@ -1116,7 +1116,7 @@ class Generator extends \SoapClient
      */
     private function addRestrictionValue($structName, $value)
     {
-        if ($this->getStruct($structName)) {
+        if ($this->getStruct($structName) !== null) {
             $this->setStructIsRestriction($structName);
             $this->setStructIsStruct($structName);
             $this->getStruct($structName)->addValue($value);
@@ -1133,7 +1133,7 @@ class Generator extends \SoapClient
      */
     private function setStructValueDocumentation($structName, $valueName, $documentation)
     {
-        if ($this->getStructValue($structName, $valueName)) {
+        if ($this->getStructValue($structName, $valueName) !== null) {
             $this->getStructValue($structName, $valueName)->setDocumentation($documentation);
         }
     }
@@ -1157,7 +1157,7 @@ class Generator extends \SoapClient
      */
     private function getServiceMethod($methodName)
     {
-        return $this->getService($this->getServiceName($methodName)) ? $this->getService($this->getServiceName($methodName))->getMethod($methodName) : null;
+        return $this->getService($this->getServiceName($methodName)) !== null ? $this->getService($this->getServiceName($methodName))->getMethod($methodName) : null;
     }
     /**
      * Sets the service function documentation
@@ -1169,7 +1169,7 @@ class Generator extends \SoapClient
      */
     private function setServiceFunctionDocumentation($methodName, $documentation)
     {
-        if ($this->getServiceMethod($methodName)) {
+        if ($this->getServiceMethod($methodName) !== null) {
             $this->getServiceMethod($methodName)->setDocumentation($documentation);
         }
     }
@@ -1184,7 +1184,7 @@ class Generator extends \SoapClient
      */
     private function addServiceFunctionMeta($methodName, $methodInfoName, $methodInfoValue)
     {
-        if ($this->getServiceMethod($methodName)) {
+        if ($this->getServiceMethod($methodName) !== null) {
             $this->getServiceMethod($methodName)->addMeta($methodInfoName, $methodInfoValue);
         }
     }
