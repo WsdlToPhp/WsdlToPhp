@@ -6,7 +6,7 @@ use WsdlToPhp\PackageGenerator\DomHandler\ElementHandler;
 use WsdlToPhp\PackageGenerator\DomHandler\DomDocumentHandler;
 use WsdlToPhp\PackageGenerator\DomHandler\AbstractDomDocumentHandler;
 
-class AbstractWsdl extends DomDocumentHandler
+abstract class AbstractWsdl extends DomDocumentHandler
 {
     const
         TAG_ADDRESS         = 'address',
