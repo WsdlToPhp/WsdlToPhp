@@ -71,6 +71,24 @@ class AbstractWsdl extends DomDocumentHandler
         return new $handlerName($element, $domDocument, $index);
     }
     /**
+     * @see \WsdlToPhp\PackageGenerator\DomHandler\AbstractDomDocumentHandler::getElementByName()
+     * @return ElementHandler
+     */
+    public function getElementByName($name)
+    {
+        $this->currentTag = $name;
+        return parent::getElementByName($name);
+    }
+    /**
+     * @see \WsdlToPhp\PackageGenerator\DomHandler\AbstractDomDocumentHandler::getElementByName()
+     * @return array[AbstractElementHandler]
+     */
+    public function getElementsByName($name)
+    {
+        $this->currentTag = $name;
+        return parent::getElementsByName($name);
+    }
+    /**
      * @param array $tags
      * @return array[WsdlToPhp\PackageGenerator\DomHandler\Wsdl\Tag\TagAbstractElement]
      */
