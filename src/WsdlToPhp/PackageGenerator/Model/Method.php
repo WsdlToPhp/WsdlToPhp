@@ -164,10 +164,11 @@ class Method extends AbstractModel
     {
         $parameterModel = self::getModelByName($this->getParameterType());
         $parameterModel = ($parameterModel && $parameterModel->getIsStruct() && !$parameterModel->getIsRestriction()) ? $parameterModel : null;
+        $parameterModelAttributesCount = $parameterModel !== null ? $parameterModel->getAttributes(true, true)->count() : 0;
         $returnModel = self::getModelByName($this->getReturnType());
         $returnModel = ($returnModel && $returnModel->getIsStruct() && !$returnModel->getIsRestriction()) ? $returnModel : null;
         if ($parameterModel) {
-            if (count($parameterModel->getAttributes(true, true))) {
+            if ($parameterModelAttributesCount > 0) {
                 $parameterName = '$' . lcfirst($parameterModel->getPackagedName());
                 $parameter = $parameterModel->getPackagedName() . ' ' . $parameterName;
             } else
@@ -202,8 +203,7 @@ class Method extends AbstractModel
          * Soap parameters
          */
         if ($parameterModel) {
-            $attributes = $parameterModel->getAttributes(true, true);
-            if (count($attributes)) {
+            if ($parameterModelAttributesCount > 0) {
                 $soapParametersStart = $parameterName;
                 $soapParametersEnd = '';
             } else
