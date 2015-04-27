@@ -84,4 +84,47 @@ class ModelContainerTest extends TestCase
             'parameterType' => 'string',
         )));
     }
+    /**
+     *
+     */
+    public function testForeach()
+    {
+        $models = new ModelContainer();
+        $models->add(new EmptyModel('Foo'));
+        $models->add(new EmptyModel('Bar'));
+        $models->add(new EmptyModel('FooBar'));
+        $models->add(new EmptyModel('BarFoo'));
+
+        $index = 0;
+        foreach ($models as $model) {
+
+            $this->assertSame($index, $models->key());
+
+            if ($models->key() === 0) {
+                $this->assertSame('Foo', $model->getName());
+            } elseif ($models->key() === 1) {
+                $this->assertSame('Bar', $model->getName());
+            } elseif ($models->key() === 2) {
+                $this->assertSame('FooBar', $model->getName());
+            } elseif ($models->key() === 3) {
+                $this->assertSame('BarFoo', $model->getName());
+            }
+
+            $index++;
+        }
+    }
+    /**
+     *
+     */
+    public function testCount()
+    {
+        $models = new ModelContainer();
+        $models->add(new EmptyModel('Foo'));
+        $models->add(new EmptyModel('Bar'));
+        $models->add(new EmptyModel('FooBar'));
+        $models->add(new EmptyModel('BarFoo'));
+
+        $this->assertSame(4, $models->count());
+        $this->assertSame(4, count($models));
+    }
 }
