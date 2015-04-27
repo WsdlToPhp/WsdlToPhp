@@ -444,7 +444,6 @@ class Generator extends \SoapClient
         $wsdlLocation = $wsdl !== null ? $wsdl->getName() : '';
         self::auditInit('generate_classes', $wsdlLocation);
         if (!empty($wsdlLocation)) {
-
             self::setPackageName($packageName);
             $rootDirectory = $rootDirectory . (substr($rootDirectory, -1) != '/' ? '/' : '');
             /**
@@ -1472,7 +1471,7 @@ class Generator extends \SoapClient
     public function addWsdl($wsdlLocation)
     {
         if ($this->wsdls->getWsdlByName($wsdlLocation) === null) {
-            $this->wsdls->add(new Wsdl($wsdlLocation));
+            $this->wsdls->add(new Wsdl($wsdlLocation, $this->getUrlContent($wsdlLocation)));
         }
         return $this;
     }
