@@ -6,6 +6,9 @@ use WsdlToPhp\PackageGenerator\Generator\Utils;
 
 class AbstractAttributeHandler extends AbstractNodeHandler
 {
+    const
+        ATTRIBUTE_NAME  = 'name',
+        ATTRIBUTE_VALUE = 'value';
     /**
      * @see \WsdlToPhp\PackageGenerator\DomHandler\AbstractNodeHandler::getNode()
      * @return \DOMAttr
