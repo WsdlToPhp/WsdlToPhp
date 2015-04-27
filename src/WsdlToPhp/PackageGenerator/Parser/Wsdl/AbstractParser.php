@@ -1,6 +1,6 @@
 <?php
 
-namespace WsdlToPhp\PackageGenerator\WsdlParser;
+namespace WsdlToPhp\PackageGenerator\Parser\Wsdl;
 
 use WsdlToPhp\PackageGenerator\Model\Wsdl;
 use WsdlToPhp\PackageGenerator\Generator\ParserInterface;
@@ -75,7 +75,7 @@ abstract class AbstractParser implements ParserInterface
     }
     /**
      * @param array $tags
-     * @return \WsdlToPhp\PackageGenerator\WsdlParser\AbstractParser
+     * @return \WsdlToPhp\PackageGenerator\Parser\Wsdl\AbstractParser
      */
     private function setTags(array $tags)
     {

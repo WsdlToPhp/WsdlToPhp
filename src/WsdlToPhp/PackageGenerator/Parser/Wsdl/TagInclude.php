@@ -1,13 +1,13 @@
 <?php
 
-namespace WsdlToPhp\PackageGenerator\WsdlParser;
+namespace WsdlToPhp\PackageGenerator\Parser\Wsdl;
 
 use WsdlToPhp\PackageGenerator\Model\Wsdl;
 
 class TagInclude extends AbstractParser
 {
     /**
-     * @see \WsdlToPhp\PackageGenerator\WsdlParser\AbstractParser::getTags()
+     * @see \WsdlToPhp\PackageGenerator\Parser\Wsdl\AbstractParser::getTags()
      * @return array[\WsdlToPhp\PackageGenerator\DomHandler\Wsdl\Tag\TagInclude]
      */
     protected function getTags()
@@ -15,7 +15,7 @@ class TagInclude extends AbstractParser
         return parent::getTags();
     }
 	/**
-     * @see \WsdlToPhp\PackageGenerator\WsdlParser\AbstractParser::parseWsdl()
+     * @see \WsdlToPhp\PackageGenerator\Parser\Wsdl\AbstractParser::parseWsdl()
      */
     protected function parseWsdl(Wsdl $wsdl)
     {
@@ -26,7 +26,7 @@ class TagInclude extends AbstractParser
         }
     }
 	/**
-     * @see \WsdlToPhp\PackageGenerator\WsdlParser\AbstractParser::parsingTag()
+     * @see \WsdlToPhp\PackageGenerator\Parser\Wsdl\AbstractParser::parsingTag()
      */
     protected function parsingTag()
     {

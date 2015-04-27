@@ -13,9 +13,9 @@ use WsdlToPhp\PackageGenerator\Model\Service;
 use WsdlToPhp\PackageGenerator\Model\Method;
 use WsdlToPhp\PackageGenerator\ConfigurationReader\GeneratorOptions;
 use WsdlToPhp\PackageGenerator\ModelContainer\StructContainer;
-use WsdlToPhp\PackageGenerator\SoapClientParser\Structs as StructsParser;
+use WsdlToPhp\PackageGenerator\Parser\SoapClient\Structs as StructsParser;
 use WsdlToPhp\PackageGenerator\ModelContainer\ServiceContainer;
-use WsdlToPhp\PackageGenerator\SoapClientParser\Functions as FunctionsParser;
+use WsdlToPhp\PackageGenerator\Parser\SoapClient\Functions as FunctionsParser;
 
 /**
  * Class Generator
