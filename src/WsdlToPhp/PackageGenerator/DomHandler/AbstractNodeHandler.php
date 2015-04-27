@@ -88,7 +88,7 @@ abstract class AbstractNodeHandler
         return $this->getNode()->hasAttributes();
     }
     /**
-     * @return array[AbstractAttributeHandler]
+     * @return array[\WsdlToPhp\PackageGenerator\DomHandler\AttributeHandler]
      */
     public function getAttributes()
     {
@@ -119,5 +119,15 @@ abstract class AbstractNodeHandler
             }
         }
         return $children;
+    }
+    /**
+     * @return string
+     */
+    public function getNodeValue()
+    {
+        $nodeValue = trim($this->getNode()->nodeValue);
+        $nodeValue = str_replace(array("\r", "\n", "\t"), array('', '', ' '), $nodeValue);
+        $nodeValue = preg_replace('[\s+]', ' ', $nodeValue);
+        return $documentation;
     }
 }
