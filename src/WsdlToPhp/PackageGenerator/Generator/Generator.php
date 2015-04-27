@@ -11,9 +11,9 @@ use WsdlToPhp\PackageGenerator\Model\Service;
 use WsdlToPhp\PackageGenerator\Model\Method;
 use WsdlToPhp\PackageGenerator\ConfigurationReader\GeneratorOptions;
 use WsdlToPhp\PackageGenerator\ModelContainer\StructContainer;
-use WsdlToPhp\PackageGenerator\SoapClientParser\SoapClientStructsParser;
+use WsdlToPhp\PackageGenerator\SoapClientParser\Structs as StructsParser;
 use WsdlToPhp\PackageGenerator\ModelContainer\ServiceContainer;
-use WsdlToPhp\PackageGenerator\SoapClientParser\SoapClientFunctionsParser;
+use WsdlToPhp\PackageGenerator\SoapClientParser\Functions as FunctionsParser;
 
 /**
  * Class Generator
@@ -519,7 +519,7 @@ class Generator extends \SoapClient
     private function initStructs()
     {
         self::auditInit('init_structs');
-        $structsParser = new SoapClientStructsParser($this);
+        $structsParser = new StructsParser($this);
         $structsParser->parse();
         return self::audit('init_structs');
     }
@@ -599,7 +599,7 @@ class Generator extends \SoapClient
     private function initServices()
     {
         self::auditInit('init_services');
-        $servicesParser = new SoapClientFunctionsParser($this);
+        $servicesParser = new FunctionsParser($this);
         $servicesParser->parse();
         return !self::audit('init_services');
     }

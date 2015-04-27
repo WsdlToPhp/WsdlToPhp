@@ -2,7 +2,7 @@
 
 namespace WsdlToPhp\PackageGenerator\SoapClientParser;
 
-class SoapClientStructsParser extends AbstractSoapClientParser
+class Structs extends AbstractParser
 {
     public function parse()
     {
