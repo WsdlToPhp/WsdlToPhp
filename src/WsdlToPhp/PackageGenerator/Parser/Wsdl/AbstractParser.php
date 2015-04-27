@@ -5,14 +5,15 @@ namespace WsdlToPhp\PackageGenerator\Parser\Wsdl;
 use WsdlToPhp\PackageGenerator\Model\Wsdl;
 use WsdlToPhp\PackageGenerator\Generator\ParserInterface;
 use WsdlToPhp\PackageGenerator\Generator\Generator;
+use WsdlToPhp\PackageGenerator\DomHandler\AbstractAttributeHandler as Attribute;
 use WsdlToPhp\PackageGenerator\DomHandler\Wsdl\Wsdl as WsdlDocument;
 use WsdlToPhp\PackageGenerator\DomHandler\Wsdl\Tag\AbstractTag as Tag;
-use WsdlToPhp\PackageGenerator\DomHandler\AbstractAttributeHandler as Attribute;
 use WsdlToPhp\PackageGenerator\DomHandler\Wsdl\Tag\TagRestriction as Restriction;
 use WsdlToPhp\PackageGenerator\DomHandler\Wsdl\Tag\TagEnumeration as Enumeration;
 use WsdlToPhp\PackageGenerator\DomHandler\Wsdl\Tag\TagAnnotation as Annotation;
 use WsdlToPhp\PackageGenerator\DomHandler\Wsdl\Tag\TagAppinfo as Appinfo;
 use WsdlToPhp\PackageGenerator\DomHandler\Wsdl\Tag\TagDocumentation as Documentation;
+use WsdlToPhp\PackageGenerator\Model\AbstractModel as Model;
 
 abstract class AbstractParser implements ParserInterface
 {
@@ -79,6 +80,12 @@ abstract class AbstractParser implements ParserInterface
      * @return string
      */
     abstract protected function parsingTag();
+    /**
+     * Must return the model on which the method will be called
+     * @param Tag $tag
+     * @return Model
+     */
+    abstract protected function getModel(Tag $tag);
     /**
      * When looping, must return false to stop it
      * @return bool
@@ -212,7 +219,8 @@ abstract class AbstractParser implements ParserInterface
     private function parseAppinfo(Tag $tag, Appinfo $appinfo)
     {
         $content = $appinfo->getContent();
-        if (!empty($content)) {
+        if (!empty($content) && $this->getModel($tag) !== null) {
+            $this->getModel($tag)->addMeta('appinfo', $content);
         }
     }
     /**
@@ -222,7 +230,8 @@ abstract class AbstractParser implements ParserInterface
     private function parseDocumentation(Tag $tag, Documentation $documentation)
     {
         $content = $documentation->getContent();
-        if (!empty($content)) {
+        if (!empty($content) && $this->getModel($tag) !== null) {
+            $this->getModel($tag)->setDocumentation($content);
         }
     }
 }
