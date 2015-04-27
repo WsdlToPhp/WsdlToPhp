@@ -13,21 +13,30 @@ abstract class AbstractParser implements ParserInterface
      */
     protected $generator;
     /**
-     * @var bool
-     */
-    protected $continue;
-    /**
      * @var array[\WsdlToPhp\PackageGenerator\DomHandler\Wsdl\Wsdl]
      */
     protected $tags;
+    /**
+     * List of Wsdl parsed fr the current tag
+     * @var unknown
+     */
+    private $parsedWsdls;
     /**
      *
      * @param Generator $generator
      */
     public function __construct(Generator $generator)
     {
-        $this->generator = $generator;
-        $this->continue  = false;
+        $this->generator   = $generator;
+        $this->continue    = false;
+        $this->parsedWsdls = array();
+    }
+    /**
+     * @return Generator
+     */
+    public function getGenerator()
+    {
+        return $this->generator;
     }
     /**
      * The method takes care of looping among WSDLS as much time as it is needed
@@ -38,10 +47,15 @@ abstract class AbstractParser implements ParserInterface
         if ($this->generator->getWsdls()->count() > 0) {
             do {
                 foreach ($this->generator->getWsdls() as $wsdl) {
-                    $content = $wsdl->getContent();
-                    $this->setTags($content->getElementsByName($this->parsingTag()));
-                    if ($content !== null && count($this->getTags()) > 0) {
-                        $this->parseWsdl($wsdl);
+                    if ($this->isWsdlParsed($wsdl) === false) {
+                        $content = $wsdl->getContent();
+                        if ($content !== null) {
+                            $this->setTags($content->getElementsByName($this->parsingTag()));
+                            if (count($this->getTags()) > 0) {
+                                $this->parseWsdl($wsdl);
+                            }
+                        }
+                        $this->setWsdlAsParsed($wsdl);
                     }
                 }
             } while($this->shouldContinue());
@@ -63,15 +77,11 @@ abstract class AbstractParser implements ParserInterface
      */
     protected function shouldContinue()
     {
-        return $this->continue;
-    }
-    /**
-     * @param bool $continue;
-     * @return AbstractParser
-     */
-    protected function setContinue($continue)
-    {
-        $this->continue = $continue;
+        $shouldContinue = false;
+        foreach ($this->generator->getWsdls() as $wsdl) {
+            $shouldContinue |= $this->isWsdlParsed($wsdl) === false;
+        }
+        return (bool)$shouldContinue;
     }
     /**
      * @param array $tags
@@ -85,8 +95,30 @@ abstract class AbstractParser implements ParserInterface
     /**
      * @return array[\WsdlToPhp\PackageGenerator\DomHandler\Wsdl\Wsdl]
      */
-    protected function getTags()
+    public function getTags()
     {
         return $this->tags;
+    }
+    /**
+     * @param Wsdl $wsdl
+     * @return AbstractParser
+     */
+    private function setWsdlAsParsed(Wsdl $wsdl)
+    {
+        if (!array_key_exists($wsdl->getName(), $this->parsedWsdls)) {
+            $this->parsedWsdls[$wsdl->getName()] = array();
+        }
+        $this->parsedWsdls[$wsdl->getName()][] = $this->parsingTag();
+        return $this;
+    }
+    /**
+     * @param Wsdl $wsdl
+     * @return boolean
+     */
+    public function isWsdlParsed(Wsdl $wsdl)
+    {
+        return array_key_exists($wsdl->getName(), $this->parsedWsdls) &&
+                is_array($this->parsedWsdls[$wsdl->getName()]) &&
+                in_array($this->parsingTag(), $this->parsedWsdls[$wsdl->getName()]);
     }
 }
