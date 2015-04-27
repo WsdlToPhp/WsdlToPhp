@@ -6,5 +6,4 @@ use WsdlToPhp\PackageGenerator\WsdlParser\AbstractParser;
 
 class Wsdl extends AbstractParser
 {
-
 }
