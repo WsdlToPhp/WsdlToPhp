@@ -18,12 +18,18 @@ abstract class AbstractModelContainer implements \ArrayAccess, \Iterator, \Count
      */
     protected $offset;
     /**
+     * Very simple cache, holds searches in order to improve preformance for big web services
+     * @var array
+     */
+    private static $cache = array();
+    /**
      * @return AbstractModelContainer
      */
     public function __construct()
     {
-        $this->offset   = 0;
+        $this->offset = 0;
         $this->models = array();
+        $this->cache  = array();
     }
     /**
      * @param int $offset
@@ -131,19 +137,30 @@ abstract class AbstractModelContainer implements \ArrayAccess, \Iterator, \Count
     public function get($value, $key = self::KEY_NAME)
     {
         if ($this->count() > 0) {
-            foreach ($this->models as $model) {
-                $get = sprintf('get%s', ucfirst($key));
-                if (!method_exists($model, $get)) {
-                    throw new \InvalidArgumentException(sprintf('Property "%s" does not exist or its getter does not exist', $key));
-                }
-                $propertyValue = call_user_func(array(
-                    $model,
-                    $get,
-                ));
-                if ($value === $propertyValue) {
-                    return $model;
+            $cacheValues = array(
+                'class'       => get_called_class(),
+                'model_class' => $this->modelClass(),
+                'value'       => $value,
+                'key'         => $key,
+            );
+            $cachedModel = self::getCache($cacheValues);
+            if ($cachedModel === null) {
+                foreach ($this->models as $model) {
+                    $get = sprintf('get%s', ucfirst($key));
+                    if (!method_exists($model, $get)) {
+                        throw new \InvalidArgumentException(sprintf('Property "%s" does not exist or its getter does not exist', $key));
+                    }
+                    $propertyValue = call_user_func(array(
+                        $model,
+                        $get,
+                    ));
+                    if ($value === $propertyValue) {
+                        self::setCache($cacheValues, $model);
+                        return $model;
+                    }
                 }
             }
+            return $cachedModel;
         }
         return null;
     }
@@ -155,24 +172,70 @@ abstract class AbstractModelContainer implements \ArrayAccess, \Iterator, \Count
     public function getAs(array $properties)
     {
         if ($this->count() > 0) {
-            foreach ($this->models as $model) {
-                $same = true;
-                foreach ($properties as $name=>$value) {
-                    $get = sprintf('get%s', ucfirst($name));
-                    if (!method_exists($model, $get)) {
-                        throw new \InvalidArgumentException(sprintf('Property "%s" does not exist or its getter does not exist', $name));
+            $cacheValues = array(
+                'class'       => get_called_class(),
+                'model_class' => $this->modelClass(),
+                'properties'  => $properties,
+            );
+            $cachedModel = self::getCache($properties);
+            if ($cachedModel === null) {
+                foreach ($this->models as $model) {
+                    $same = true;
+                    foreach ($properties as $name=>$value) {
+                        $get = sprintf('get%s', ucfirst($name));
+                        if (!method_exists($model, $get)) {
+                            throw new \InvalidArgumentException(sprintf('Property "%s" does not exist or its getter does not exist', $name));
+                        }
+                        $propertyValue = call_user_func(array(
+                            $model,
+                            $get,
+                        ));
+                        $same &= $propertyValue === $value;
                     }
-                    $propertyValue = call_user_func(array(
-                        $model,
-                        $get,
-                    ));
-                    $same &= $propertyValue === $value;
-                }
-                if ((bool)$same === true) {
-                    return $model;
+                    if ((bool)$same === true) {
+                        self::setCache($cacheValues, $model);
+                        return $model;
+                    }
                 }
             }
+            return $cachedModel;
         }
         return null;
+    }
+    /**
+     * @param array $values
+     * @return mixed
+     */
+    private static function getCache(array $values)
+    {
+        $key = self::cacheKey($values);
+        return array_key_exists($key, self::$cache) ? self::$cache[$key] : null;
+    }
+    /**
+     * @param array $values
+     * @return AbstractModelContainer
+     */
+    private static function purgeCache(array $values)
+    {
+        if (self::getCache($values)) {
+            unset(self::$cache[self::cacheKey($values)]);
+        }
+    }
+    /**
+     * @param array $values
+     * @param mixed $value
+     * @return AbstractModelContainer
+     */
+    private static function setCache(array $values, $value)
+    {
+        self::$cache[self::cacheKey($values)] = $value;
+    }
+    /**
+     * @param array $values
+     * @return string
+     */
+    private static function cacheKey(array $values)
+    {
+        return sprintf('_%s', var_export($values, true));
     }
 }
