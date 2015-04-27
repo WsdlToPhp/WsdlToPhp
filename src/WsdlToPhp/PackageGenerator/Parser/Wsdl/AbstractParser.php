@@ -5,6 +5,14 @@ namespace WsdlToPhp\PackageGenerator\Parser\Wsdl;
 use WsdlToPhp\PackageGenerator\Model\Wsdl;
 use WsdlToPhp\PackageGenerator\Generator\ParserInterface;
 use WsdlToPhp\PackageGenerator\Generator\Generator;
+use WsdlToPhp\PackageGenerator\DomHandler\Wsdl\Wsdl as WsdlDocument;
+use WsdlToPhp\PackageGenerator\DomHandler\Wsdl\Tag\AbstractTag as Tag;
+use WsdlToPhp\PackageGenerator\DomHandler\AbstractAttributeHandler as Attribute;
+use WsdlToPhp\PackageGenerator\DomHandler\Wsdl\Tag\TagRestriction as Restriction;
+use WsdlToPhp\PackageGenerator\DomHandler\Wsdl\Tag\TagEnumeration as Enumeration;
+use WsdlToPhp\PackageGenerator\DomHandler\Wsdl\Tag\TagAnnotation as Annotation;
+use WsdlToPhp\PackageGenerator\DomHandler\Wsdl\Tag\TagAppinfo as Appinfo;
+use WsdlToPhp\PackageGenerator\DomHandler\Wsdl\Tag\TagDocumentation as Documentation;
 
 abstract class AbstractParser implements ParserInterface
 {
@@ -120,5 +128,101 @@ abstract class AbstractParser implements ParserInterface
         return array_key_exists($wsdl->getName(), $this->parsedWsdls) &&
                 is_array($this->parsedWsdls[$wsdl->getName()]) &&
                 in_array($this->parsingTag(), $this->parsedWsdls[$wsdl->getName()]);
+    }
+    /**
+     *
+     */
+    protected function parseRestrictions(Tag $tag)
+    {
+        $restrictions = $tag->getChildrenByName(WsdlDocument::TAG_RESTRICTION);
+        foreach ($restrictions as $restriction) {
+            if ($restriction->isEnumeration() === false) {
+                $this->parseRestriction($tag, $restriction);
+            } else {
+                $this->parseEnumeration($tag, $restriction);
+            }
+        }
+    }
+    /**
+     * @param Tag $tag
+     * @param Restriction $restriction
+     */
+    private function parseRestriction(Tag $tag, Restriction $restriction)
+    {
+        if ($restriction->hasAttributes()) {
+            foreach ($restriction->getAttributes() as $attribute) {
+                $this->addStructRestriction($tag, $attribute);
+            }
+        }
+    }
+    /**
+     * @param Tag $tag
+     * @param Attribute $attribute
+     */
+    private function addStructRestriction(Tag $tag, Attribute $attribute)
+    {
+        $this->generator->addStructMeta($tag->getAttributeName(), $attribute->getName(), $attribute->getValue());
+    }
+    /**
+     * @param Tag $tag
+     * @param Restriction $restriction
+     */
+    private function parseEnumeration(Tag $tag, Restriction $restriction)
+    {
+        foreach ($restriction->getEnumerations() as $enumeration) {
+            $this->addStructValue($tag, $enumeration);
+        }
+    }
+    /**
+     * @param Tag $tag
+     * @param Enumeration $enumeration
+     */
+    private function addStructValue(Tag $tag, Enumeration $enumeration)
+    {
+        $this->generator->addRestrictionValue($tag->getAttributeName(), $enumeration->getValue());
+    }
+    /**
+     * @param Tag $tag
+     */
+    protected function parseAnnotations(Tag $tag)
+    {
+        $annotations = $tag->getChildrenByName(WsdlDocument::TAG_ANNOTATION);
+        foreach ($annotations as $annotation) {
+            $this->parseAnnotation($tag, $annotation);
+        }
+    }
+    /**
+     * @param Annotation $annotation
+     */
+    private function parseAnnotation(Tag $tag, Annotation $annotation)
+    {
+        $appinfos = $annotation->getChildrenByName(WsdlDocument::TAG_APPINFO);
+        foreach ($appinfos as $appinfo) {
+            $this->parseAppinfo($tag, $appinfo);
+        }
+        $documentations = $annotation->getChildrenByName(WsdlDocument::TAG_DOCUMENTATION);
+        foreach ($documentations as $documentation) {
+            $this->parseDocumentation($tag, $documentation);
+        }
+    }
+    /**
+     * @param Tag $tag
+     * @param Appinfo $appinfo
+     */
+    private function parseAppinfo(Tag $tag, Appinfo $appinfo)
+    {
+        $content = $appinfo->getContent();
+        if (!empty($content)) {
+        }
+    }
+    /**
+     * @param Tag $tag
+     * @param Documentation $documentation
+     */
+    private function parseDocumentation(Tag $tag, Documentation $documentation)
+    {
+        $content = $documentation->getContent();
+        if (!empty($content)) {
+        }
     }
 }
