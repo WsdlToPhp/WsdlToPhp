@@ -217,6 +217,14 @@ abstract class AbstractContainer implements \ArrayAccess, \Iterator, \Countable
     }
     /**
      * @param array $values
+     * @return Container
+     */
+    public static function purgeAllCache()
+    {
+        self::$cache = array();
+    }
+    /**
+     * @param array $values
      * @param mixed $value
      * @return Container
      */
