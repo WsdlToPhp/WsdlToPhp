@@ -2,6 +2,10 @@
 
 namespace WsdlToPhp\PackageGenerator\Model;
 
+use WsdlToPhp\PackageGenerator\ModelContainer\StructValueContainer;
+
+use WsdlToPhp\PackageGenerator\ModelContainer\StructAttributeContainer;
+
 use WsdlToPhp\PackageGenerator\Generator\Generator;
 
 /**
@@ -16,9 +20,9 @@ class Struct extends AbstractModel
         DOC_SUB_PACKAGE_ENUMERATIONS = 'Enumerations';
     /**
      * Attributes of the struct
-     * @var array
+     * @var StructAttributeContainer
      */
-    private $attributes = array();
+    private $attributes;
     /**
      * Is the struct a restriction with defined values  ?
      * @var bool
@@ -26,9 +30,9 @@ class Struct extends AbstractModel
     private $isRestriction = false;
     /**
      * If the struct is a restriction with values, then store values
-     * @var array
+     * @var StructValueContainer
      */
-    private $values = array();
+    private $values;
     /**
      * Define if the urrent struct is a concrete struct or just a virtual struct to store meta informations
      * @var bool
@@ -48,6 +52,8 @@ class Struct extends AbstractModel
         parent::__construct($name);
         $this->setIsStruct($isStruct);
         $this->setIsRestriction($isRestriction);
+        $this->setAttributes(new StructAttributeContainer());
+        $this->setValues(new StructValueContainer());
     }
     /**
      * Returns the constructor method
@@ -449,12 +455,13 @@ class Struct extends AbstractModel
     }
     /**
      * Sets the attributes of the struct
-     * @param array
-     * @return array
+     * @param StructAttributeContainer $structAttributeContainer
+     * @return Struct
      */
-    public function setAttributes(array $attributes = array())
+    public function setAttributes(StructAttributeContainer $structAttributeContainer)
     {
-        return ($this->attributes = $attributes);
+        $this->attributes = $structAttributeContainer;
+        return $this;
     }
     /**
      * Adds attribute based on its original name
@@ -465,9 +472,10 @@ class Struct extends AbstractModel
      */
     public function addAttribute($attributeName, $attributeType)
     {
-        $this->attributes[$attributeName] = new StructAttribute($attributeName, $attributeType, $this);
+        $structAttribute = new StructAttribute($attributeName, $attributeType, $this);
+        $this->attributes->add($structAttribute);
         self::updateModels($this);
-        return $this->attributes[$attributeName];
+        return $structAttribute;
     }
     /**
      * Returns the attribute by its name, otherwise null
@@ -477,7 +485,7 @@ class Struct extends AbstractModel
      */
     public function getAttribute($attributeName)
     {
-        return array_key_exists($attributeName, $this->getAttributes()) ? $this->attributes[$attributeName] : null;
+        return $this->attributes->getStructAttributeByName($attributeName);
     }
     /**
      * Returns the isRestriction value
@@ -521,7 +529,7 @@ class Struct extends AbstractModel
     }
     /**
      * Returns the values for an enumeration
-     * @return array[StructValue]
+     * @return StructValueContainer
      */
     public function getValues()
     {
@@ -530,14 +538,14 @@ class Struct extends AbstractModel
     /**
      * Sets the values for an enumeration
      * @uses AbstractModel::updateModels()
-     * @param array $values
-     * @return array
+     * @param StructValueContainer $structValueContainer
+     * @return Struct
      */
-    private function setValues(array $values = array())
+    private function setValues(StructValueContainer $structValueContainer)
     {
-        $this->values = $values;
+        $this->values = $structValueContainer;
         self::updateModels($this);
-        return $values;
+        return $this;
     }
     /**
      * Adds value to values array
@@ -545,13 +553,15 @@ class Struct extends AbstractModel
      * @uses Struct::getValue()
      * @uses Struct::getValues()
      * @param mixed $value the original value
+     * @return Struct
      */
     public function addValue($value)
     {
-        if (!$this->getValue($value)) {
-            array_push($this->values, new StructValue($value, count($this->getValues()), $this));
+        if ($this->getValue($value) === null) {
+            $this->values->add(new StructValue($value, $this->getValues()->count(), $this));
         }
         self::updateModels($this);
+        return $this;
     }
     /**
      * Gets the value object for the given value
@@ -562,12 +572,7 @@ class Struct extends AbstractModel
      */
     public function getValue($value)
     {
-        foreach ($this->getValues() as $structValue) {
-            if ($structValue->getName() === $value) {
-                return $structValue;
-            }
-        }
-        return null;
+        return $this->values->getStructValueByName($value);
     }
     /**
      * Returns class name
