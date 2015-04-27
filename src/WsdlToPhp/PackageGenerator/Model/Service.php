@@ -2,6 +2,7 @@
 
 namespace WsdlToPhp\PackageGenerator\Model;
 
+use WsdlToPhp\PackageGenerator\ModelContainer\MethodContainer;
 use WsdlToPhp\PackageGenerator\Generator\Generator;
 
 /**
@@ -11,9 +12,9 @@ class Service extends AbstractModel
 {
     /**
      * Store the methods of the service
-     * @var array
+     * @var MethodContainer
      */
-    private $methods = array();
+    private $methods;
     /**
      * Main constructor
      * @see AbstractModel::__construct()
@@ -24,6 +25,7 @@ class Service extends AbstractModel
     public function __construct($name)
     {
         parent::__construct($name);
+        $this->setMethods(new MethodContainer());
     }
     /**
      * Returns the contextual part of the class name for the package
@@ -178,20 +180,21 @@ class Service extends AbstractModel
     }
     /**
      * Returns the methods of the service
-     * @return array[Method]
+     * @return MethodContainer
      */
     public function getMethods()
     {
         return $this->methods;
     }
     /**
-     * Sets the methods
-     * @param array $methods
-     * @return array
+     * Sets the methods container
+     * @param MethodContainer $methodContainer
+     * @return Service
      */
-    private function setMethods(array $methods = array())
+    private function setMethods(MethodContainer $methodContainer)
     {
-        return ($this->methods = $methods);
+        $this->methods = $methodContainer;
+        return $this;
     }
     /**
      * Adds a method to the service
@@ -204,9 +207,8 @@ class Service extends AbstractModel
      */
     public function addMethod($methodName, $methodParameterType, $methodReturnType, $methodIsUnique = true)
     {
-        $method = new Method($methodName, $methodParameterType, $methodReturnType, $this);
-        $method->setIsUnique($methodIsUnique);
-        array_push($this->methods, $method);
+        $method = new Method($methodName, $methodParameterType, $methodReturnType, $this, $methodIsUnique);
+        $this->methods->add($method);
         return $method;
     }
     /**
@@ -218,12 +220,7 @@ class Service extends AbstractModel
      */
     public function getMethod($methodName)
     {
-        foreach ($this->getMethods() as $method) {
-            if ($method->getName() === $methodName) {
-                return $method;
-            }
-        }
-        return null;
+        return $this->methods->getMethodByName($methodName);
     }
     /**
      * Returns class name
