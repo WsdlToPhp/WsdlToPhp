@@ -2,7 +2,6 @@
 
 namespace WsdlToPhp\PackageGenerator\Model;
 
-use WsdlToPhp\PackageGenerator\Generator\Utils;
 use WsdlToPhp\PackageGenerator\DomHandler\Wsdl\Wsdl as WsdlContent;
 
 class Wsdl extends AbstractModel
