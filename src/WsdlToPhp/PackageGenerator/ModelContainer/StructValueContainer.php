@@ -2,6 +2,8 @@
 
 namespace WsdlToPhp\PackageGenerator\ModelContainer;
 
+use WsdlToPhp\PackageGenerator\Model\StructValue;
+
 class StructValueContainer extends ModelContainer
 {
     /**
@@ -11,6 +13,14 @@ class StructValueContainer extends ModelContainer
     protected function modelClass()
     {
         return 'WsdlToPhp\\PackageGenerator\\Model\\StructValue';
+    }
+    /**
+     * @param string $name
+     * @return StructValue|null
+     */
+    public function getStructValueByName($name)
+    {
+        return $this->get($name, parent::KEY_NAME);
     }
     /**
      * @see \WsdlToPhp\PackageGenerator\ModelContainer\AbstractModelContainer::get()
