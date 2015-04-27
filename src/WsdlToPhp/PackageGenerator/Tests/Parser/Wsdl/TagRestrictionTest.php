@@ -4,8 +4,6 @@ namespace WsdlToPhp\PackageGenerator\Tests\Parser\Wsdl;
 
 use WsdlToPhp\PackageGenerator\Generator\AbstractContainer;
 use WsdlToPhp\PackageGenerator\Parser\Wsdl\TagRestriction;
-use WsdlToPhp\PackageGenerator\Generator\Generator;
-use WsdlToPhp\PackageGenerator\Model\Wsdl;
 use WsdlToPhp\PackageGenerator\DomHandler\Wsdl\Wsdl as WsdlDocument;
 
 class TagRestrictionTest extends WsdlParser
