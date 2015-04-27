@@ -142,4 +142,72 @@ class Utils
         }
         return $value;
     }
+    /**
+     * @param string $path
+     * @return string
+     */
+    public static function cleanPath($path)
+    {
+        $cleanDestination = array();
+        $destinationParts = explode('/', $path);
+        $pathParts = explode('/', $path);
+        foreach ($destinationParts as $locationPart) {
+            if ($locationPart == '..') {
+                $pathParts = count($pathParts) >= 2 ? array_slice($pathParts, 0, count($pathParts) - 2) : $pathParts;
+            } else {
+                array_push($cleanDestination, $locationPart);
+            }
+        }
+        return implode('/', $cleanDestination);
+    }
+    /**
+     * @param string $origin
+     * @param string $destination
+     * @return string
+     */
+    public static function resolveCompletePath($origin, $destination)
+    {
+        $resolvedPath = $destination;
+        if (!empty($destination) && strpos($destination, 'http://') === false && strpos($destination, 'https://') === false && !empty($origin)) {
+
+            if (substr($destination, 0, 2) === './') {
+                $destination = substr($destination, 2);
+            }
+            $destinationParts = explode('/', $destination);
+
+            $fileParts = pathinfo($origin);
+            $fileBasename = (is_array($fileParts) && array_key_exists('basename', $fileParts)) ? $fileParts['basename'] : '';
+            $parts = parse_url(str_replace('/' . $fileBasename, '', $origin));
+            $scheme = (is_array($parts) && array_key_exists('scheme', $parts)) ? $parts['scheme'] : '';
+            $host = (is_array($parts) && array_key_exists('host', $parts)) ? $parts['host'] : '';
+            $path = (is_array($parts) && array_key_exists('path', $parts)) ? $parts['path'] : '';
+            $path = str_replace('/' . $fileBasename, '', $path);
+            $pathParts = explode('/', $path);
+            $finalPath = implode('/', $pathParts);
+
+            foreach ($destinationParts as $index=>$locationPart) {
+                if ($locationPart == '..') {
+                    $finalPath = substr($finalPath, 0, strrpos($finalPath, '/', 0));
+                } else {
+                    $finalPath .= '/' . $locationPart;
+                }
+            }
+
+            $port = (is_array($parts) && array_key_exists('port', $parts)) ? $parts['port'] : '';
+            /**
+             * Remote file
+             */
+            if (!empty($scheme) && !empty($host)) {
+                $resolvedPath = str_replace('urn', 'http', $scheme) . '://' . $host . (!empty($port) ? ':' . $port : '') . str_replace('//', '/', $finalPath);
+            } elseif (empty($scheme) && empty($host) && count($pathParts)) {
+                /**
+                 * Local file
+                 */
+                if (is_file($finalPath)) {
+                    $resolvedPath = $finalPath;
+                }
+            }
+        }
+        return $resolvedPath;
+    }
 }
