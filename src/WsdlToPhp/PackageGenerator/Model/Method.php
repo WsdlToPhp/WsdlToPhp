@@ -34,14 +34,16 @@ class Method extends AbstractModel
      * @param string $parameterType the type/name of the parameter
      * @param string $returnType the type/name of the return value
      * @param Service $service defines the struct which owns this value
+     * @param bool $isUnique defines if the method is unique or not
      * @return Method
      */
-    public function __construct($name, $parameterType, $returnType, Service $service)
+    public function __construct($name, $parameterType, $returnType, Service $service, $isUnique = true)
     {
         parent::__construct($name);
         $this->setParameterType($parameterType);
         $this->setReturnType($returnType);
         $this->setOwner($service);
+        $this->setIsUnique($isUnique);
     }
     /**
      * Returns the name of the method that is used to call the operation
