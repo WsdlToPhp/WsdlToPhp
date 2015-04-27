@@ -132,10 +132,10 @@ abstract class AbstractContainer implements \ArrayAccess, \Iterator, \Countable
     {
         if ($this->count() > 0) {
             $cacheValues = array(
-                    'class'       => get_called_class(),
-                    'object_class' => $this->objectClass(),
-                    'value'       => $value,
-                    'key'         => $key,
+                'class'       => get_called_class(),
+                'object_class' => $this->objectClass(),
+                'value'       => $value,
+                'key'         => $key,
             );
             $cachedModel = self::getCache($cacheValues);
             if ($cachedModel === null) {
