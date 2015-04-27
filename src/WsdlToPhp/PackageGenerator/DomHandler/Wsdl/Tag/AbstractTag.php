@@ -2,7 +2,8 @@
 
 namespace WsdlToPhp\PackageGenerator\DomHandler\Wsdl\Tag;
 
-use WsdlToPhp\PackageGenerator\DomHandler\Wsdl\Wsdl;
+use WsdlToPhp\PackageGenerator\DomHandler\Wsdl\Wsdl as WsdlDocument;
+use WsdlToPhp\PackageGenerator\DomHandler\AbstractAttributeHandler as Attribute;
 use WsdlToPhp\PackageGenerator\DomHandler\ElementHandler;
 
 abstract class AbstractTag extends ElementHandler
@@ -40,10 +41,24 @@ abstract class AbstractTag extends ElementHandler
     protected function getSuitableParentTags(array $additionalTags = array())
     {
         return array_merge(array(
-            Wsdl::TAG_ELEMENT,
-            Wsdl::TAG_ATTRIBUTE,
-            Wsdl::TAG_SIMPLE_TYPE,
-            Wsdl::TAG_COMPLEX_TYPE,
+            WsdlDocument::TAG_ELEMENT,
+            WsdlDocument::TAG_ATTRIBUTE,
+            WsdlDocument::TAG_SIMPLE_TYPE,
+            WsdlDocument::TAG_COMPLEX_TYPE,
         ), $additionalTags);
+    }
+    /**
+     * @return null|\WsdlToPhp\PackageGenerator\DomHandler\AttributeHandler
+     */
+    public function getAttributeName()
+    {
+        return $this->getAttribute(Attribute::ATTRIBUTE_NAME);
+    }
+    /**
+     * @return null|\WsdlToPhp\PackageGenerator\DomHandler\AttributeHandler
+     */
+    public function getAttributeValue()
+    {
+        return $this->getAttribute(Attribute::ATTRIBUTE_VALUE);
     }
 }
