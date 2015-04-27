@@ -4,6 +4,9 @@ namespace WsdlToPhp\PackageGenerator\Parser\Wsdl;
 
 use WsdlToPhp\PackageGenerator\Model\Wsdl;
 use WsdlToPhp\PackageGenerator\DomHandler\Wsdl\Wsdl as WsdlDocument;
+use WsdlToPhp\PackageGenerator\DomHandler\Wsdl\Tag\AbstractTag as Tag;
+use WsdlToPhp\PackageGenerator\Model\Struct;
+
 
 class TagSimpleType extends AbstractParser
 {
@@ -31,5 +34,13 @@ class TagSimpleType extends AbstractParser
     protected function parsingTag()
     {
         return WsdlDocument::TAG_SIMPLE_CONTENT;
+    }
+    /**
+     * @see \WsdlToPhp\PackageGenerator\Parser\Wsdl\AbstractParser::getModel()
+     * @return Struct
+     */
+    protected function getModel(Tag $tag)
+    {
+        return $this->generator->getStruct($tag->getAttributeName());
     }
 }
