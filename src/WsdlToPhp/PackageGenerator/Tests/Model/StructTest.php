@@ -64,19 +64,39 @@ class StructTest extends TestCase
         $struct->setIsRestriction(false);
         $this->assertContains(Struct::DOC_SUB_PACKAGE_STRUCTS, $struct->getDocSubPackages());
     }
+    public function testGetCountAttributes()
+    {
+        $struct = self::instance('Foo', false);
+        $struct->addAttribute('bar', 'string');
+        $struct->addAttribute('bool', 'bool');
+
+        $this->assertSame(2, $struct->getAttributes()->count());
+    }
     /**
      *
      */
-    public function testIsArray()
+    public function testIsArrayTrue()
     {
         $struct = self::instance('ArrayFoo', false);
         $struct->addAttribute('ArrayOfId', 'array');
         $this->assertTrue($struct->isArray());
-
-        $struct->setName('Foo');
+    }
+    /**
+     *
+     */
+    public function testIsArrayFalseForName()
+    {
+        $struct = self::instance('Foo', false);
+        $struct->addAttribute('ArrayOfId', 'array');
         $this->assertFalse($struct->isArray());
-
-        $struct->setName('ArrayFoo');
+    }
+    /**
+     *
+     */
+    public function testIsArrayFalseForMultipleAttributes()
+    {
+        $struct = self::instance('ArrayFoo', false);
+        $struct->addAttribute('ArrayOfId', 'array');
         $struct->addAttribute('ArrayOfString', 'array');
         $this->assertFalse($struct->isArray());
     }
