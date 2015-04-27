@@ -6,6 +6,10 @@ use WsdlToPhp\PackageGenerator\Model\Service;
 
 class ServiceContainer extends ModelContainer
 {
+    /**
+     * @see \WsdlToPhp\PackageGenerator\ModelContainer\ModelContainer::modelClass()
+     * @return string
+     */
     protected function modelClass()
     {
         return 'WsdlToPhp\\PackageGenerator\\Model\\Service';
@@ -38,11 +42,27 @@ class ServiceContainer extends ModelContainer
         }
     }
     /**
+     * @param string $name
+     * @return Service|null
+     */
+    public function getServiceByName($name)
+    {
+        return $this->get($name, parent::KEY_NAME);
+    }
+    /**
      * @see \WsdlToPhp\PackageGenerator\ModelContainer\AbstractModelContainer::get()
-     * @return Service
+     * @return Service|null
      */
     public function get($value, $key = parent::KEY_NAME)
     {
         return parent::get($value, $key);
+    }
+    /**
+     * @see \WsdlToPhp\PackageGenerator\ModelContainer\AbstractModelContainer::getAs()
+     * @return Service|null
+     */
+    public function getAs(array $properties)
+    {
+        return parent::getAs($properties);
     }
 }
