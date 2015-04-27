@@ -3,7 +3,6 @@
 namespace WsdlToPhp\PackageGenerator\WsdlParser;
 
 use WsdlToPhp\PackageGenerator\Model\Wsdl;
-use WsdlToPhp\PackageGenerator\DomHandler\Wsdl\Wsdl as WsdlContent;
 use WsdlToPhp\PackageGenerator\Generator\ParserInterface;
 use WsdlToPhp\PackageGenerator\Generator\Generator;
 
@@ -41,7 +40,7 @@ abstract class AbstractParser implements ParserInterface
                 foreach ($this->generator->getWsdls() as $wsdl) {
                     $content = $wsdl->getContent();
                     $this->setTags($content->getElementsByName($this->parsingTag()));
-                    if ($content instanceof WsdlContent && count($this->getTags()) > 0) {
+                    if ($content !== null && count($this->getTags()) > 0) {
                         $this->parseWsdl($wsdl);
                     }
                 }
