@@ -2,9 +2,10 @@
 
 namespace WsdlToPhp\PackageGenerator\SoapClientParser;
 
+use WsdlToPhp\PackageGenerator\Generator\ParserInterface;
 use WsdlToPhp\PackageGenerator\Generator\Generator;
 
-abstract class AbstractSoapClientParser implements SoapClientParserInterface
+abstract class AbstractSoapClientParser implements ParserInterface
 {
     /**
      * @var Generator

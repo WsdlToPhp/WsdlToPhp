@@ -1,10 +1,8 @@
 <?php
 
-namespace WsdlToPhp\PackageGenerator\SoapClientParser;
+namespace WsdlToPhp\PackageGenerator\Generator;
 
-use WsdlToPhp\PackageGenerator\Generator\Generator;
-
-interface SoapClientParserInterface
+interface ParserInterface
 {
     /**
      * @param Generator $generator
