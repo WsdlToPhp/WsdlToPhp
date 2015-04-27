@@ -5,10 +5,10 @@ namespace WsdlToPhp\PackageGenerator\ModelContainer;
 class ModelContainer extends AbstractModelContainer
 {
     /**
-     * @see \WsdlToPhp\PackageGenerator\ModelContainer\AbstractModelContainer::modelClass()
+     * @see \WsdlToPhp\PackageGenerator\ModelContainer\AbstractModelContainer::objectClass()
      * @return string
      */
-    protected function modelClass()
+    protected function objectClass()
     {
         return 'WsdlToPhp\\PackageGenerator\\Model\\EmptyModel';
     }
