@@ -386,7 +386,7 @@ class Generator extends \SoapClient
             try {
                 parent::__construct($pathToWsdl, $options);
             } catch (\SoapFault $fault) {
-                throw new \Exception('Unable to load WSDL!', null, $fault);
+                throw new \Exception(sprintf('Unable to load WSDL at "%s"!', $pathToWsdl), null, $fault);
             }
         }
         $this->setOptions(GeneratorOptions::instance());
@@ -1470,7 +1470,7 @@ class Generator extends \SoapClient
      */
     public function addWsdl($wsdlLocation)
     {
-        if ($this->wsdls->getWsdlByName($wsdlLocation) === null) {
+        if (!empty($wsdlLocation) && $this->wsdls->getWsdlByName($wsdlLocation) === null) {
             $this->wsdls->add(new Wsdl($wsdlLocation, $this->getUrlContent($wsdlLocation)));
         }
         return $this;
@@ -2855,10 +2855,16 @@ class Generator extends \SoapClient
     }
     /**
      * @param string $url
+     * @return string
      */
     public function getUrlContent($url)
     {
-        return Utils::getContentFromUrl($url, isset($this->_proxy_host) ? $this->_proxy_host : null, isset($this->_proxy_port) ? $this->_proxy_port : null, isset($this->_proxy_login) ? $this->_proxy_login : null, isset($this->_proxy_password) ? $this->_proxy_password : null);
+        if (strpos($url, '://') !== false) {
+            return Utils::getContentFromUrl($url, isset($this->_proxy_host) ? $this->_proxy_host : null, isset($this->_proxy_port) ? $this->_proxy_port : null, isset($this->_proxy_login) ? $this->_proxy_login : null, isset($this->_proxy_password) ? $this->_proxy_password : null);
+        } elseif (is_file($url)) {
+            return file_get_contents($url);
+        }
+        return null;
     }
     /**
      * Returns current class name
