@@ -5,6 +5,8 @@ namespace WsdlToPhp\PackageGenerator\Parser\Wsdl;
 use WsdlToPhp\PackageGenerator\Generator\Utils;
 use WsdlToPhp\PackageGenerator\Model\Wsdl;
 use WsdlToPhp\PackageGenerator\DomHandler\Wsdl\Wsdl as WsdlDocument;
+use WsdlToPhp\PackageGenerator\DomHandler\Wsdl\Tag\AbstractTag as Tag;
+use WsdlToPhp\PackageGenerator\Model\EmptyModel;
 
 class TagInclude extends AbstractParser
 {
@@ -35,5 +37,13 @@ class TagInclude extends AbstractParser
     protected function parsingTag()
     {
         return WsdlDocument::TAG_INCLUDE;
+    }
+    /**
+     * @see \WsdlToPhp\PackageGenerator\Parser\Wsdl\AbstractParser::getModel()
+     * @return EmptyModel
+     */
+    protected function getModel(Tag $tag)
+    {
+        return new EmptyModel($tag->getAttributeName());
     }
 }
