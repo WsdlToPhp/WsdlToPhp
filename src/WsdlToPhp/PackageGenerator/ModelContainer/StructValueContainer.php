@@ -7,10 +7,10 @@ use WsdlToPhp\PackageGenerator\Model\StructValue;
 class StructValueContainer extends ModelContainer
 {
     /**
-     * @see \WsdlToPhp\PackageGenerator\ModelContainer\ModelContainer::modelClass()
+     * @see \WsdlToPhp\PackageGenerator\ModelContainer\ModelContainer::objectClass()
      * @return string
      */
-    protected function modelClass()
+    protected function objectClass()
     {
         return 'WsdlToPhp\\PackageGenerator\\Model\\StructValue';
     }
