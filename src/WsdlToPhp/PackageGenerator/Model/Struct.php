@@ -88,7 +88,7 @@ class Struct extends AbstractModel
         /**
          * A restriction struct with enumeration values
          */
-        if ($this->getIsRestriction() && count($this->getValues())) {
+        if ($this->getIsRestriction() && $this->getValues()->count() > 0) {
             $constantsDefined = array();
             foreach ($this->getValues() as $index => $value) {
                 array_push($body, array('comment' => $value->getComment()));
@@ -113,7 +113,7 @@ class Struct extends AbstractModel
             array_push($body, 'return in_array($value, array(' . implode(', ', $constantsDefined) . '));');
             array_push($body, '}');
             unset($comments);
-        } elseif (count($this->getAttributes())) {
+        } elseif ($this->getAttributes()->count() > 0) {
             /**
              * A classic struct with attributes
              * Gathers informations about attributes
@@ -388,59 +388,63 @@ class Struct extends AbstractModel
      * @uses Struct::getAttributes()
      * @param bool $includeInheritanceAttributes include the attributes of parent class, default parent attributes are not included. If true, then the array is an associative array containing and index "attribute" for the StructAttribute object and an index "model" for the Struct object.
      * @param bool $requiredFirst places the required attributes first, then the not required in order to have the _contrust method with the required attribute at first
-     * @return array
+     * @return StructAttributeContainer
      */
     public function getAttributes($includeInheritanceAttributes = false, $requiredFirst = false)
     {
-        $attributes = $this->attributes;
-        /**
-         * Returns the inherited attributes
-         */
-        if ($includeInheritanceAttributes) {
-            $attributes = array();
-            if ($this->getInheritance() != '') {
-                $model = AbstractModel::getModelByName($this->getInheritance());
-                while ($model && $model->getIsStruct()) {
-                    $modelAttributes = $model->getAttributes();
-                    if (count($modelAttributes)) {
-                        foreach ($modelAttributes as $attribute) {
-                            array_push($attributes, array('attribute' => $attribute, 'model' => $model));
+        if ($includeInheritanceAttributes === false && $requiredFirst === false) {
+            $attributes = $this->attributes;
+        } else {
+            $attributes    = new StructAttributeContainer();
+            $allAttributes = new StructAttributeContainer();
+            /**
+             * Returns the inherited attributes
+             */
+            if ($includeInheritanceAttributes) {
+                if ($this->getInheritance() != '') {
+                    $model = AbstractModel::getModelByName($this->getInheritance());
+                    while ($model && $model->getIsStruct()) {
+                        if ($model->getAttributes()->count()) {
+                            foreach ($model->getAttributes() as $attribute) {
+                                $allAttributes->add($attribute);
+                            }
                         }
+                        $model = AbstractModel::getModelByName($model->getInheritance());
                     }
-                    unset($modelAttributes);
-                    $model = AbstractModel::getModelByName($model->getInheritance());
                 }
             }
-            $thisAttributes = $this->getAttributes();
-            if (count($thisAttributes)) {
-                foreach ($thisAttributes as $attribute) {
-                    array_push($attributes, array('attribute' => $attribute, 'model' => $this));
+            if ($this->attributes->count() > 0) {
+                foreach ($this->attributes as $attribute) {
+                    $allAttributes->add($attribute);
                 }
             }
-            unset($thisAttributes);
-        }
-        /**
-         * Returns the required attributes at first position
-         */
-        if ($requiredFirst) {
-            $requiredAttributes = array();
-            $notRequiredAttributes = array();
-            foreach ($attributes as $attribute) {
-                $attributeModel = $includeInheritanceAttributes ? $attribute['attribute'] : $attribute;
-                if ($attributeModel->isRequired()) {
-                    array_push($requiredAttributes, $attribute);
-                } else {
-                    array_push($notRequiredAttributes, $attribute);
+            /**
+             * Returns the required attributes at first position
+             */
+            if ($requiredFirst) {
+                $requiredAttributes    = new StructAttributeContainer();
+                $notRequiredAttributes = new StructAttributeContainer();
+                foreach ($allAttributes as $attribute) {
+                    if ($attribute->isRequired()) {
+                        $requiredAttributes->add($attribute);
+                    } else {
+                        $notRequiredAttributes->add($attribute);
+                    }
+                }
+                $attributes = new StructAttributeContainer();
+                foreach ($requiredAttributes as $attribute) {
+                    $attributes->add($attribute);
+                }
+                foreach ($notRequiredAttributes as $attribute) {
+                    $attributes->add($attribute);
+                }
+                unset($requiredAttributes, $notRequiredAttributes);
+            } else {
+                $attributes = new StructAttributeContainer();
+                foreach ($allAttributes as $attribute) {
+                    $attributes->add($attribute);
                 }
             }
-            $attributes = array();
-            foreach ($requiredAttributes as $attribute) {
-                array_push($attributes, $attribute);
-            }
-            foreach ($notRequiredAttributes as $attribute) {
-                array_push($attributes, $attribute);
-            }
-            unset($requiredAttributes, $notRequiredAttributes);
         }
         return $attributes;
     }
@@ -451,7 +455,7 @@ class Struct extends AbstractModel
      */
     public function countOwnAttributes()
     {
-        return count($this->getAttributes(false, false));
+        return $this->getAttributes(false, false)->count();
     }
     /**
      * Sets the attributes of the struct
