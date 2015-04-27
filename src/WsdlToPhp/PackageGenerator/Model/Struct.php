@@ -40,12 +40,14 @@ class Struct extends AbstractModel
      * @uses Struct::setIsStruct()
      * @param string $name the original name
      * @param bool $isStruct defines if it's a real sruct or not
+     * @param bool $isRestriction defines if it's an enumeration or not
      * @return Struct
      */
-    public function __construct($name, $isStruct = true)
+    public function __construct($name, $isStruct = true, $isRestriction = false)
     {
         parent::__construct($name);
         $this->setIsStruct($isStruct);
+        $this->setIsRestriction($isRestriction);
     }
     /**
      * Returns the constructor method
