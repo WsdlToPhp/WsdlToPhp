@@ -6,10 +6,10 @@ class MethodContainer extends ModelContainer
 {
     const KEY_PARAMETER_TYPE = 'parameterType';
     /**
-     * @see \WsdlToPhp\PackageGenerator\ModelContainer\ModelContainer::modelClass()
+     * @see \WsdlToPhp\PackageGenerator\ModelContainer\ModelContainer::objectClass()
      * @return string
      */
-    protected function modelClass()
+    protected function objectClass()
     {
         return 'WsdlToPhp\\PackageGenerator\\Model\\Method';
     }
