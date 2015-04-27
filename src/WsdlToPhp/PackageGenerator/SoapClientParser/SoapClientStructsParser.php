@@ -91,7 +91,7 @@ class SoapClientStructsParser extends AbstractSoapClientParser
                         if ($then) {
                             $structParamName = $typeVal;
                             if (! empty($structParamType) && ! empty($structParamName) && ! empty($structName)) {
-                                $this->addStruct($structName, $structParamName, $structParamType);
+                                $structs->addStruct($structName, $structParamName, $structParamType);
                                 array_push($structsDefined, $typeSignature);
                                 $structParamName = '';
                                 $structParamType = '';
