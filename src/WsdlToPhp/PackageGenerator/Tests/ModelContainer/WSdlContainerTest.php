@@ -9,16 +9,16 @@ use WsdlToPhp\PackageGenerator\ModelContainer\WsdlContainer;
 class WsdlContainerTest extends TestCase
 {
     const
-        WSDL_BING = 'http://api.bing.net/search.wsdl',
-        WSDL_OVH  = 'http://www.ovh.com/soapi/soapi-dlw-1.49.wsdl';
+        WSDL_BING = 'bingsearch.wsdl',
+        WSDL_EBAY = 'ebaySvc.wsdl';
     /**
      * @return WsdlContainer
      */
     public static function instance()
     {
         $wsdlContainer = new WsdlContainer();
-        $wsdlContainer->add(new Wsdl(self::WSDL_BING));
-        $wsdlContainer->add(new Wsdl(self::WSDL_OVH));
+        $wsdlContainer->add(new Wsdl(self::WSDL_BING, file_get_contents(dirname(__FILE__) . '/../resources/' . self::WSDL_BING)));
+        $wsdlContainer->add(new Wsdl(self::WSDL_EBAY, file_get_contents(dirname(__FILE__) . '/../resources/' . self::WSDL_EBAY)));
         return $wsdlContainer;
     }
     /**
@@ -29,7 +29,7 @@ class WsdlContainerTest extends TestCase
         $wsdlContainer = self::instance();
 
         $this->assertInstanceOf('\\WsdlToPhp\\PackageGenerator\\Model\\Wsdl', $wsdlContainer->getWsdlByName(self::WSDL_BING));
-        $this->assertInstanceOf('\\WsdlToPhp\\PackageGenerator\\Model\\Wsdl', $wsdlContainer->getWsdlByName(self::WSDL_OVH));
+        $this->assertInstanceOf('\\WsdlToPhp\\PackageGenerator\\Model\\Wsdl', $wsdlContainer->getWsdlByName(self::WSDL_EBAY));
         $this->assertNull($wsdlContainer->getWsdlByName('Bar'));
     }
 }
