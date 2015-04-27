@@ -2,7 +2,7 @@
 
 namespace WsdlToPhp\PackageGenerator\DomHandler;
 
-class AbstractElementHandler extends AbstractNodeHandler
+abstract class AbstractElementHandler extends AbstractNodeHandler
 {
     /**
      * @param \DOMElement $element
