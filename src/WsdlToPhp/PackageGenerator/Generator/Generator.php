@@ -2,6 +2,8 @@
 
 namespace WsdlToPhp\PackageGenerator\Generator;
 
+use WsdlToPhp\PackageGenerator\Model\Wsdl;
+use WsdlToPhp\PackageGenerator\ModelContainer\WsdlContainer;
 use WsdlToPhp\PackageGenerator\Model\AbstractModel;
 use WsdlToPhp\PackageGenerator\Model\EmptyModel;
 use WsdlToPhp\PackageGenerator\Model\Struct;
@@ -329,7 +331,7 @@ class Generator extends \SoapClient
     private static $packageName;
     /**
      * Wsdl lists
-     * @var array
+     * @var WsdlContainer
      */
     private $wsdls;
     /**
@@ -374,7 +376,6 @@ class Generator extends \SoapClient
             $options['login'] = $login;
             $options['password'] = $password;
         }
-        $this->setWsdls();
         /**
          * Construct
          */
@@ -388,10 +389,11 @@ class Generator extends \SoapClient
                 throw new \Exception('Unable to load WSDL!', null, $fault);
             }
         }
-        $this->addWsdl($pathToWsdl);
         $this->setOptions(GeneratorOptions::instance());
         $this->setStructs(new StructContainer());
         $this->setServices(new ServiceContainer());
+        $this->setWsdls(new WsdlContainer());
+        $this->addWsdl($pathToWsdl);
     }
     /**
      * @param string options's file to parse
@@ -439,73 +441,78 @@ class Generator extends \SoapClient
     {
         self::initGlobals();
         $wsdl = $this->getWsdl(0);
-        self::auditInit('generate_classes', $wsdl);
-        self::setPackageName($packageName);
-        $rootDirectory = $rootDirectory . (substr($rootDirectory, -1) != '/' ? '/' : '');
-        /**
-         * Root directory
-         */
-        if (!is_dir($rootDirectory) && !$createRootDirectory) {
-            throw new \InvalidArgumentException(sprintf('Unable to use dir "%s" as dir does not exists and its creation has been disabled', $rootDirectory));
-        } elseif (!is_dir($rootDirectory) && $createRootDirectory) {
-            mkdir($rootDirectory, $rootDirectoryRights);
-        }
-        /**
-         * Begin process
-         */
-        if (is_dir($rootDirectory)) {
+        $wsdlLocation = $wsdl !== null ? $wsdl->getName() : '';
+        self::auditInit('generate_classes', $wsdlLocation);
+        if (!empty($wsdlLocation)) {
+
+            self::setPackageName($packageName);
+            $rootDirectory = $rootDirectory . (substr($rootDirectory, -1) != '/' ? '/' : '');
             /**
-             * Initialize elements
+             * Root directory
              */
-            $init = false;
-            if ($this->getStructs()->count() === 0) {
-                $this->initStructs();
+            if (!is_dir($rootDirectory) && !$createRootDirectory) {
+                throw new \InvalidArgumentException(sprintf('Unable to use dir "%s" as dir does not exists and its creation has been disabled', $rootDirectory));
+            } elseif (!is_dir($rootDirectory) && $createRootDirectory) {
+                mkdir($rootDirectory, $rootDirectoryRights);
+            }
+            /**
+             * Begin process
+             */
+            if (is_dir($rootDirectory)) {
+                /**
+                 * Initialize elements
+                 */
+                $init = false;
+                if ($this->getStructs()->count() === 0) {
+                    $this->initStructs();
+                } else {
+                    $init = true;
+                }
+                if ($this->getServices()->count() === 0) {
+                    $this->initServices();
+                }
+                if (!$init && $this->getWsdls()->count()) {
+                    $this->loadWsdls($wsdlLocation);
+                }
+                /**
+                 * Initialize specific elements when all wsdls are loaded
+                 */
+                $this->wsdlsLoaded();
+                /**
+                 * Generates Wsdl Class ?
+                 */
+                if ($this->getOptionGenerateWsdlClassFile() === true) {
+                    $wsdlClassFile = $this->generateWsdlClassFile($rootDirectory);
+                } else {
+                    $wsdlClassFile = array();
+                }
+                if (!count($wsdlClassFile)) {
+                    $this->setOptionGenerateWsdlClassFile(false);
+                }
+                /**
+                 * Generates classes files
+                 */
+                $structsClassesFiles = $this->generateStructsClasses($rootDirectory, $rootDirectoryRights);
+                $servicesClassesFiles = $this->generateServicesClasses($rootDirectory, $rootDirectoryRights);
+                $classMapFile = $this->generateClassMap($rootDirectory);
+                /**
+                 * Generates autoload ?
+                 */
+                if ($this->getOptionGenerateAutoloadFile() === true) {
+                    $this->generateAutoloadFile($rootDirectory, array_merge($wsdlClassFile, $structsClassesFiles, $servicesClassesFiles, $classMapFile));
+                }
+                /**
+                 * Generates tutorial ?
+                 */
+                if ($this->getOptionGenerateTutorialFile() === true) {
+                    $this->generateTutorialFile($rootDirectory, $servicesClassesFiles);
+                }
+                return self::audit('generate_classes', $wsdlLocation);
             } else {
-                $init = true;
+                return !self::audit('generate_classes', $wsdlLocation);
             }
-            if ($this->getServices()->count() === 0) {
-                $this->initServices();
-            }
-            if (!$init && count($this->wsdls)) {
-                $this->loadWsdls($wsdl);
-            }
-            /**
-             * Initialize specific elements when all wsdls are loaded
-             */
-            $this->wsdlsLoaded();
-            /**
-             * Generates Wsdl Class ?
-             */
-            if ($this->getOptionGenerateWsdlClassFile() === true) {
-                $wsdlClassFile = $this->generateWsdlClassFile($rootDirectory);
-            } else {
-                $wsdlClassFile = array();
-            }
-            if (!count($wsdlClassFile)) {
-                $this->setOptionGenerateWsdlClassFile(false);
-            }
-            /**
-             * Generates classes files
-             */
-            $structsClassesFiles = $this->generateStructsClasses($rootDirectory, $rootDirectoryRights);
-            $servicesClassesFiles = $this->generateServicesClasses($rootDirectory, $rootDirectoryRights);
-            $classMapFile = $this->generateClassMap($rootDirectory);
-            /**
-             * Generates autoload ?
-             */
-            if ($this->getOptionGenerateAutoloadFile() === true) {
-                $this->generateAutoloadFile($rootDirectory, array_merge($wsdlClassFile, $structsClassesFiles, $servicesClassesFiles, $classMapFile));
-            }
-            /**
-             * Generates tutorial ?
-             */
-            if ($this->getOptionGenerateTutorialFile() === true) {
-                $this->generateTutorialFile($rootDirectory, $servicesClassesFiles);
-            }
-            return self::audit('generate_classes', $wsdl);
-        } else {
-            return !self::audit('generate_classes', $wsdl);
         }
+        return !self::audit('generate_classes', $wsdlLocation);
     }
     /**
      * Initialize structs defined in WSDL :
@@ -832,8 +839,8 @@ class Generator extends \SoapClient
                 $content = file_get_contents($pathToWsdlClassTemplate);
             }
             $metaInformation = '';
-            foreach ($this->wsdls as $wsdlinfos) {
-                foreach ($wsdlinfos['meta'] as $metaName => $metaValue) {
+            foreach ($this->getWsdls() as $wsdl) {
+                foreach ($wsdl->getMeta() as $metaName => $metaValue) {
                     $metaValueCleaned = AbstractModel::cleanComment($metaValue);
                     if ($metaValueCleaned === '') {
                         continue;
@@ -841,7 +848,17 @@ class Generator extends \SoapClient
                     $metaInformation .= (!empty($metaInformation) ? "\n * " : '') . ucfirst($metaName) . " : $metaValueCleaned";
                 }
             }
-            $content = str_replace(array('packageName', 'PackageName', 'meta_informations', "'wsdl_url_value'"), array(lcfirst(self::getPackageName(false)), self::getPackageName(), $metaInformation, var_export(self::getWsdl(0), true)), $content);
+            $content = str_replace(array(
+                'packageName',
+                'PackageName',
+                'meta_informations',
+                "'wsdl_url_value'"
+            ), array(
+                lcfirst(self::getPackageName(false)),
+                self::getPackageName(),
+                $metaInformation,
+                var_export(self::getWsdl(0)->getName(), true)
+            ), $content);
             file_put_contents($rootDirectory . self::getPackageName() . 'WsdlClass.php', $content);
             self::audit('generate_wsdlclass');
             return array($rootDirectory . self::getPackageName() . 'WsdlClass.php');
@@ -960,7 +977,19 @@ class Generator extends \SoapClient
                     } else {
                         $fileContent = file_get_contents($pathToTutorialTemplate);
                     }
-                    $fileContent = str_replace(array('packageName', 'PackageName', 'PACKAGENAME', 'WSDL_PATH', '$content;'), array(lcfirst(self::getPackageName()), ucfirst(self::getPackageName()), strtoupper(self::getPackageName()), var_export($this->getWsdl(0), true), $content), $fileContent);
+                    $fileContent = str_replace(array(
+                        'packageName',
+                        'PackageName',
+                        'PACKAGENAME',
+                        'WSDL_PATH',
+                        '$content;'
+                    ), array(
+                        lcfirst(self::getPackageName()),
+                        ucfirst(self::getPackageName()),
+                        strtoupper(self::getPackageName()),
+                        var_export($this->getWsdl(0)->getName(), true),
+                        $content
+                    ), $fileContent);
                     file_put_contents($rootDirectory . 'sample.php', $fileContent);
                 }
                 self::audit('generate_tutorial');
@@ -1411,7 +1440,7 @@ class Generator extends \SoapClient
     }
     /**
      * Gets the WSDLs
-     * @return array
+     * @return WsdlContainer
      */
     public function getWsdls()
     {
@@ -1420,20 +1449,21 @@ class Generator extends \SoapClient
     /**
      * Gets the WSDL at the index
      * @param int $index
-     * @return string|null
+     * @return Wsdl
      */
     public function getWsdl($index)
     {
-        return (is_array($this->wsdls) && count($this->wsdls) > $index) ? implode('', array_slice(array_keys($this->wsdls), $index, 1)) : null;
+        return $this->getWsdls()->offsetExists($index) ? $this->getWsdls()->offsetGet($index) : null;
     }
     /**
      * Sets the WSDLs
-     * @param array
-     * @return array
+     * @param WsdlContainer $wsdlContainer
+     * @return Generator
      */
-    public function setWsdls(array $wsdls = array())
+    public function setWsdls(WsdlContainer $wsdlContainer)
     {
-        $this->wsdls = $wsdls;
+        $this->wsdls = $wsdlContainer;
+        return $this;
     }
     /**
      * Adds Wsdl location
@@ -1441,9 +1471,10 @@ class Generator extends \SoapClient
      */
     public function addWsdl($wsdlLocation)
     {
-        if (is_string($wsdlLocation) && !empty($wsdlLocation)) {
-            $this->wsdls[$wsdlLocation] = array('meta' => array());
+        if ($this->wsdls->getWsdlByName($wsdlLocation) === null) {
+            $this->wsdls->add(new Wsdl($wsdlLocation));
         }
+        return $this;
     }
     /**
      * Adds Wsdl location meta information
@@ -1452,9 +1483,12 @@ class Generator extends \SoapClient
      * @param mixed $metaValue meta value
      * @return string
      */
-    public function addWsdlMeta($metaName, $metaValue)
+    public function addWsdlMeta($wsdlLocation, $metaName, $metaValue)
     {
-        return ($this->wsdls[$this->getWsdl(0)]['meta'][$metaName] = $metaValue);
+        if ($this->getWsdls()->getWsdlByName($wsdlLocation) !== null) {
+            $this->getWsdls()->getWsdlByName($wsdlLocation)->addMeta($metaName, $metaValue);
+        }
+        return $this;
     }
     /**
      * Methods to load WSDL from current WSDL when current WSDL imports other WSDL
@@ -1492,7 +1526,7 @@ class Generator extends \SoapClient
     protected function wsdlsLoaded()
     {
         self::auditInit(__METHOD__);
-        if (count($this->getWsdls())) {
+        if ($this->getWsdls()->count() > 0) {
             $tags = array();
             /**
              * Retrieve headers informations
@@ -1519,10 +1553,8 @@ class Generator extends \SoapClient
              */
             array_push($tags, 'output');
             foreach ($tags as $tagName) {
-                foreach (array_keys($this->getWsdls()) as $wsdlLocation) {
-                    if (is_string($wsdlLocation) && !empty($wsdlLocation)) {
-                        $this->manageWsdlLocation($wsdlLocation, null, '', $tagName);
-                    }
+                foreach ($this->getWsdls() as $wsdl) {
+                    $this->manageWsdlLocation($wsdl->getName(), null, '', $tagName);
                 }
             }
         }
@@ -1938,7 +1970,7 @@ class Generator extends \SoapClient
             /**
              * is it the definitions node of the WSDL
              */
-            $this->addWsdlMeta('documentation', $documentation);
+            $this->addWsdlMeta($wsdlLocation, 'documentation', $documentation);
         }
         self::audit('managewsdlnode_documentation', !empty($wsdlLocation) ? $wsdlLocation : $fromWsdlLocation);
     }
