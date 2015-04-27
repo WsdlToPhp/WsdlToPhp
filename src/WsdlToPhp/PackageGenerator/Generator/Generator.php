@@ -571,7 +571,7 @@ class Generator extends \SoapClient
             $structTmp = $structs;
             $structs = array();
             foreach (array_keys($structsToGenerateDone) as $structName)
-                $structs[$structName] = $structTmp[$structName];
+                $structs[$structName] = $structTmp->getStructByName($structName);
             unset($structTmp, $structsToGenerateDone);
             foreach ($structs as $structName => $struct) {
                 if (!$struct->getIsStruct()) {
@@ -978,7 +978,7 @@ class Generator extends \SoapClient
      */
     public function getStruct($structName)
     {
-        return array_key_exists($structName, $this->getStructs()) ? $this->structs[$structName] : null;
+        return $this->structs->getStructByName($structName);
     }
     /**
      * Adds an info to the struct
@@ -991,7 +991,7 @@ class Generator extends \SoapClient
      */
     private function addStructMeta($structName, $structInfoName, $structInfoValue)
     {
-        if ($this->getStruct($structName)) {
+        if ($this->getStruct($structName) !== null) {
             $this->getStruct($structName)->addMeta($structInfoName, $structInfoValue);
         }
     }
@@ -1005,7 +1005,7 @@ class Generator extends \SoapClient
      */
     private function setStructInheritance($structName, $inherits)
     {
-        if ($this->getStruct($structName)) {
+        if ($this->getStruct($structName) !== null) {
             $this->getStruct($structName)->setInheritance($inherits);
         }
     }
@@ -1019,7 +1019,7 @@ class Generator extends \SoapClient
      */
     private function setStructDocumentation($structName, $documentation)
     {
-        if ($this->getStruct($structName)) {
+        if ($this->getStruct($structName) !== null) {
             $this->getStruct($structName)->setDocumentation($documentation);
         }
     }
@@ -1032,7 +1032,7 @@ class Generator extends \SoapClient
      */
     private function setStructIsRestriction($structName)
     {
-        if ($this->getStruct($structName)) {
+        if ($this->getStruct($structName) !== null) {
             $this->getStruct($structName)->setIsRestriction(true);
         }
     }
@@ -1045,7 +1045,7 @@ class Generator extends \SoapClient
      */
     private function setStructIsStruct($structName)
     {
-        if ($this->getStruct($structName)) {
+        if ($this->getStruct($structName) !== null) {
             $this->getStruct($structName)->setIsStruct(true);
         }
     }
@@ -1059,7 +1059,7 @@ class Generator extends \SoapClient
      */
     public function getStructAttribute($structName, $attributeName)
     {
-        return $this->getStruct($structName) ? $this->getStruct($structName)->getAttribute($attributeName) : null;
+        return $this->getStruct($structName) !== null ? $this->getStruct($structName)->getAttribute($attributeName) : null;
     }
     /**
      * Adds an info to the struct attribute
@@ -1073,7 +1073,7 @@ class Generator extends \SoapClient
      */
     private function addStructAttributeMeta($structName, $attributeName, $attributeInfoName, $attributeInfoValue)
     {
-        if ($this->getStructAttribute($structName, $attributeName)) {
+        if ($this->getStructAttribute($structName, $attributeName) !== null) {
             $this->getStructAttribute($structName, $attributeName)->addMeta($attributeInfoName, $attributeInfoValue);
         }
     }
@@ -1088,7 +1088,7 @@ class Generator extends \SoapClient
      */
     private function setStructAttributeDocumentation($structName, $attributeName, $documentation)
     {
-        if ($this->getStructAttribute($structName, $attributeName)) {
+        if ($this->getStructAttribute($structName, $attributeName) !== null) {
             $this->getStructAttribute($structName, $attributeName)->setDocumentation($documentation);
         }
     }
@@ -1102,7 +1102,7 @@ class Generator extends \SoapClient
      */
     public function getStructValue($structName, $valueName)
     {
-        return $this->getStruct($structName) ? $this->getStruct($structName)->getValue($valueName) : null;
+        return $this->getStruct($structName) !== null ? $this->getStruct($structName)->getValue($valueName) : null;
     }
     /**
      * Adds value to restriction struct
@@ -1144,7 +1144,7 @@ class Generator extends \SoapClient
      */
     public function getService($serviceName)
     {
-        return array_key_exists($serviceName, $this->getServices()) ? $this->services[$serviceName] : null;
+        return $this->services->getServiceByName($serviceName);
     }
     /**
      * Returns the method
@@ -1792,7 +1792,7 @@ class Generator extends \SoapClient
                 do {
                 } while (!(($childNodes->item($firstValidNodePos) instanceof \DOMNode) && $childNodes->item($firstValidNodePos)->nodeType === XML_ELEMENT_NODE) && $firstValidNodePos++ < $childNodesLength);
                 if ($childNodes->item($firstValidNodePos)) {
-                    $this->addVirtualStruct($parentNode->getAttribute('name'));
+                    $this->structs->addVirtualStruct($parentNode->getAttribute('name'));
                     for ($i = 0; $i < $childNodesLength; $i++) {
                         $childNode = $childNodes->item($i);
                         /**
