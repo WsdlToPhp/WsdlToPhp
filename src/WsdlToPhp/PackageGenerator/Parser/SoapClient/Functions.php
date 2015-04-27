@@ -54,11 +54,11 @@ class Functions extends AbstractParser
                                 ', ',
                                 '(',
                                 ')',
-                                '$'
+                                '$',
                             ), '', trim($infos[$i]));
                             if (! empty($info)) {
                                 $methodParameters = array_merge($methodParameters, array(
-                                    $info => $i == $start ? $firstParameterType : $infos[$i - 1]
+                                    $info => $i == $start ? $firstParameterType : $infos[$i - 1],
                                 ));
                             }
                         }
