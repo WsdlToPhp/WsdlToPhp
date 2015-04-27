@@ -83,7 +83,8 @@ class GeneratePackageCommand extends AbstractCommand
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         parent::execute($input, $output);
-        $this->writeLn(" Start");
+        $start = new \DateTime();
+        $this->writeLn(sprintf(" Start at %s", $start->format('Y-m-d H:i:s')));
 
         $wsdlUrl            = $this->input->getOption('wsdl-urlorpath');
         $wsdlLogin          = $this->input->getOption('wsdl-login');
@@ -114,7 +115,8 @@ class GeneratePackageCommand extends AbstractCommand
             $this->writeLn("    " . implode(PHP_EOL . '    ', $this->formatArrayForConsole($packageGenerationOptions)));
         }
 
-        $this->writeLn(" End");
+        $end = new \DateTime();
+        $this->writeLn(sprintf(" End at %s, duration: %s", $end->format('Y-m-d H:i:s'), $start->diff($end)->format('%s')));
     }
 
     /**
