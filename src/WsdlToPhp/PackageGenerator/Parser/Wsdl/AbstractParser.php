@@ -14,6 +14,7 @@ use WsdlToPhp\PackageGenerator\DomHandler\Wsdl\Tag\TagAnnotation as Annotation;
 use WsdlToPhp\PackageGenerator\DomHandler\Wsdl\Tag\TagAppinfo as Appinfo;
 use WsdlToPhp\PackageGenerator\DomHandler\Wsdl\Tag\TagDocumentation as Documentation;
 use WsdlToPhp\PackageGenerator\Model\AbstractModel as Model;
+use WsdlToPhp\PackageGenerator\Model\Struct;
 
 abstract class AbstractParser implements ParserInterface
 {
@@ -132,9 +133,10 @@ abstract class AbstractParser implements ParserInterface
      */
     public function isWsdlParsed(Wsdl $wsdl)
     {
-        return array_key_exists($wsdl->getName(), $this->parsedWsdls) &&
-                is_array($this->parsedWsdls[$wsdl->getName()]) &&
-                in_array($this->parsingTag(), $this->parsedWsdls[$wsdl->getName()]);
+        return
+            array_key_exists($wsdl->getName(), $this->parsedWsdls) &&
+            is_array($this->parsedWsdls[$wsdl->getName()]) &&
+            in_array($this->parsingTag(), $this->parsedWsdls[$wsdl->getName()]);
     }
     /**
      * @param Tag $tag
@@ -201,7 +203,10 @@ abstract class AbstractParser implements ParserInterface
      */
     private function addStructValue(Tag $tag, Enumeration $enumeration)
     {
-        $this->generator->addRestrictionValue($tag->getAttributeName(), $enumeration->getValue());
+        $struct = $this->getModel($tag);
+        if ($struct instanceof  Struct) {
+            $struct->addValue($enumeration->getValue());
+        }
     }
     /**
      * @param Tag $tag
