@@ -48,18 +48,18 @@ abstract class AbstractTag extends ElementHandler
         ), $additionalTags);
     }
     /**
-     * @return null|\WsdlToPhp\PackageGenerator\DomHandler\AttributeHandler
+     * @return null|string
      */
     public function getAttributeName()
     {
-        return $this->getAttribute(Attribute::ATTRIBUTE_NAME);
+        return $this->getAttribute(Attribute::ATTRIBUTE_NAME) ? $this->getAttribute(Attribute::ATTRIBUTE_NAME)->getValue() : '';
     }
     /**
-     * @return null|\WsdlToPhp\PackageGenerator\DomHandler\AttributeHandler
+     * @return null|string
      */
     public function getAttributeValue()
     {
-        return $this->getAttribute(Attribute::ATTRIBUTE_VALUE);
+        return $this->getAttribute(Attribute::ATTRIBUTE_VALUE) ? $this->getAttribute(Attribute::ATTRIBUTE_VALUE)->getValue() : '';
     }
     /**
      * @see \WsdlToPhp\PackageGenerator\DomHandler\AbstractElementHandler::getChildrenByName()
