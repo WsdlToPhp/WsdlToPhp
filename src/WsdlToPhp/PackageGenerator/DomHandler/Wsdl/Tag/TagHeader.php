@@ -53,4 +53,31 @@ class TagHeader extends AbstractTag
     {
         return $this->getAttribute(Attribute::ATTRIBUTE_NAMESPACE) !== null ? $this->getAttribute(Attribute::ATTRIBUTE_NAMESPACE)->getValue() : '';
     }
+    /**
+     * @return \WsdlToPhp\PackageGenerator\DomHandler\Wsdl\Tag\TagMessage
+     */
+    public function getMessage()
+    {
+        $messageName = $this->getAttributeMessage();
+        if (!empty($messageName)) {
+            return $this->getDomDocumentHandler()->getElementByNameAndAttributes('message', array(
+                'name' => $messageName,
+            ));
+        }
+        return null;
+    }
+    /**
+     * @return null|\WsdlToPhp\PackageGenerator\DomHandler\Wsdl\Tag\TagPart
+     */
+    public function getPart()
+    {
+        $message  = $this->getMessage();
+        $partName = $this->getAttributePart();
+        if ($message !== null && !empty($partName)) {
+            return $message->getChildByNameAndAttributes('part', array(
+                'name' => $partName,
+            ));
+        }
+        return null;
+    }
 }
