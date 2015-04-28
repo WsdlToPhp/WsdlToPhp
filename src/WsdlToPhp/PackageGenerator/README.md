@@ -68,3 +68,16 @@ You can run the unit tests with the following command:
     $ cd /path/to/WsdlToPhp/PackageGenerator/
     $ composer install
     $ phpunit
+
+You have several ```testsuite```s available which run test in the proper order:
+
+- configuration: tests configuration readers
+- utils: tests utils class
+- domhandler: tests dom handlers
+- model: tests models
+- container : tests containers
+- parser: tests parsers
+
+    $ cd /path/to/WsdlToPhp/PackageGenerator/
+    $ composer install
+    $ phpunit --testsuite=model
