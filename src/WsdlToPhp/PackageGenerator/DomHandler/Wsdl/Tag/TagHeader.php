@@ -30,28 +30,28 @@ class TagHeader extends AbstractTag
      */
     public function getAttributePart()
     {
-        return $this->getAttribute(self::ATTRIBUTE_PART) !== null ? $this->getAttribute(self::ATTRIBUTE_PART)->getValue() : '';
+        return $this->hasAttribute(self::ATTRIBUTE_PART) === true ? $this->getAttribute(self::ATTRIBUTE_PART)->getValue() : '';
     }
     /**
      * @return string
      */
     public function getAttributeMessage()
     {
-        return $this->getAttribute(self::ATTRIBUTE_MESSAGE) !== null ? $this->getAttribute(self::ATTRIBUTE_MESSAGE)->getValue() : '';
+        return $this->hasAttribute(self::ATTRIBUTE_MESSAGE) === true ? $this->getAttribute(self::ATTRIBUTE_MESSAGE)->getValue() : '';
     }
     /**
      * @return string
      */
     public function getAttributeRequired()
     {
-        return $this->getAttribute(self::ATTRIBUTE_REQUIRED) !== null ? $this->getAttribute(self::ATTRIBUTE_REQUIRED)->getValue() : '';
+        return $this->hasAttribute(self::ATTRIBUTE_REQUIRED) === true ? $this->getAttribute(self::ATTRIBUTE_REQUIRED)->getValue() : '';
     }
     /**
      * @return string
      */
     public function getAttributeNamespace()
     {
-        return $this->getAttribute(Attribute::ATTRIBUTE_NAMESPACE) !== null ? $this->getAttribute(Attribute::ATTRIBUTE_NAMESPACE)->getValue() : '';
+        return $this->hasAttribute(Attribute::ATTRIBUTE_NAMESPACE) === true ? $this->getAttribute(Attribute::ATTRIBUTE_NAMESPACE)->getValue() : '';
     }
     /**
      * @return \WsdlToPhp\PackageGenerator\DomHandler\Wsdl\Tag\TagMessage
