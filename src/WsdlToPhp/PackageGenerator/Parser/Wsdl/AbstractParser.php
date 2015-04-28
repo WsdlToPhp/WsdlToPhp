@@ -163,7 +163,7 @@ abstract class AbstractParser implements ParserInterface
                 $this->addMetaFromAttribute($tag, $attribute);
             }
         }
-        foreach ($restriction->getChildren() as $child) {
+        foreach ($restriction->getElementChildren() as $child) {
             $this->parseRestrictionChild($tag, $child);
         }
     }
