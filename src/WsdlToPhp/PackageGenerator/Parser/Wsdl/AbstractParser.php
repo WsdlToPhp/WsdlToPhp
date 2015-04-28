@@ -137,7 +137,7 @@ abstract class AbstractParser implements ParserInterface
                 in_array($this->parsingTag(), $this->parsedWsdls[$wsdl->getName()]);
     }
     /**
-     *
+     * @param Tag $tag
      */
     protected function parseRestrictions(Tag $tag)
     {
@@ -161,6 +161,9 @@ abstract class AbstractParser implements ParserInterface
                 $this->addStructRestriction($tag, $attribute);
             }
         }
+        foreach ($restriction->getChildren() as $child) {
+            $this->parseRestrictionChild($tag, $child);
+        }
     }
     /**
      * @param Tag $tag
@@ -169,6 +172,16 @@ abstract class AbstractParser implements ParserInterface
     private function addStructRestriction(Tag $tag, Attribute $attribute)
     {
         $this->generator->addStructMeta($tag->getAttributeName(), $attribute->getName(), $attribute->getValue());
+    }
+    /**
+     * @param Tag $tag
+     * @param Tag $child
+     */
+    private function parseRestrictionChild(Tag $tag, Tag $child)
+    {
+        if ($child->hasAttribute(Attribute::ATTRIBUTE_VALUE) && $this->getModel($tag) !== null) {
+            $this->getModel($tag)->addMeta($child->getName(), $child->getAttributeValue());
+        }
     }
     /**
      * @param Tag $tag
