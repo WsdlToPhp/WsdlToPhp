@@ -27,4 +27,26 @@ class TagHeaderTest extends TestCase
             $this->assertSame('', $header->getAttributeNamespace());
         }
     }
+    /**
+     *
+     */
+    public function testGetMessage()
+    {
+        $wsdl = WsdlTest::ebayInstance();
+
+        $headers = $wsdl->getContent()->getHeaders();
+
+        $this->assertInstanceOf('\\WsdlToPhp\\PackageGenerator\\DomHandler\\Wsdl\\Tag\\TagMessage', $headers[0]->getMessage());
+    }
+    /**
+     *
+     */
+    public function testGetPart()
+    {
+        $wsdl = WsdlTest::ebayInstance();
+
+        $headers = $wsdl->getContent()->getHeaders();
+
+        $this->assertInstanceOf('\\WsdlToPhp\\PackageGenerator\\DomHandler\\Wsdl\\Tag\\TagPart', $headers[0]->getPart());
+    }
 }
