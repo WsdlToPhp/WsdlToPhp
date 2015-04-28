@@ -131,4 +131,28 @@ abstract class AbstractDomDocumentHandler
         }
         return $elements;
     }
+    /**
+     * @param string $name
+     * @param array $attributes
+     * @return array[\WsdlToPhp\PackageGenerator\DomHandler\ElementHandler]
+     */
+    public function getElementsByNameAndAttributes($name, array $attributes)
+    {
+        $matchingElements = $elements = $this->getElementsByName($name);
+        if (!empty($attributes) && !empty($elements)) {
+            $matchingElements = array();
+            foreach ($elements as $element) {
+                if ($element->hasAttributes()) {
+                    $elementMatches = true;
+                    foreach ($attributes as $attributeName=>$attributeValue) {
+                        $elementMatches &= $element->hasAttribute($attributeName) ? $element->getAttribute($attributeName)->getValue() === $attributeValue : false;
+                    }
+                    if ((bool)$elementMatches === true) {
+                        $matchingElements[] = $element;
+                    }
+                }
+            }
+        }
+        return $matchingElements;
+    }
 }
