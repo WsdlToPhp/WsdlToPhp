@@ -10,8 +10,47 @@
         <ini name="error_reporting" value="-1" />
     </php>
     <testsuites>
-        <testsuite name="WsdlToPhp Test Suite">
-            <directory>./Tests/</directory>
+        <testsuite name="full">
+            <directory>Tests/ConfigurationReader/</directory>
+            <file>Tests/Generator/UtilsTest.php</file>
+            <file>Tests/DomHandler/DomDocumentHandlerTest.php</file>
+            <file>Tests/DomHandler/NodeHandlerTest.php</file>
+            <file>Tests/DomHandler/ElementHandlerTest.php</file>
+            <file>Tests/DomHandler/AttributeHandlerTest.php</file>
+            <file>Tests/DomHandler/Wsdl/WsdlHandlerTest.php</file>
+            <directory>Tests/DomHandler/Wsdl/Tag</directory>
+            <directory>Tests/Model/</directory>
+            <directory>Tests/Container/</directory>
+            <directory>Tests/Parser/</directory>
+        </testsuite>
+        
+        <testsuite name="configuration">
+            <directory>Tests/ConfigurationReader</directory>
+        </testsuite>
+        
+        <testsuite name="utils">
+            <file>Tests/Generator/UtilsTest.php</file>
+        </testsuite>
+        
+        <testsuite name="domhandler">
+            <file>Tests/DomHandler/DomDocumentHandlerTest.php</file>
+            <file>Tests/DomHandler/NodeHandlerTest.php</file>
+            <file>Tests/DomHandler/ElementHandlerTest.php</file>
+            <file>Tests/DomHandler/AttributeHandlerTest.php</file>
+            <file>Tests/DomHandler/Wsdl/WsdlHandlerTest.php</file>
+            <directory>Tests/DomHandler/Wsdl/Tag</directory>
+        </testsuite>
+        
+        <testsuite name="model">
+            <directory>Tests/Model</directory>
+        </testsuite>
+        
+        <testsuite name="container">
+            <directory>Tests/Container</directory>
+        </testsuite>
+        
+        <testsuite name="parser">
+            <directory>Tests/Parser</directory>
         </testsuite>
     </testsuites>
 
