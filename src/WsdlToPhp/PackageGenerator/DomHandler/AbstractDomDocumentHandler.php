@@ -155,4 +155,14 @@ abstract class AbstractDomDocumentHandler
         }
         return $matchingElements;
     }
+    /**
+     * @param string $name
+     * @param array $attributes
+     * @return null|\WsdlToPhp\PackageGenerator\DomHandler\ElementHandler
+     */
+    public function getElementByNameAndAttributes($name, array $attributes)
+    {
+        $elements = $this->getElementsByNameAndAttributes($name, $attributes);
+        return empty($elements) ? null : array_shift($elements);
+    }
 }

@@ -79,4 +79,17 @@ class DomDocumentHandlerTest extends TestCase
         $this->assertNotEmpty($parts);
         $this->assertContainsOnlyInstancesOf('\\WsdlToPhp\\PackageGenerator\\DomHandler\\ElementHandler', $parts);
     }
+    /**
+     *
+     */
+    public function testGetElementByNameAndAttributes()
+    {
+        $instance = self::bingInstance();
+
+        $part = $instance->getElementByNameAndAttributes('part', array(
+            'name'    => 'parameters',
+            'element' => 'SearchRequest',
+        ));
+        $this->assertInstanceOf('\\WsdlToPhp\\PackageGenerator\\DomHandler\\ElementHandler', $part);
+    }
 }
