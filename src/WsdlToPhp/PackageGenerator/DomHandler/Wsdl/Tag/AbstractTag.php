@@ -17,7 +17,7 @@ abstract class AbstractTag extends ElementHandler
      * @param string $checkName whether to validate the attribute named "name" or not
      * @param array $additionalTags
      * @param int $maxDeep
-     * @return null|\WsdlToPhp\PackageGenerator\DomHandler\AbstractNodeHandler|\WsdlToPhp\PackageGenerator\DomHandler\AbstractElementHandler|\WsdlToPhp\PackageGenerator\DomHandler\AbstractAttributeHandler
+     * @return null|\WsdlToPhp\PackageGenerator\DomHandler\AbstractNodeHandler|\WsdlToPhp\PackageGenerator\DomHandler\AbstractElementHandler|\WsdlToPhp\PackageGenerator\DomHandler\AbstractAttributeHandler|\WsdlToPhp\PackageGenerator\DomHandler\Wsdl\Tag\AbstractTag
      */
     public function getSuitableParent($checkName = true, array $additionalTags = array(), $maxDeep = self::MAX_DEEP)
     {
