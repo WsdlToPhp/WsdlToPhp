@@ -44,6 +44,22 @@ class ElementHandlerTest extends TestCase
     /**
      *
      */
+    public function testGetElementChildren()
+    {
+        $domDocument = DomDocumentHandlerTest::bingInstance();
+
+        // first schema tag
+        $schema = $domDocument->getElementByName('schema');
+        // first element tag
+        $element = $domDocument->getElementByName('element');
+
+        $this->assertNotEmpty($schema->getElementChildren());
+        $this->assertContainsOnlyInstancesOf('\\WsdlToPhp\\PackageGenerator\\DomHandler\\AbstractElementHandler', $schema->getElementChildren());
+        $this->assertEmpty($element->getElementChildren());
+    }
+    /**
+     *
+     */
     public function testGetChildrenByName()
     {
         $domDocument = DomDocumentHandlerTest::bingInstance();

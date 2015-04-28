@@ -60,4 +60,21 @@ abstract class AbstractElementHandler extends AbstractNodeHandler
         }
         return $children;
     }
+    /**
+     * @return array[AbstractElementHandler]
+     */
+    public function getElementChildren()
+    {
+        $children = array();
+        if ($this->hasChildren()) {
+            $index = 0;
+            foreach ($this->getChildren() as $child) {
+                if ($child->getNode()->nodeType === XML_ELEMENT_NODE) {
+                    $children[] = $this->getDomDocumentHandler()->getHandler($child->getNode(), $index);
+                    $index++;
+                }
+            }
+        }
+        return $children;
+    }
 }
