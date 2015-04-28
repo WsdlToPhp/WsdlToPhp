@@ -3,6 +3,8 @@
 namespace WsdlToPhp\PackageGenerator\Parser\Wsdl;
 
 use WsdlToPhp\PackageGenerator\DomHandler\Wsdl\Wsdl as WsdlDocument;
+use WsdlToPhp\PackageGenerator\DomHandler\Wsdl\Tag\AbstractTag as Tag;
+use WsdlToPhp\PackageGenerator\DomHandler\Wsdl\Tag\TagExtension as Extension;
 use WsdlToPhp\PackageGenerator\Model\Wsdl;
 
 class TagExtension extends AbstractTagParser
@@ -30,5 +32,16 @@ class TagExtension extends AbstractTagParser
     protected function parsingTag()
     {
         return WsdlDocument::TAG_EXTENSION;
+    }
+    /**
+     * @param Extension $extension
+     */
+    public function parseExtension(Extension $extension)
+    {
+        $base   = $extension->getAttribute('base')->getValue();
+        $parent = $extension->getSuitableParent();
+        if (!empty($base) && $parent !== null && $this->getModel($parent) !== null && $parent->getAttributeName() !== $base) {
+            $this->getModel($parent)->setInheritance($base);
+        }
     }
 }
