@@ -64,4 +64,26 @@ class TagSimpleTypeTest extends WsdlParser
         }
         $this->assertTrue((bool)$ok);
     }
+    /**
+     *
+     */
+    public function testParseImageViewService()
+    {
+        $tagSimpleTypeParser = self::imageViewInstance();
+        AbstractContainer::purgeAllCache();
+
+        $tagSimpleTypeParser->parse();
+
+        $ok = false;
+        foreach ($tagSimpleTypeParser->getGenerator()->getStructs() as $struct) {
+            if ($struct instanceof Struct && $struct->getIsRestriction() === false) {
+                if ($struct->getName() === 'EchoRequestType') {
+                    $ok = true;
+                } elseif ($struct->getName() === 'PasswordType') {
+                    $ok = true;
+                }
+            }
+        }
+        $this->assertTrue((bool)$ok);
+    }
 }
