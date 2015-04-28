@@ -159,11 +159,20 @@ abstract class AbstractParser implements ParserInterface
      */
     private function parseRestriction(Tag $tag, Restriction $restriction)
     {
+        $this->getGenerator()->getStructs()->addVirtualStruct($tag->getAttributeName());
+
         if ($restriction->hasAttributes()) {
             foreach ($restriction->getAttributes() as $attribute) {
-                $this->addMetaFromAttribute($tag, $attribute);
+                if ($attribute->getName() === 'base' && $attribute->getValue() !== $tag->getAttributeName()) {
+                    if ($this->getModel($tag) !== null) {
+                        $this->getModel($tag)->setInheritance($attribute->getValue());
+                    }
+                } else {
+                    $this->addMetaFromAttribute($tag, $attribute);
+                }
             }
         }
+
         foreach ($restriction->getElementChildren() as $child) {
             $this->parseRestrictionChild($tag, $child);
         }

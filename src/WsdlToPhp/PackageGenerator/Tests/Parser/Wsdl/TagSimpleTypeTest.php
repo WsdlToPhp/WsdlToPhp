@@ -78,8 +78,10 @@ class TagSimpleTypeTest extends WsdlParser
         foreach ($tagSimpleTypeParser->getGenerator()->getStructs() as $struct) {
             if ($struct instanceof Struct && $struct->getIsRestriction() === false) {
                 if ($struct->getName() === 'EchoRequestType') {
+                    $this->assertSame('string', $struct->getInheritance());
                     $ok = true;
                 } elseif ($struct->getName() === 'PasswordType') {
+                    $this->assertSame('string', $struct->getInheritance());
                     $ok = true;
                 }
             }
