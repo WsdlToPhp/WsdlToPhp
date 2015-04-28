@@ -11,7 +11,7 @@ class TagRestriction extends AbstractTag
      */
     public function isEnumeration()
     {
-        return count($this->getEnumerations()) === 0;
+        return count($this->getEnumerations()) > 0;
     }
     /**
      * @return array[TagEnumeration]
