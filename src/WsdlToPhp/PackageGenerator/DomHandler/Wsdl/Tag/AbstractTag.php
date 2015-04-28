@@ -61,4 +61,13 @@ abstract class AbstractTag extends ElementHandler
     {
         return $this->getAttribute(Attribute::ATTRIBUTE_VALUE);
     }
+    /**
+     * @see \WsdlToPhp\PackageGenerator\DomHandler\AbstractElementHandler::getChildrenByName()
+     * @return array[AbstractTag]
+     */
+    public function getChildrenByName($name)
+    {
+        $this->getDomDocumentHandler()->setCurrentTag($name);
+        return parent::getChildrenByName($name);
+    }
 }
