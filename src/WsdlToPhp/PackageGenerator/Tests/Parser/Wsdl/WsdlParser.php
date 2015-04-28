@@ -6,6 +6,8 @@ use WsdlToPhp\PackageGenerator\Generator\Generator;
 use WsdlToPhp\PackageGenerator\Parser\Wsdl\TagImport;
 use WsdlToPhp\PackageGenerator\Parser\Wsdl\TagInclude;
 use WsdlToPhp\PackageGenerator\Tests\TestCase;
+use WsdlToPhp\PackageGenerator\Parser\SoapClient\Structs;
+use WsdlToPhp\PackageGenerator\Parser\SoapClient\Functions;
 
 class WsdlParser extends TestCase
 {
@@ -54,6 +56,8 @@ class WsdlParser extends TestCase
         $parsers = array(
             new TagInclude($generator),
             new TagImport($generator),
+            new Structs($generator),
+            new Functions($generator),
         );
         foreach ($parsers as $parser) {
             $parser->parse();
