@@ -72,4 +72,22 @@ class ElementHandlerTest extends TestCase
             $this->assertSame('element', $child->getName());
         }
     }
+    /**
+     *
+     */
+    public function testGetChildByNameAndAttributes()
+    {
+        $domDocument = DomDocumentHandlerTest::bingInstance();
+
+        // first message tag
+        $message = $domDocument->getElementByName('message');
+        $part = $message->getChildByNameAndAttributes('part', array(
+            'name'    => 'parameters',
+            'element' => 'SearchRequest'
+        ));
+
+        $this->assertInstanceOf('\\WsdlToPhp\\PackageGenerator\\DomHandler\\ElementHandler', $part);
+        $this->assertSame('parameters', $part->getAttribute('name')->getValue());
+        $this->assertSame('SearchRequest', $part->getAttribute('element')->getValue());
+    }
 }
