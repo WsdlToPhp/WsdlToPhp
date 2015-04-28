@@ -563,6 +563,8 @@ class Struct extends AbstractModel
     {
         if ($this->getValue($value) === null) {
             $this->values->add(new StructValue($value, $this->getValues()->count(), $this));
+            $this->setIsRestriction(true);
+            $this->setIsStruct(true);
         }
         self::updateModels($this);
         return $this;
