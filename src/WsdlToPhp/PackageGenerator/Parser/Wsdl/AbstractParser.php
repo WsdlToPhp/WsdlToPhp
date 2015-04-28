@@ -14,7 +14,8 @@ use WsdlToPhp\PackageGenerator\DomHandler\Wsdl\Tag\TagAnnotation as Annotation;
 use WsdlToPhp\PackageGenerator\DomHandler\Wsdl\Tag\TagAppinfo as Appinfo;
 use WsdlToPhp\PackageGenerator\DomHandler\Wsdl\Tag\TagDocumentation as Documentation;
 use WsdlToPhp\PackageGenerator\Model\AbstractModel as Model;
-use WsdlToPhp\PackageGenerator\Model\Struct;
+use WsdlToPhp\PackageGenerator\Model\Struct as Struct;
+use WsdlToPhp\PackageGenerator\Model\Service as Service;
 
 abstract class AbstractParser implements ParserInterface
 {
@@ -84,7 +85,7 @@ abstract class AbstractParser implements ParserInterface
     /**
      * Must return the model on which the method will be called
      * @param Tag $tag
-     * @return Model
+     * @return Model|Struct|Service
      */
     abstract protected function getModel(Tag $tag);
     /**
@@ -249,9 +250,26 @@ abstract class AbstractParser implements ParserInterface
      */
     private function parseDocumentation(Tag $tag, Documentation $documentation)
     {
-        $content = $documentation->getContent();
-        if (!empty($content) && $this->getModel($tag) !== null) {
-            $this->getModel($tag)->setDocumentation($content);
+        $content      = $documentation->getContent();
+        $parent       = $documentation->getSuitableParent();
+        $parentParent = $parent->getSuitableParent();
+
+        if (!empty($content) && $parent !== null) {
+            /**
+             * Is it an element ? part of a struct
+             * Finds parent node of this documentation node
+             */
+            if ($parent->hasAttribute('type') && $parentParent !== null) {
+                if ($this->getModel($parentParent) instanceof Struct && $this->getModel($parentParent)->getAttribute($parent->getAttributeName())) {
+                    $this->getModel($parentParent)->getAttribute($parent->getAttributeName())->setDocumentation($content);
+                }
+            } elseif($parent->getName() === WsdlDocument::TAG_ENUMERATION) {
+                if ($parentParent !== null && $this->getModel($parentParent) !== null && $this->getModel($parentParent)->getValue($parent->getAttributeName()) !== null) {
+                    $this->getModel($parentParent)->getValue($parent->getAttributeName())->setDocumentation($content);
+                }
+            } elseif ($this->getModel($parent)) {
+                $this->getModel($parent)->setDocumentation($content);
+            }
         }
     }
 }
