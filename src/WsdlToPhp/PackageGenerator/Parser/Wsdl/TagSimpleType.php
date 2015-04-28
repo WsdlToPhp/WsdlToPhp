@@ -7,7 +7,6 @@ use WsdlToPhp\PackageGenerator\DomHandler\Wsdl\Wsdl as WsdlDocument;
 use WsdlToPhp\PackageGenerator\DomHandler\Wsdl\Tag\AbstractTag as Tag;
 use WsdlToPhp\PackageGenerator\Model\Struct;
 
-
 class TagSimpleType extends AbstractParser
 {
     /**
@@ -33,7 +32,7 @@ class TagSimpleType extends AbstractParser
      */
     protected function parsingTag()
     {
-        return WsdlDocument::TAG_SIMPLE_CONTENT;
+        return WsdlDocument::TAG_SIMPLE_TYPE;
     }
     /**
      * @see \WsdlToPhp\PackageGenerator\Parser\Wsdl\AbstractParser::getModel()
