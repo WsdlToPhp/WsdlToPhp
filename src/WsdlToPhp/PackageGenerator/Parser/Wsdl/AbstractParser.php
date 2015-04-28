@@ -158,7 +158,7 @@ abstract class AbstractParser implements ParserInterface
     {
         if ($restriction->hasAttributes()) {
             foreach ($restriction->getAttributes() as $attribute) {
-                $this->addStructRestriction($tag, $attribute);
+                $this->addMetaFromAttribute($tag, $attribute);
             }
         }
         foreach ($restriction->getChildren() as $child) {
@@ -169,9 +169,11 @@ abstract class AbstractParser implements ParserInterface
      * @param Tag $tag
      * @param Attribute $attribute
      */
-    private function addStructRestriction(Tag $tag, Attribute $attribute)
+    private function addMetaFromAttribute(Tag $tag, Attribute $attribute)
     {
-        $this->generator->addStructMeta($tag->getAttributeName(), $attribute->getName(), $attribute->getValue());
+        if ($this->getModel($tag) !== null) {
+            $this->getModel($tag)->addMeta($attribute->getName(), $attribute->getValue());
+        }
     }
     /**
      * @param Tag $tag
