@@ -2,7 +2,7 @@
 
 namespace WsdlToPhp\PackageGenerator\Tests\Parser\Wsdl;
 
-use WsdlToPhp\PackageGenerator\Container\AbstractContainer;
+use WsdlToPhp\PackageGenerator\Container\AbstractObjectContainer;
 use WsdlToPhp\PackageGenerator\Parser\Wsdl\TagEnumeration;
 use WsdlToPhp\PackageGenerator\Model\Struct;
 use WsdlToPhp\PackageGenerator\Container\Model\StructValue as StructValueContainer;
@@ -37,7 +37,7 @@ class TagEnumerationTest extends WsdlParser
     public function testBing()
     {
         $tagEnumerationParser = self::bingInstance();
-        AbstractContainer::purgeAllCache();
+        AbstractObjectContainer::purgeAllCache();
 
         $tagEnumerationParser->parse();
 

@@ -1,6 +1,6 @@
 <?php
 
-namespace WsdlToPhp\PackageGenerator\Tests\ModelContainer;
+namespace WsdlToPhp\PackageGenerator\Tests\Container\Model;
 
 use WsdlToPhp\PackageGenerator\Tests\TestCase;
 use WsdlToPhp\PackageGenerator\Model\Wsdl;
@@ -17,8 +17,8 @@ class WsdlContainerTest extends TestCase
     public static function instance()
     {
         $wsdlContainer = new WsdlContainer();
-        $wsdlContainer->add(new Wsdl(self::WSDL_BING, file_get_contents(dirname(__FILE__) . '/../resources/' . self::WSDL_BING)));
-        $wsdlContainer->add(new Wsdl(self::WSDL_EBAY, file_get_contents(dirname(__FILE__) . '/../resources/' . self::WSDL_EBAY)));
+        $wsdlContainer->add(new Wsdl(self::WSDL_BING, file_get_contents(dirname(__FILE__) . '/../../resources/' . self::WSDL_BING)));
+        $wsdlContainer->add(new Wsdl(self::WSDL_EBAY, file_get_contents(dirname(__FILE__) . '/../../resources/' . self::WSDL_EBAY)));
         return $wsdlContainer;
     }
     /**

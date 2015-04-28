@@ -2,7 +2,7 @@
 
 namespace WsdlToPhp\PackageGenerator\Tests\Parser\Wsdl;
 
-use WsdlToPhp\PackageGenerator\Container\AbstractContainer;
+use WsdlToPhp\PackageGenerator\Container\AbstractObjectContainer;
 use WsdlToPhp\PackageGenerator\Parser\Wsdl\TagAttribute;
 
 class TagAttributeTest extends WsdlParser
@@ -20,7 +20,7 @@ class TagAttributeTest extends WsdlParser
     public function testParseEbay()
     {
         $tagAttributeParser = self::ebayInstance();
-        AbstractContainer::purgeAllCache();
+        AbstractObjectContainer::purgeAllCache();
 
         $tagAttributeParser->parse();
 

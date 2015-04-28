@@ -2,7 +2,7 @@
 
 namespace WsdlToPhp\PackageGenerator\Container;
 
-abstract class AbstractContainer implements \ArrayAccess, \Iterator, \Countable
+abstract class AbstractObjectContainer implements \ArrayAccess, \Iterator, \Countable
 {
     /**
      * @var array
@@ -18,7 +18,7 @@ abstract class AbstractContainer implements \ArrayAccess, \Iterator, \Countable
      */
     private static $cache = array();
     /**
-     * @return AbstractContainer
+     * @return AbstractObjectContainer
     */
     public function __construct()
     {
@@ -44,7 +44,7 @@ abstract class AbstractContainer implements \ArrayAccess, \Iterator, \Countable
     /**
      * @param int $offset
      * @param mixed $value
-     * @return AbstractContainer
+     * @return AbstractObjectContainer
      */
     public function offsetSet($offset, $value)
     {
@@ -53,7 +53,7 @@ abstract class AbstractContainer implements \ArrayAccess, \Iterator, \Countable
     }
     /**
      * @param int $offset
-     * @return AbstractContainer
+     * @return AbstractObjectContainer
      */
     public function offsetUnset($offset)
     {
@@ -91,7 +91,7 @@ abstract class AbstractContainer implements \ArrayAccess, \Iterator, \Countable
         return $this->offsetExists($this->offset);
     }
     /**
-     * @return AbstractContainer
+     * @return AbstractObjectContainer
      */
     public function rewind()
     {
@@ -112,7 +112,7 @@ abstract class AbstractContainer implements \ArrayAccess, \Iterator, \Countable
     /**
      * @param unknown $object
      * @throws \InvalidArgumentException
-     * @return AbstractContainer
+     * @return AbstractObjectContainer
      */
     public function add($object)
     {
@@ -128,7 +128,7 @@ abstract class AbstractContainer implements \ArrayAccess, \Iterator, \Countable
     /**
      * @param string $key
      * @param string $value
-     * @return AbstractModel
+     * @return mixed
      */
     public function get($value, $key)
     {
@@ -164,7 +164,7 @@ abstract class AbstractContainer implements \ArrayAccess, \Iterator, \Countable
     /**
      * @param array $properties
      * @throws \InvalidArgumentException
-     * @return AbstractModel|null
+     * @return mixed|null
      */
     public function getAs(array $properties)
     {
@@ -211,7 +211,7 @@ abstract class AbstractContainer implements \ArrayAccess, \Iterator, \Countable
     }
     /**
      * @param array $values
-     * @return AbstractContainer
+     * @return AbstractObjectContainer
      */
     private static function purgeCache(array $values)
     {
@@ -221,7 +221,7 @@ abstract class AbstractContainer implements \ArrayAccess, \Iterator, \Countable
     }
     /**
      * @param array $values
-     * @return AbstractContainer
+     * @return AbstractObjectContainer
      */
     public static function purgeAllCache()
     {
@@ -230,7 +230,7 @@ abstract class AbstractContainer implements \ArrayAccess, \Iterator, \Countable
     /**
      * @param array $values
      * @param mixed $value
-     * @return AbstractContainer
+     * @return AbstractObjectContainer
      */
     private static function setCache(array $values, $value)
     {

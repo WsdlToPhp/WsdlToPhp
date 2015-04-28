@@ -2,7 +2,7 @@
 
 namespace WsdlToPhp\PackageGenerator\Tests\Parser\Wsdl;
 
-use WsdlToPhp\PackageGenerator\Container\AbstractContainer;
+use WsdlToPhp\PackageGenerator\Container\AbstractObjectContainer;
 use WsdlToPhp\PackageGenerator\Parser\Wsdl\TagImport;
 use WsdlToPhp\PackageGenerator\Generator\Generator;
 use WsdlToPhp\PackageGenerator\Model\Wsdl;
@@ -22,7 +22,7 @@ class TagImportTest extends WsdlParser
     public function testIsWsdlParsed()
     {
         $tagImportParser = self::instance();
-        AbstractContainer::purgeAllCache();
+        AbstractObjectContainer::purgeAllCache();
 
         $tagImportParser->parse();
 
@@ -35,7 +35,7 @@ class TagImportTest extends WsdlParser
     public function testCountWsdlsAfterParsing()
     {
         $tagImportParser = self::instance();
-        AbstractContainer::purgeAllCache();
+        AbstractObjectContainer::purgeAllCache();
 
         $tagImportParser->parse();
 

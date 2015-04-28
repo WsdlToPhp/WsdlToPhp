@@ -2,7 +2,7 @@
 
 namespace WsdlToPhp\PackageGenerator\Tests\Parser\Wsdl;
 
-use WsdlToPhp\PackageGenerator\Container\AbstractContainer;
+use WsdlToPhp\PackageGenerator\Container\AbstractObjectContainer;
 use WsdlToPhp\PackageGenerator\Parser\Wsdl\TagSimpleType;
 use WsdlToPhp\PackageGenerator\Model\Struct;
 use WsdlToPhp\PackageGenerator\Container\Model\StructValue as StructValueContainer;
@@ -37,7 +37,7 @@ class TagSimpleTypeTest extends WsdlParser
     public function testParseBing()
     {
         $tagSimpleTypeParser = self::bingInstance();
-        AbstractContainer::purgeAllCache();
+        AbstractObjectContainer::purgeAllCache();
 
         $tagSimpleTypeParser->parse();
 
@@ -70,7 +70,7 @@ class TagSimpleTypeTest extends WsdlParser
     public function testParseImageViewService()
     {
         $tagSimpleTypeParser = self::imageViewInstance();
-        AbstractContainer::purgeAllCache();
+        AbstractObjectContainer::purgeAllCache();
 
         $tagSimpleTypeParser->parse();
 

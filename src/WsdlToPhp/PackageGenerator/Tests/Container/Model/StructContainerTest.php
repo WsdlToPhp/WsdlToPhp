@@ -1,6 +1,6 @@
 <?php
 
-namespace WsdlToPhp\PackageGenerator\Tests\ModelContainer;
+namespace WsdlToPhp\PackageGenerator\Tests\Container\Model;
 
 use WsdlToPhp\PackageGenerator\Tests\Model\StructTest;
 use WsdlToPhp\PackageGenerator\Container\Model\Struct as StructContainer;

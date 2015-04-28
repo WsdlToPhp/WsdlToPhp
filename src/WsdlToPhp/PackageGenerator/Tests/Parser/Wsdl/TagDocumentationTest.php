@@ -2,7 +2,7 @@
 
 namespace WsdlToPhp\PackageGenerator\Tests\Parser\Wsdl;
 
-use WsdlToPhp\PackageGenerator\Container\AbstractContainer;
+use WsdlToPhp\PackageGenerator\Container\AbstractObjectContainer;
 use WsdlToPhp\PackageGenerator\Parser\Wsdl\TagDocumentation;
 use WsdlToPhp\PackageGenerator\Model\Struct;
 
@@ -35,7 +35,7 @@ class TagDocumentationTest extends WsdlParser
     public function testParseImageViewService()
     {
         $tagDocumentationParser = self::imageViewInstance();
-        AbstractContainer::purgeAllCache();
+        AbstractObjectContainer::purgeAllCache();
 
         $tagDocumentationParser->parse();
 

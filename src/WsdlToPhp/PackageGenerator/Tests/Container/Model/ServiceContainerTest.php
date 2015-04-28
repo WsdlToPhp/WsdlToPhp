@@ -1,6 +1,6 @@
 <?php
 
-namespace WsdlToPhp\PackageGenerator\Test\ModelContainer;
+namespace WsdlToPhp\PackageGenerator\Test\Container\Model;
 
 use WsdlToPhp\PackageGenerator\Model\Service;
 use WsdlToPhp\PackageGenerator\Container\Model\Service as ServiceContainer;

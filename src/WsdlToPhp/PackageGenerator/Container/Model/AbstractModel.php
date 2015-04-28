@@ -2,10 +2,10 @@
 
 namespace WsdlToPhp\PackageGenerator\Container\Model;
 
-use WsdlToPhp\PackageGenerator\Container\AbstractContainer;
+use WsdlToPhp\PackageGenerator\Container\AbstractObjectContainer;
 use WsdlToPhp\PackageGenerator\Model\AbstractModel as Model;
 
-abstract class AbstractModel extends AbstractContainer
+abstract class AbstractModel extends AbstractObjectContainer
 {
     const
         KEY_NAME  = 'name',
