@@ -41,7 +41,7 @@ abstract class AbstractDomDocumentHandler
      * Return the matching node handler based on current \DomNode type
      * @param \DOMNode $node
      * @param int $index
-     * @return AbstractNodeHandler|AbstractElementHandler
+     * @return NodeHandler|ElementHandler
      */
     public function getHandler(\DOMNode $node, $index = -1)
     {
@@ -61,26 +61,26 @@ abstract class AbstractDomDocumentHandler
      * @param \DOMNode $node
      * @param AbstractDomDocumentHandler $domDocument
      * @param int $index
-     * @return AbstractNodeHandler
+     * @return NodeHandler
      */
     abstract protected function getNodeHandler(\DOMNode $node, AbstractDomDocumentHandler $domDocument, $index = -1);
     /**
      * @param \DOMElement $element
      * @param AbstractDomDocumentHandler $domDocument
      * @param int $index
-     * @return AbstractElementHandler
+     * @return ElementHandler
      */
     abstract protected function getElementHandler(\DOMElement $element, AbstractDomDocumentHandler $domDocument, $index = -1);
     /**
      * @param \DOMAttr $element
      * @param AbstractDomDocumentHandler $domDocument
      * @param int $index
-     * @return AbstractAttributeHandler
+     * @return AttributeHandler
      */
     abstract protected function getAttributeHandler(\DOMAttr $attribute, AbstractDomDocumentHandler $domDocument, $index = -1);
     /**
      * @param string $name
-     * @return AbstractNodeHandler
+     * @return NodeHandler
      */
     public function getNodeByName($name)
     {
@@ -100,7 +100,7 @@ abstract class AbstractDomDocumentHandler
     }
     /**
      * @param string $name
-     * @return array[AbstractNodeHandler]
+     * @return array[NodeHandler]
      */
     public function getNodesByName($name)
     {
@@ -114,7 +114,7 @@ abstract class AbstractDomDocumentHandler
     }
     /**
      * @param string $name
-     * @return array[AbstractElementHandler]
+     * @return array[ElementHandler]
      */
     public function getElementsByName($name)
     {
