@@ -58,6 +58,15 @@ abstract class AbstractWsdl extends DomDocumentHandler
      */
     protected $currentTag;
     /**
+     * @param string $currentTag
+     * @return \WsdlToPhp\PackageGenerator\DomHandler\Wsdl\AbstractWsdl
+     */
+    public function setCurrentTag($currentTag)
+    {
+        $this->currentTag = $currentTag;
+        return $this;
+    }
+    /**
      * @see \WsdlToPhp\PackageGenerator\DomHandler\AbstractDomDocumentHandler::getElementHandler()
      * @return ElementHandler
      */
