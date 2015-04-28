@@ -77,4 +77,38 @@ abstract class AbstractElementHandler extends AbstractNodeHandler
         }
         return $children;
     }
+    /**
+     * @param string $name
+     * @param array $attributes
+     * @return array[\WsdlToPhp\PackageGenerator\DomHandler\ElementHandler]
+     */
+    public function getChildrenByNameAndAttributes($name, array $attributes)
+    {
+        $machingChildren = $children = $this->getChildrenByName($name);
+        if (!empty($attributes) && !empty($children)) {
+            $machingChildren = array();
+            foreach ($children as $child) {
+                if ($child->hasAttributes()) {
+                    $elementMatches = true;
+                    foreach ($attributes as $attributeName=>$attributeValue) {
+                        $elementMatches &= $child->hasAttribute($attributeName) ? $child->getAttribute($attributeName)->getValue() === $attributeValue : false;
+                    }
+                    if ((bool)$elementMatches === true) {
+                        $machingChildren[] = $child;
+                    }
+                }
+            }
+        }
+        return $machingChildren;
+    }
+    /**
+     * @param string $name
+     * @param array $attributes
+     * @return null|\WsdlToPhp\PackageGenerator\DomHandler\ElementHandler
+     */
+    public function getChildByNameAndAttributes($name, array $attributes)
+    {
+        $children = $this->getChildrenByNameAndAttributes($name, $attributes);
+        return empty($children) ? null : array_shift($children);
+    }
 }
