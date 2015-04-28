@@ -35,7 +35,7 @@ abstract class AbstractParser implements ParserInterface
      * The method takes care of looping among WSDLS as much time as it is needed
      * @see \WsdlToPhp\PackageGenerator\Generator\ParserInterface::parse()
      */
-    public function parse()
+    private function parse()
     {
         if ($this->generator->getWsdls()->count() > 0) {
             do {
@@ -68,7 +68,7 @@ abstract class AbstractParser implements ParserInterface
      * When looping, must return false to stop it
      * @return bool
      */
-    protected function shouldContinue()
+    private function shouldContinue()
     {
         $shouldContinue = false;
         foreach ($this->generator->getWsdls() as $wsdl) {
@@ -108,7 +108,7 @@ abstract class AbstractParser implements ParserInterface
      * @param Wsdl $wsdl
      * @return boolean
      */
-    public function isWsdlParsed(Wsdl $wsdl)
+    private function isWsdlParsed(Wsdl $wsdl)
     {
         return
             array_key_exists($wsdl->getName(), $this->parsedWsdls) &&
