@@ -238,6 +238,6 @@ abstract class AbstractContainer implements \ArrayAccess, \Iterator, \Countable
      */
     private static function cacheKey(array $values)
     {
-        return sprintf('_%s', var_export($values, true));
+        return sprintf('_%s', json_encode($values));
     }
 }
