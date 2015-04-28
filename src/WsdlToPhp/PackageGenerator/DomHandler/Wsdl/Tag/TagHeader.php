@@ -74,9 +74,7 @@ class TagHeader extends AbstractTag
         $message  = $this->getMessage();
         $partName = $this->getAttributePart();
         if ($message !== null && !empty($partName)) {
-            return $message->getChildByNameAndAttributes('part', array(
-                'name' => $partName,
-            ));
+            return $message->getPart($partName);
         }
         return null;
     }
