@@ -1,8 +1,8 @@
 <?php
 namespace WsdlToPhp\PackageGenerator\Parser\Wsdl;
 
-use WsdlToPhp\PackageGenerator\DomHandler\AbstractAttributeHandler as Attribute;
 use WsdlToPhp\PackageGenerator\DomHandler\Wsdl\Wsdl as WsdlDocument;
+use WsdlToPhp\PackageGenerator\DomHandler\AbstractAttributeHandler;
 use WsdlToPhp\PackageGenerator\DomHandler\Wsdl\Tag\AbstractTag as Tag;
 use WsdlToPhp\PackageGenerator\DomHandler\Wsdl\Tag\TagRestriction as Restriction;
 use WsdlToPhp\PackageGenerator\DomHandler\Wsdl\Tag\TagEnumeration as Enumeration;
@@ -10,6 +10,7 @@ use WsdlToPhp\PackageGenerator\DomHandler\Wsdl\Tag\TagAnnotation as Annotation;
 use WsdlToPhp\PackageGenerator\DomHandler\Wsdl\Tag\TagAppinfo as Appinfo;
 use WsdlToPhp\PackageGenerator\DomHandler\Wsdl\Tag\TagDocumentation as Documentation;
 use WsdlToPhp\PackageGenerator\DomHandler\Wsdl\Tag\TagExtension as Extension;
+use WsdlToPhp\PackageGenerator\DomHandler\Wsdl\Tag\TagAttribute as Attribute;
 use WsdlToPhp\PackageGenerator\Model\Struct;
 use WsdlToPhp\PackageGenerator\Model\Method;
 use WsdlToPhp\PackageGenerator\Generator\Generator;
@@ -100,7 +101,7 @@ abstract class AbstractTagParser extends AbstractParser
      */
     private function parseRestrictionChild(Tag $tag, Tag $child)
     {
-        if ($child->hasAttribute(Attribute::ATTRIBUTE_VALUE) && $this->getModel($tag) !== null) {
+        if ($child->hasAttributeValue() && $this->getModel($tag) !== null) {
             $this->getModel($tag)->addMeta($child->getName(), $child->getAttributeValue());
         }
     }
@@ -156,8 +157,8 @@ abstract class AbstractTagParser extends AbstractParser
     {
         $content = $appinfo->getContent();
         $parent  = $appinfo->getSuitableParent();
-        if (!empty($content) && $parent !== null && $this->getModel($parent->getAttributeName()) !== null) {
-            $this->getModel($parent->getAttributeName())->addMeta('appinfo', $content);
+        if (!empty($content) && $parent !== null && $this->getModel($parent) !== null) {
+            $this->getModel($parent)->addMeta('appinfo', $content);
         }
     }
     /**
@@ -196,6 +197,44 @@ abstract class AbstractTagParser extends AbstractParser
         $parent = $extension->getSuitableParent();
         if (!empty($base) && $parent !== null && $this->getModel($parent) !== null && $parent->getAttributeName() !== $base) {
             $this->getModel($parent)->setInheritance($base);
+        }
+    }
+    /**
+     * @param Attribute $attribute
+     */
+    protected function parseAttribute(Attribute $attribute)
+    {
+        $parent = $attribute->getSuitableParent();
+        if ($parent !== null && $attribute->hasAttributeName() && ($model = $this->getModel($parent)) !== null && ($modelAttribute = $model->getAttribute($attribute->getAttributeName())) !== null) {
+            if ($modelAttribute !== null) {
+                foreach ($attribute->getAttributes() as $attributeAttribute) {
+                    switch ($attributeAttribute->getName()) {
+                        case AbstractAttributeHandler::ATTRIBUTE_NAME:
+                            /**
+                             * Avoid this attribute to be added as meta
+                             */
+                            break;
+                        case AbstractAttributeHandler::ATTRIBUTE_TYPE:
+                            $type = $attributeAttribute->getValue();
+                            if ($type !== null) {
+                                $typeModel = $this->generator->getStruct($type);
+                                $modelAttributeType = $modelAttribute->getType();
+                                if ($typeModel !== null && (empty($modelAttributeType) || strtolower($modelAttributeType) === 'unknown')) {
+                                    if ($typeModel->getIsRestriction()) {
+                                        $modelAttribute->setType($typeModel->getName());
+                                    } elseif (!$typeModel->getIsStruct() && $typeModel->getInheritance()) {
+                                        $modelAttribute->setType($typeModel->getInheritance());
+                                    }
+                                }
+                            }
+                            break;
+                        default:
+                            $modelAttribute->addMeta($attributeAttribute->getName(), $attributeAttribute->getValue());
+                            break;
+                    }
+                }
+            }
+
         }
     }
 }
