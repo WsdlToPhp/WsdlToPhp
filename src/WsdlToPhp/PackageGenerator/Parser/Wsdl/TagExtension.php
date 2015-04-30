@@ -15,7 +15,7 @@ class TagExtension extends AbstractTagParser
     {
         return parent::getTags();
     }
-	/**
+    /**
      * @see \WsdlToPhp\PackageGenerator\Parser\Wsdl\AbstractParser::parseWsdl()
      */
     protected function parseWsdl(Wsdl $wsdl)
@@ -24,7 +24,7 @@ class TagExtension extends AbstractTagParser
             $this->parseExtension($tag);
         }
     }
-	/**
+    /**
      * @see \WsdlToPhp\PackageGenerator\Parser\Wsdl\AbstractParser::parsingTag()
      */
     protected function parsingTag()

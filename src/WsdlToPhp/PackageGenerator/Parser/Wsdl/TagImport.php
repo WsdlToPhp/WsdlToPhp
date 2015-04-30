@@ -16,7 +16,7 @@ class TagImport extends AbstractTagParser
     {
         return parent::getTags();
     }
-	/**
+    /**
      * @see \WsdlToPhp\PackageGenerator\Parser\Wsdl\AbstractParser::parseWsdl()
      */
     protected function parseWsdl(Wsdl $wsdl)
@@ -28,7 +28,7 @@ class TagImport extends AbstractTagParser
             }
         }
     }
-	/**
+    /**
      * @see \WsdlToPhp\PackageGenerator\Parser\Wsdl\AbstractParser::parsingTag()
      * @return string
      */

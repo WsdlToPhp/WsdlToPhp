@@ -15,7 +15,7 @@ class TagComplexType extends AbstractTagParser
     {
         return parent::getTags();
     }
-	/**
+    /**
      * @see \WsdlToPhp\PackageGenerator\Parser\Wsdl\AbstractParser::parseWsdl()
      */
     protected function parseWsdl(Wsdl $wsdl)
@@ -25,7 +25,7 @@ class TagComplexType extends AbstractTagParser
             $this->parseAnnotations($tag);
         }
     }
-	/**
+    /**
      * @see \WsdlToPhp\PackageGenerator\Parser\Wsdl\AbstractParser::parsingTag()
      */
     protected function parsingTag()
