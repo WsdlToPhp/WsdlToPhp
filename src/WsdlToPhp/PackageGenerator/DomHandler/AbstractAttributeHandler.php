@@ -8,7 +8,8 @@ class AbstractAttributeHandler extends AbstractNodeHandler
 {
     const
         ATTRIBUTE_NAME  = 'name',
-        ATTRIBUTE_VALUE = 'value';
+        ATTRIBUTE_VALUE = 'value',
+        ATTRIBUTE_TYPE  = 'type';
     /**
      * @see \WsdlToPhp\PackageGenerator\DomHandler\AbstractNodeHandler::getNode()
      * @return \DOMAttr
