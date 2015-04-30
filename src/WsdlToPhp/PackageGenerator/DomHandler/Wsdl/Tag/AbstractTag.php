@@ -30,6 +30,8 @@ abstract class AbstractTag extends ElementHandler
             }
             if ($parentNode instanceof \DOMElement) {
                 $parentNode = $this->getDomDocumentHandler()->getHandler($parentNode);
+            } else {
+                $parentNode = null;
             }
         }
         return $parentNode;
