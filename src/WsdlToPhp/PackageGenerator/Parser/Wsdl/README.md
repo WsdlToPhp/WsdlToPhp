@@ -7,14 +7,14 @@ Neverthless, the goals of these parsers are various:
 
 - Get the maximum amount of informations about each structs and operations
 - Consolidate the informations parsed by the SoapClient parsers they can't see as:
--- SoapHeaders (header tags)
--- Enumerations values
--- Restrictions on parameters
--- Default parameter value
--- Abstract elements
--- Input/Output parameters type
--- Values of type array
--- Inheritance between elements
+    - SoapHeaders (header tags)
+    - Enumerations values
+    - Restrictions on parameters
+    - Default parameter value
+    - Abstract elements
+    - Input/Output parameters type
+    - Values of type array
+    - Inheritance between elements
 
 Knowing this, it is simpler to understand why complexType, simpleType, element are not parsed as parsing them would mean that:
 
