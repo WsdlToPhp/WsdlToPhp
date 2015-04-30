@@ -1183,7 +1183,7 @@ class Generator extends \SoapClient
      * @param mixed $methodParameter the original function paramter
      * @return Method|null
      */
-    private function getServiceMethod($methodName)
+    public function getServiceMethod($methodName)
     {
         return $this->getService($this->getServiceName($methodName)) !== null ? $this->getService($this->getServiceName($methodName))->getMethod($methodName) : null;
     }
