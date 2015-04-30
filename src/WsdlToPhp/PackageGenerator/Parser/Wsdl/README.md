@@ -23,11 +23,13 @@ Knowing this, it is simpler to understand why complexType, simpleType, element a
 - For each child tag, parse its informations and its own children
  
 This shows that potentially we would load lots of nodes for nothing if they don't contain anything interesting. We simply do the opposite by:
+
 - Retrieve each tag that provide additional usefull informations
 - For each retrieved tag, climb to its parent
 - Parse the tag and consolite its parent's informations with it
 
 So, if we load all the documentation nodes that contain textual informations about its container, if documentations are numerous it's good because it means that the Web Service is well documented.
+
 On the other hand, if there is no documentation node, then we won't do anything meaning that we won't loose time to parse any node.
 
 After all!
