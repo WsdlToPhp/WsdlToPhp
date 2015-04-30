@@ -14,13 +14,32 @@ class TagDocumentation extends AbstractTag
         return $this->getNodeValue();
     }
     /**
+     * Finds parent node of this documentation node without taking care of the name attribute for enumeration and definitions
+     * This case is managed first because enumerations are contained by elements and the method could climb to its parent without stopping on the enumeration tag
+     * Indeed, depending on the node, it may contain or not the attribute named "name" so we have to split each case
+     * Go from the deepest possible node to the highest possible node
+     * Each case must be treated on the same level, this is why we test the suitableParent for each case
+     * @see \WsdlToPhp\PackageGenerator\DomHandler\Wsdl\Tag\AbstractTag::getSuitableParent()
+     */
+    public function getSuitableParent($checkName = true, array $additionalTags = array(), $maxDeep = self::MAX_DEEP)
+    {
+        $enumerationTag = parent::getSuitableParent(false, array(
+            WsdlDocument::TAG_ENUMERATION,
+        ));
+        if ($enumerationTag !== null && $enumerationTag->getName() === WsdlDocument::TAG_ENUMERATION) {
+            return $enumerationTag;
+        }
+
+        return parent::getSuitableParent($checkName, $additionalTags, $maxDeep);
+    }
+    /**
      * @see \WsdlToPhp\PackageGenerator\DomHandler\Wsdl\Tag\AbstractTag::getSuitableParentTags()
      */
     public function getSuitableParentTags(array $additionalTags = array())
     {
         return array_merge(parent::getSuitableParentTags($additionalTags), array(
             WsdlDocument::TAG_OPERATION,
-            WsdlDocument::TAG_ENUMERATION,
         ));
     }
+
 }
