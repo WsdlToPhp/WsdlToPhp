@@ -37,6 +37,11 @@ class TagAttributeTest extends WsdlParser
                 $this->assertSame(array('use'=>'required'), $structs->getStructByName('CharityIDType')->getAttribute('type')->getMeta());
                 $ok = true;
             }
+            if ($structs->getStructByName('CharityAffiliationType') !== null) {
+                $this->assertSame('string', $structs->getStructByName('CharityAffiliationType')->getAttribute('id')->getType());
+                $this->assertSame('CharityAffiliationTypeCodeType', $structs->getStructByName('CharityAffiliationType')->getAttribute('type')->getType());
+                $ok = true;
+            }
         }
         $this->assertTrue((bool)$ok);
     }
