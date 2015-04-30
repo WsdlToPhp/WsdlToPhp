@@ -9,8 +9,10 @@ use WsdlToPhp\PackageGenerator\DomHandler\Wsdl\Tag\TagEnumeration as Enumeration
 use WsdlToPhp\PackageGenerator\DomHandler\Wsdl\Tag\TagAnnotation as Annotation;
 use WsdlToPhp\PackageGenerator\DomHandler\Wsdl\Tag\TagAppinfo as Appinfo;
 use WsdlToPhp\PackageGenerator\DomHandler\Wsdl\Tag\TagDocumentation as Documentation;
+use WsdlToPhp\PackageGenerator\DomHandler\Wsdl\Tag\TagExtension as Extension;
 use WsdlToPhp\PackageGenerator\Model\Struct;
 use WsdlToPhp\PackageGenerator\Model\Method;
+use WsdlToPhp\PackageGenerator\Generator\Generator;
 
 abstract class AbstractTagParser extends AbstractParser
 {
@@ -183,6 +185,17 @@ abstract class AbstractTagParser extends AbstractParser
             } elseif ($this->getModel($parent) !== null) {
                 $this->getModel($parent)->setDocumentation($content);
             }
+        }
+    }
+    /**
+     * @param Extension $extension
+     */
+    protected function parseExtension(Extension $extension)
+    {
+        $base   = $extension->getAttribute('base')->getValue();
+        $parent = $extension->getSuitableParent();
+        if (!empty($base) && $parent !== null && $this->getModel($parent) !== null && $parent->getAttributeName() !== $base) {
+            $this->getModel($parent)->setInheritance($base);
         }
     }
 }
