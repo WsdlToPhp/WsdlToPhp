@@ -50,11 +50,25 @@ abstract class AbstractTag extends ElementHandler
         ), $additionalTags);
     }
     /**
+     * @return bool
+     */
+    public function hasAttributeName()
+    {
+        return $this->hasAttribute(Attribute::ATTRIBUTE_NAME);
+    }
+    /**
      * @return null|string
      */
     public function getAttributeName()
     {
         return $this->getAttribute(Attribute::ATTRIBUTE_NAME) ? $this->getAttribute(Attribute::ATTRIBUTE_NAME)->getValue() : '';
+    }
+    /**
+     * @return boolean
+     */
+    public function hasAttributeValue()
+    {
+        return $this->hasAttribute(Attribute::ATTRIBUTE_VALUE);
     }
     /**
      * @return null|string
