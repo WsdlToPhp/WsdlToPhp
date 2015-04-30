@@ -25,3 +25,8 @@ This show that potentially we would load lots of nodes for nothing if they don't
  
 Otherwise, if we load all the annotation nodes that contains appinfo or documentation nodes for example, if annotations are numerous, it's good meaning that the Web Service is well documented.
 On the other hand, if there is no annotation node, then we won't do anything meaning that we won't loose time to parse any node.
+
+After all!
+----------
+
+After all, if you think it is not a good choice to not parse complexType, simpleType and so on, please let me know the reasons!
