@@ -13,9 +13,8 @@ use WsdlToPhp\PackageGenerator\DomHandler\Wsdl\Tag\TagEnumeration as Enumeration
 use WsdlToPhp\PackageGenerator\DomHandler\Wsdl\Tag\TagAnnotation as Annotation;
 use WsdlToPhp\PackageGenerator\DomHandler\Wsdl\Tag\TagAppinfo as Appinfo;
 use WsdlToPhp\PackageGenerator\DomHandler\Wsdl\Tag\TagDocumentation as Documentation;
-use WsdlToPhp\PackageGenerator\Model\AbstractModel as Model;
-use WsdlToPhp\PackageGenerator\Model\Struct as Struct;
-use WsdlToPhp\PackageGenerator\Model\Service as Service;
+use WsdlToPhp\PackageGenerator\Model\Struct;
+use WsdlToPhp\PackageGenerator\Model\Method;
 
 abstract class AbstractParser implements ParserInterface
 {
@@ -83,11 +82,23 @@ abstract class AbstractParser implements ParserInterface
      */
     abstract protected function parsingTag();
     /**
-     * Must return the model on which the method will be called
+     * Return the model on which the method will be called
      * @param Tag $tag
-     * @return Model|Struct|Service
+     * @return Struct|Method
      */
-    abstract protected function getModel(Tag $tag);
+    protected function getModel(Tag $tag)
+    {
+        $model = null;
+        switch ($tag->getName()) {
+            case WsdlDocument::TAG_OPERATION:
+                $model = $this->generator->getServiceMethod($tag->getAttributeName());
+                break;
+            default:
+                $model = $this->generator->getStruct($tag->getAttributeName());
+                break;
+        }
+        return $model;
+    }
     /**
      * When looping, must return false to stop it
      * @return bool
@@ -147,9 +158,9 @@ abstract class AbstractParser implements ParserInterface
         $restrictions = $tag->getChildrenByName(WsdlDocument::TAG_RESTRICTION);
         foreach ($restrictions as $restriction) {
             if ($restriction->isEnumeration() === false) {
-                $this->parseRestriction($tag, $restriction);
+                $this->parseRestriction($restriction);
             } else {
-                $this->parseEnumeration($tag, $restriction);
+                $this->parseEnumeration($restriction);
             }
         }
     }
@@ -157,24 +168,27 @@ abstract class AbstractParser implements ParserInterface
      * @param Tag $tag
      * @param Restriction $restriction
      */
-    private function parseRestriction(Tag $tag, Restriction $restriction)
+    private function parseRestriction(Restriction $restriction)
     {
-        $this->getGenerator()->getStructs()->addVirtualStruct($tag->getAttributeName());
+        $parent = $restriction->getSuitableParent();
+        if ($parent !== null) {
+            $this->getGenerator()->getStructs()->addVirtualStruct($parent->getAttributeName());
 
-        if ($restriction->hasAttributes()) {
-            foreach ($restriction->getAttributes() as $attribute) {
-                if ($attribute->getName() === 'base' && $attribute->getValue() !== $tag->getAttributeName()) {
-                    if ($this->getModel($tag) !== null) {
-                        $this->getModel($tag)->setInheritance($attribute->getValue());
+            if ($restriction->hasAttributes()) {
+                foreach ($restriction->getAttributes() as $attribute) {
+                    if ($attribute->getName() === 'base' && $attribute->getValue() !== $parent->getAttributeName()) {
+                        if ($this->getModel($parent) !== null) {
+                            $this->getModel($parent)->setInheritance($attribute->getValue());
+                        }
+                    } else {
+                        $this->addMetaFromAttribute($parent, $attribute);
                     }
-                } else {
-                    $this->addMetaFromAttribute($tag, $attribute);
                 }
             }
-        }
 
-        foreach ($restriction->getElementChildren() as $child) {
-            $this->parseRestrictionChild($tag, $child);
+            foreach ($restriction->getElementChildren() as $child) {
+                $this->parseRestrictionChild($parent, $child);
+            }
         }
     }
     /**
@@ -201,10 +215,13 @@ abstract class AbstractParser implements ParserInterface
      * @param Tag $tag
      * @param Restriction $restriction
      */
-    private function parseEnumeration(Tag $tag, Restriction $restriction)
+    private function parseEnumeration(Restriction $restriction)
     {
-        foreach ($restriction->getEnumerations() as $enumeration) {
-            $this->addStructValue($tag, $enumeration);
+        $parent = $restriction->getSuitableParent();
+        if ($parent !== null) {
+            foreach ($restriction->getEnumerations() as $enumeration) {
+                $this->addStructValue($parent, $enumeration);
+            }
         }
     }
     /**
@@ -225,43 +242,42 @@ abstract class AbstractParser implements ParserInterface
     {
         $annotations = $tag->getChildrenByName(WsdlDocument::TAG_ANNOTATION);
         foreach ($annotations as $annotation) {
-            $this->parseAnnotation($tag, $annotation);
+            $this->parseAnnotation($annotation);
         }
     }
     /**
      * @param Annotation $annotation
      */
-    private function parseAnnotation(Tag $tag, Annotation $annotation)
+    private function parseAnnotation(Annotation $annotation)
     {
         $appinfos = $annotation->getChildrenByName(WsdlDocument::TAG_APPINFO);
         foreach ($appinfos as $appinfo) {
-            $this->parseAppinfo($tag, $appinfo);
+            $this->parseAppinfo($appinfo);
         }
         $documentations = $annotation->getChildrenByName(WsdlDocument::TAG_DOCUMENTATION);
         foreach ($documentations as $documentation) {
-            $this->parseDocumentation($tag, $documentation);
+            $this->parseDocumentation($documentation);
         }
     }
     /**
-     * @param Tag $tag
      * @param Appinfo $appinfo
      */
-    private function parseAppinfo(Tag $tag, Appinfo $appinfo)
+    private function parseAppinfo(Appinfo $appinfo)
     {
         $content = $appinfo->getContent();
-        if (!empty($content) && $this->getModel($tag) !== null) {
-            $this->getModel($tag)->addMeta('appinfo', $content);
+        $parent  = $appinfo->getSuitableParent();
+        if (!empty($content) && $parent !== null && $this->getModel($parent->getAttributeName()) !== null) {
+            $this->getModel($parent->getAttributeName())->addMeta('appinfo', $content);
         }
     }
     /**
-     * @param Tag $tag
      * @param Documentation $documentation
      */
-    private function parseDocumentation(Tag $tag, Documentation $documentation)
+    protected function parseDocumentation(Documentation $documentation)
     {
         $content      = $documentation->getContent();
         $parent       = $documentation->getSuitableParent();
-        $parentParent = $parent->getSuitableParent();
+        $parentParent = $parent !== null ? $parent->getSuitableParent() : null;
 
         if (!empty($content) && $parent !== null) {
             /**
@@ -276,7 +292,7 @@ abstract class AbstractParser implements ParserInterface
                 if ($parentParent !== null && $this->getModel($parentParent) !== null && $this->getModel($parentParent)->getValue($parent->getAttributeName()) !== null) {
                     $this->getModel($parentParent)->getValue($parent->getAttributeName())->setDocumentation($content);
                 }
-            } elseif ($this->getModel($parent)) {
+            } elseif ($this->getModel($parent) !== null) {
                 $this->getModel($parent)->setDocumentation($content);
             }
         }
