@@ -49,7 +49,9 @@ abstract class AbstractTagParser extends AbstractParser
             if ($restriction->isEnumeration() === false) {
                 $this->parseRestriction($restriction);
             } else {
-                $this->parseEnumeration($restriction);
+                foreach ($restriction->getEnumerations() as $enumeration) {
+                    $this->parseEnumeration($enumeration);
+                }
             }
         }
     }
@@ -101,16 +103,13 @@ abstract class AbstractTagParser extends AbstractParser
         }
     }
     /**
-     * @param Tag $tag
-     * @param Restriction $restriction
+     * @param Enumeration $enumeration
      */
-    private function parseEnumeration(Restriction $restriction)
+    protected function parseEnumeration(Enumeration $enumeration)
     {
-        $parent = $restriction->getSuitableParent();
+        $parent = $enumeration->getSuitableParent();
         if ($parent !== null) {
-            foreach ($restriction->getEnumerations() as $enumeration) {
-                $this->addStructValue($parent, $enumeration);
-            }
+            $this->addStructValue($parent, $enumeration);
         }
     }
     /**
