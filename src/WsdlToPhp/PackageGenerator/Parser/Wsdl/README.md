@@ -5,21 +5,21 @@ The key of theses parsers is to do the minimum treatments meaning that we must l
 
 Neverthless, the goals of these parsers are various:
 
- - Get the maximum amount of informations about each structs and operations
- - Consolidate the informations parsed by the SoapClient parsers they can't see as:
-   - SoapHeaders (header tags)
-   - Enumerations values
-   - Restrictions on parameters
-   - Default parameter value
-   - Abstract elements
-   - Input/Output parameters type
-   - Values of type array
-   - Inheritance between elements
+- Get the maximum amount of informations about each structs and operations
+- Consolidate the informations parsed by the SoapClient parsers they can't see as:
+-- SoapHeaders (header tags)
+-- Enumerations values
+-- Restrictions on parameters
+-- Default parameter value
+-- Abstract elements
+-- Input/Output parameters type
+-- Values of type array
+-- Inheritance between elements
 
 Knowing this, it is simpler to understand why complexType, simpleType, element are not parsed as parsing them would mean that:
 
- - We would retrieve each tag
- - For each tag we would apply various methods to test the presence of each possible information we want to get (possibly none)
+- We would retrieve each tag
+- For each tag we would apply various methods to test the presence of each possible information we want to get (possibly none)
  
 This show that potentially we would load lots of nodes for nothing if they don't contain anything.
  
