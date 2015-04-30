@@ -47,6 +47,13 @@ class WsdlParser extends TestCase
         return dirname(__FILE__) . '/../../resources/bingsearch.wsdl';
     }
     /**
+     * @return string
+     */
+    public static function wsdlEbayPath()
+    {
+        return dirname(__FILE__) . '/../../resources/ebaySvc.wsdl';
+    }
+    /**
      * @param srting $wsdlPath
      * @return Generator
      */
