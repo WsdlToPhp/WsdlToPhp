@@ -5,7 +5,7 @@ namespace WsdlToPhp\PackageGenerator\Parser\Wsdl;
 use WsdlToPhp\PackageGenerator\DomHandler\Wsdl\Wsdl as WsdlDocument;
 use WsdlToPhp\PackageGenerator\Model\Wsdl;
 
-class TagDocumentation extends AbstractParser
+class TagDocumentation extends AbstractTagParser
 {
     /**
      * @see \WsdlToPhp\PackageGenerator\Parser\Wsdl\AbstractParser::getTags()
