@@ -34,7 +34,7 @@ class TagEnumerationTest extends WsdlParser
     /**
      *
      */
-    public function testParseImageViewService()
+    public function testBing()
     {
         $tagEnumerationParser = self::bingInstance();
         AbstractContainer::purgeAllCache();
@@ -44,7 +44,7 @@ class TagEnumerationTest extends WsdlParser
         $ok = false;
         foreach ($tagEnumerationParser->getGenerator()->getStructs() as $struct) {
             if ($struct instanceof Struct && $struct->getIsRestriction() === true) {
-            if ($struct->getName() === 'AdultOption') {
+                if ($struct->getName() === 'AdultOption') {
                     $values = new StructValueContainer();
                     $values->add(new StructValue('Off', 0, $struct));
                     $values->add(new StructValue('Moderate', 1, $struct));
