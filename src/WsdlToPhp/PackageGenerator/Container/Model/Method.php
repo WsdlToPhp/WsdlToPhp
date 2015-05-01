@@ -1,12 +1,14 @@
 <?php
 
-namespace WsdlToPhp\PackageGenerator\ModelContainer;
+namespace WsdlToPhp\PackageGenerator\Container\Model;
 
-class MethodContainer extends ModelContainer
+use WsdlToPhp\PackageGenerator\Model\Method as Model;
+
+class Method extends AbstractModel
 {
     const KEY_PARAMETER_TYPE = 'parameterType';
     /**
-     * @see \WsdlToPhp\PackageGenerator\ModelContainer\ModelContainer::objectClass()
+     * @see \WsdlToPhp\PackageGenerator\Container\ModelContainer\Model::objectClass()
      * @return string
      */
     protected function objectClass()
@@ -15,7 +17,7 @@ class MethodContainer extends ModelContainer
     }
     /**
      * @param sring $name
-     * @return Method|null
+     * @return Model|null
      */
     public function getMethodByName($name)
     {
@@ -34,16 +36,16 @@ class MethodContainer extends ModelContainer
         ));
     }
     /**
-     * @see \WsdlToPhp\PackageGenerator\ModelContainer\AbstractModelContainer::get()
-     * @return Method|null
+     * @see \WsdlToPhp\PackageGenerator\Model\AbstractModel::get()
+     * @return Model|null
      */
     public function get($value, $key = parent::KEY_NAME)
     {
         return parent::get($value, $key);
     }
     /**
-     * @see \WsdlToPhp\PackageGenerator\ModelContainer\AbstractModelContainer::getAs()
-     * @return Method|null
+     * @see \WsdlToPhp\PackageGenerator\Model\AbstractModel::getAs()
+     * @return Model|null
      */
     public function getAs(array $properties)
     {

@@ -3,13 +3,12 @@
 namespace WsdlToPhp\PackageGenerator\Tests\ModelContainer;
 
 use WsdlToPhp\PackageGenerator\Model\Struct;
-
 use WsdlToPhp\PackageGenerator\Model\EmptyModel;
-use WsdlToPhp\PackageGenerator\ModelContainer\ModelContainer;
+use WsdlToPhp\PackageGenerator\Container\Model\EmptyModel as ModelContainer;
 use WsdlToPhp\PackageGenerator\Tests\TestCase;
 use WsdlToPhp\PackageGenerator\Model\Method;
 use WsdlToPhp\PackageGenerator\Model\Service;
-use WsdlToPhp\PackageGenerator\ModelContainer\MethodContainer;
+use WsdlToPhp\PackageGenerator\Container\Model\Method as MethodContainer;
 
 class ModelContainerTest extends TestCase
 {

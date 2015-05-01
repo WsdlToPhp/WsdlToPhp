@@ -2,7 +2,7 @@
 
 namespace WsdlToPhp\PackageGenerator\Tests\Parser\Wsdl;
 
-use WsdlToPhp\PackageGenerator\Generator\AbstractContainer;
+use WsdlToPhp\PackageGenerator\Container\AbstractContainer;
 use WsdlToPhp\PackageGenerator\Parser\Wsdl\TagInclude;
 use WsdlToPhp\PackageGenerator\Generator\Generator;
 use WsdlToPhp\PackageGenerator\Model\Wsdl;

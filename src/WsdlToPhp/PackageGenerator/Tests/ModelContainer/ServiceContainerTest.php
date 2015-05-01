@@ -3,7 +3,7 @@
 namespace WsdlToPhp\PackageGenerator\Test\ModelContainer;
 
 use WsdlToPhp\PackageGenerator\Model\Service;
-use WsdlToPhp\PackageGenerator\ModelContainer\ServiceContainer;
+use WsdlToPhp\PackageGenerator\Container\Model\Service as ServiceContainer;
 use WsdlToPhp\PackageGenerator\Tests\TestCase;
 
 class ServiceContainerTest extends TestCase

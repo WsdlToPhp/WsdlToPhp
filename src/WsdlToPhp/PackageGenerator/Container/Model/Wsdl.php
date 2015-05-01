@@ -1,13 +1,13 @@
 <?php
 
-namespace WsdlToPhp\PackageGenerator\ModelContainer;
+namespace WsdlToPhp\PackageGenerator\Container\Model;
 
-use WsdlToPhp\PackageGenerator\Model\Wsdl;
+use WsdlToPhp\PackageGenerator\Model\Wsdl as Model;
 
-class WsdlContainer extends ModelContainer
+class Wsdl extends AbstractModel
 {
     /**
-     * @see \WsdlToPhp\PackageGenerator\ModelContainer\ModelContainer::objectClass()
+     * @see \WsdlToPhp\PackageGenerator\Container\ModelContainer\Model::objectClass()
      * @return string
      */
     protected function objectClass()
@@ -16,23 +16,23 @@ class WsdlContainer extends ModelContainer
     }
     /**
      * @param string $name
-     * @return Wsdl|null
+     * @return Model|null
      */
     public function getWsdlByName($name)
     {
         return $this->get($name, parent::KEY_NAME);
     }
     /**
-     * @see \WsdlToPhp\PackageGenerator\ModelContainer\AbstractModelContainer::get()
-     * @return Wsdl|null
+     * @see \WsdlToPhp\PackageGenerator\Model\AbstractModel::get()
+     * @return Model|null
      */
     public function get($value, $key = parent::KEY_NAME)
     {
         return parent::get($value, $key);
     }
     /**
-     * @see \WsdlToPhp\PackageGenerator\ModelContainer\AbstractModelContainer::getAs()
-     * @return Wsdl|null
+     * @see \WsdlToPhp\PackageGenerator\Model\AbstractModel::getAs()
+     * @return Model|null
      */
     public function getAs(array $properties)
     {

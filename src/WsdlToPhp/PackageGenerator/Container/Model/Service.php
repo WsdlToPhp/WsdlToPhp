@@ -1,13 +1,13 @@
 <?php
 
-namespace WsdlToPhp\PackageGenerator\ModelContainer;
+namespace WsdlToPhp\PackageGenerator\Container\Model;
 
-use WsdlToPhp\PackageGenerator\Model\Service;
+use WsdlToPhp\PackageGenerator\Model\Service as Model;
 
-class ServiceContainer extends ModelContainer
+class Service extends AbstractModel
 {
     /**
-     * @see \WsdlToPhp\PackageGenerator\ModelContainer\ModelContainer::objectClass()
+     * @see \WsdlToPhp\PackageGenerator\Container\ModelContainer\Model::objectClass()
      * @return string
      */
     protected function objectClass()
@@ -20,12 +20,12 @@ class ServiceContainer extends ModelContainer
      * @param string $methodName the original function name
      * @param string $methodParameter the original parameter name
      * @param string $methodReturn the original return name
-     * @return ServiceContainer
+     * @return Model
      */
     public function addService($serviceName, $methodName, $methodParameter, $methodReturn)
     {
         if ($this->get($serviceName) === null) {
-            $this->add(new Service($serviceName));
+            $this->add(new Model($serviceName));
         }
         $serviceMethod = $this->get($serviceName)->getMethod($methodName);
         /**
@@ -43,23 +43,23 @@ class ServiceContainer extends ModelContainer
     }
     /**
      * @param string $name
-     * @return Service|null
+     * @return Model|null
      */
     public function getServiceByName($name)
     {
         return $this->get($name, parent::KEY_NAME);
     }
     /**
-     * @see \WsdlToPhp\PackageGenerator\ModelContainer\AbstractModelContainer::get()
-     * @return Service|null
+     * @see \WsdlToPhp\PackageGenerator\Model\AbstractModel::get()
+     * @return Model|null
      */
     public function get($value, $key = parent::KEY_NAME)
     {
         return parent::get($value, $key);
     }
     /**
-     * @see \WsdlToPhp\PackageGenerator\ModelContainer\AbstractModelContainer::getAs()
-     * @return Service|null
+     * @see \WsdlToPhp\PackageGenerator\Model\AbstractModel::getAs()
+     * @return Model|null
      */
     public function getAs(array $properties)
     {

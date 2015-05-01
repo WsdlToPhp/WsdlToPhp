@@ -3,11 +3,8 @@
 namespace WsdlToPhp\PackageGenerator\Tests\ModelContainer;
 
 use WsdlToPhp\PackageGenerator\Tests\Model\StructTest;
-
 use WsdlToPhp\PackageGenerator\Model\StructAttribute;
-
-use WsdlToPhp\PackageGenerator\ModelContainer\StructAttributeContainer;
-
+use WsdlToPhp\PackageGenerator\Container\Model\StructAttribute as StructAttributeContainer;
 use WsdlToPhp\PackageGenerator\Tests\TestCase;
 
 class StructAttributeContainerTest extends TestCase

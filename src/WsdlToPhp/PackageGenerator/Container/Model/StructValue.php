@@ -1,13 +1,13 @@
 <?php
 
-namespace WsdlToPhp\PackageGenerator\ModelContainer;
+namespace WsdlToPhp\PackageGenerator\Container\Model;
 
-use WsdlToPhp\PackageGenerator\Model\StructValue;
+use WsdlToPhp\PackageGenerator\Model\StructValue as Model;
 
-class StructValueContainer extends ModelContainer
+class StructValue extends AbstractModel
 {
     /**
-     * @see \WsdlToPhp\PackageGenerator\ModelContainer\ModelContainer::objectClass()
+     * @see \WsdlToPhp\PackageGenerator\Container\ModelContainer\Model::objectClass()
      * @return string
      */
     protected function objectClass()
@@ -16,23 +16,23 @@ class StructValueContainer extends ModelContainer
     }
     /**
      * @param string $name
-     * @return StructValue|null
+     * @return Model|null
      */
     public function getStructValueByName($name)
     {
         return $this->get($name, parent::KEY_NAME);
     }
     /**
-     * @see \WsdlToPhp\PackageGenerator\ModelContainer\AbstractModelContainer::get()
-     * @return StructValue|null
+     * @see \WsdlToPhp\PackageGenerator\Model\AbstractModel::get()
+     * @return Model|null
      */
     public function get($value, $key = parent::KEY_NAME)
     {
         return parent::get($value, $key);
     }
     /**
-     * @see \WsdlToPhp\PackageGenerator\ModelContainer\AbstractModelContainer::getAs()
-     * @return StructValue|null
+     * @see \WsdlToPhp\PackageGenerator\Model\AbstractModel::getAs()
+     * @return Model|null
      */
     public function getAs(array $properties)
     {

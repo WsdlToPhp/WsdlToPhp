@@ -1,6 +1,6 @@
 <?php
 
-namespace WsdlToPhp\PackageGenerator\Generator;
+namespace WsdlToPhp\PackageGenerator\Container;
 
 abstract class AbstractContainer implements \ArrayAccess, \Iterator, \Countable
 {

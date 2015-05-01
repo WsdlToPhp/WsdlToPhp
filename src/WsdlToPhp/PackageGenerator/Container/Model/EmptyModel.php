@@ -1,8 +1,10 @@
 <?php
 
-namespace WsdlToPhp\PackageGenerator\ModelContainer;
+namespace WsdlToPhp\PackageGenerator\Container\Model;
 
-class ModelContainer extends AbstractModelContainer
+use WsdlToPhp\PackageGenerator\Model\EmptyModel as Model;
+
+class EmptyModel extends AbstractModel
 {
     /**
      * @see \WsdlToPhp\PackageGenerator\ModelContainer\AbstractModelContainer::objectClass()
@@ -14,7 +16,7 @@ class ModelContainer extends AbstractModelContainer
     }
     /**
      * @see \WsdlToPhp\PackageGenerator\ModelContainer\AbstractModelContainer::get()
-     * @return EmptyModel|null
+     * @return Model|null
      */
     public function get($value, $key = parent::KEY_NAME)
     {
@@ -22,7 +24,7 @@ class ModelContainer extends AbstractModelContainer
     }
     /**
      * @see \WsdlToPhp\PackageGenerator\ModelContainer\AbstractModelContainer::getAs()
-     * @return EmptyModel|null
+     * @return Model|null
      */
     public function getAs(array $properties)
     {

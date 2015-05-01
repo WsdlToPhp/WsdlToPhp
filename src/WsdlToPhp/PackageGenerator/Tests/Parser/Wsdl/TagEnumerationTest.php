@@ -2,10 +2,10 @@
 
 namespace WsdlToPhp\PackageGenerator\Tests\Parser\Wsdl;
 
-use WsdlToPhp\PackageGenerator\Generator\AbstractContainer;
+use WsdlToPhp\PackageGenerator\Container\AbstractContainer;
 use WsdlToPhp\PackageGenerator\Parser\Wsdl\TagEnumeration;
 use WsdlToPhp\PackageGenerator\Model\Struct;
-use WsdlToPhp\PackageGenerator\ModelContainer\StructValueContainer;
+use WsdlToPhp\PackageGenerator\Container\Model\StructValue as StructValueContainer;
 use WsdlToPhp\PackageGenerator\Model\StructValue;
 
 class TagEnumerationTest extends WsdlParser

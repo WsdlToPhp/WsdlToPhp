@@ -3,9 +3,7 @@
 namespace WsdlToPhp\PackageGenerator\Tests\ModelContainer;
 
 use WsdlToPhp\PackageGenerator\Tests\Model\StructTest;
-
-use WsdlToPhp\PackageGenerator\ModelContainer\StructContainer;
-
+use WsdlToPhp\PackageGenerator\Container\Model\Struct as StructContainer;
 use WsdlToPhp\PackageGenerator\Tests\TestCase;
 
 class StructContainerTest extends TestCase

@@ -3,7 +3,6 @@
 namespace WsdlToPhp\PackageGenerator\Model;
 
 use WsdlToPhp\PackageGenerator\ConfigurationReader\ReservedKeywords;
-
 use WsdlToPhp\PackageGenerator\Generator\Generator;
 
 /**

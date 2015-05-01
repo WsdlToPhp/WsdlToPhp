@@ -2,10 +2,8 @@
 
 namespace WsdlToPhp\PackageGenerator\Model;
 
-use WsdlToPhp\PackageGenerator\ModelContainer\StructValueContainer;
-
-use WsdlToPhp\PackageGenerator\ModelContainer\StructAttributeContainer;
-
+use WsdlToPhp\PackageGenerator\Container\Model\StructValue as StructValueContainer;
+use WsdlToPhp\PackageGenerator\Container\Model\StructAttribute as StructAttributeContainer;
 use WsdlToPhp\PackageGenerator\Generator\Generator;
 
 /**

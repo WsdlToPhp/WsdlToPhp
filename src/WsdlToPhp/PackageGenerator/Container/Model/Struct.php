@@ -1,13 +1,13 @@
 <?php
 
-namespace WsdlToPhp\PackageGenerator\ModelContainer;
+namespace WsdlToPhp\PackageGenerator\Container\Model;
 
-use WsdlToPhp\PackageGenerator\Model\Struct;
+use WsdlToPhp\PackageGenerator\Model\Struct as Model;
 
-class StructContainer extends ModelContainer
+class Struct extends AbstractModel
 {
     /**
-     * @see \WsdlToPhp\PackageGenerator\ModelContainer\ModelContainer::objectClass()
+     * @see \WsdlToPhp\PackageGenerator\Container\ModelContainer\Model::objectClass()
      * @return string
      */
     protected function objectClass()
@@ -16,7 +16,7 @@ class StructContainer extends ModelContainer
     }
     /**
      * @param string $name
-     * @return Struct|null
+     * @return Model|null
      */
     public function getStructByName($name)
     {
@@ -25,12 +25,12 @@ class StructContainer extends ModelContainer
     /**
      * Adds a virtual struct
      * @param string $structName the original struct name
-     * @return StructContainer
+     * @return Model
      */
     public function addVirtualStruct($structName)
     {
         if ($this->get($structName) === null) {
-            $this->add(new Struct($structName, false));
+            $this->add(new Model($structName, false));
         }
         return $this;
     }
@@ -39,19 +39,19 @@ class StructContainer extends ModelContainer
      * @param string $structName the original struct name
      * @param string $attributeName the attribute name
      * @param string $attributeType the attribute type
-     * @return StructContainer
+     * @return Model
      */
     public function addStruct($structName, $attributeName, $attributeType)
     {
         if ($this->get($structName) === null) {
-            $this->add(new Struct($structName));
+            $this->add(new Model($structName));
         }
         if (!empty($attributeName) && !empty($attributeType) && $this->get($structName) !== null) {
             $this->get($structName)->addAttribute($attributeName, $attributeType);
         }
     }
     /**
-     * @see \WsdlToPhp\PackageGenerator\ModelContainer\AbstractModelContainer::get()
+     * @see \WsdlToPhp\PackageGenerator\Model\AbstractModel::get()
      * @return Struct|null
      */
     public function get($value, $key = parent::KEY_NAME)
@@ -59,7 +59,7 @@ class StructContainer extends ModelContainer
         return parent::get($value, $key);
     }
     /**
-     * @see \WsdlToPhp\PackageGenerator\ModelContainer\AbstractModelContainer::getAs()
+     * @see \WsdlToPhp\PackageGenerator\Model\AbstractModel::getAs()
      * @return Struct|null
      */
     public function getAs(array $properties)

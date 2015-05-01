@@ -4,7 +4,7 @@ namespace WsdlToPhp\PackageGenerator\Tests\ModelContainer;
 
 use WsdlToPhp\PackageGenerator\Tests\TestCase;
 use WsdlToPhp\PackageGenerator\Model\Wsdl;
-use WsdlToPhp\PackageGenerator\ModelContainer\WsdlContainer;
+use WsdlToPhp\PackageGenerator\Container\Model\Wsdl as WsdlContainer;
 
 class WsdlContainerTest extends TestCase
 {

@@ -2,7 +2,7 @@
 
 namespace WsdlToPhp\PackageGenerator\Model;
 
-use WsdlToPhp\PackageGenerator\ModelContainer\MethodContainer;
+use WsdlToPhp\PackageGenerator\Container\Model\Method as MethodContainer;
 use WsdlToPhp\PackageGenerator\Generator\Generator;
 
 /**
