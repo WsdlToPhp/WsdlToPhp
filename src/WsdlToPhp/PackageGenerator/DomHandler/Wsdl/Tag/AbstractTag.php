@@ -5,6 +5,7 @@ namespace WsdlToPhp\PackageGenerator\DomHandler\Wsdl\Tag;
 use WsdlToPhp\PackageGenerator\DomHandler\Wsdl\Wsdl as WsdlDocument;
 use WsdlToPhp\PackageGenerator\DomHandler\AbstractAttributeHandler as Attribute;
 use WsdlToPhp\PackageGenerator\DomHandler\ElementHandler;
+use WsdlToPhp\PackageGenerator\DomHandler\Wsdl\AbstractWsdl;
 
 abstract class AbstractTag extends ElementHandler
 {
@@ -14,12 +15,13 @@ abstract class AbstractTag extends ElementHandler
     const MAX_DEEP = 5;
     /**
      * This method aims to get the parent element that matches a valid Wsdl element (aka struct)
-     * @param string $checkName whether to validate the attribute named "name" or not
+     * @param bool $checkName whether to validate the attribute named "name" or not
      * @param array $additionalTags
      * @param int $maxDeep
+     * @param bool $strict used by overridden methods to avoid infinite loop
      * @return null|\WsdlToPhp\PackageGenerator\DomHandler\AbstractNodeHandler|\WsdlToPhp\PackageGenerator\DomHandler\AbstractElementHandler|\WsdlToPhp\PackageGenerator\DomHandler\AbstractAttributeHandler|\WsdlToPhp\PackageGenerator\DomHandler\Wsdl\Tag\AbstractTag
      */
-    public function getSuitableParent($checkName = true, array $additionalTags = array(), $maxDeep = self::MAX_DEEP)
+    public function getSuitableParent($checkName = true, array $additionalTags = array(), $maxDeep = self::MAX_DEEP, $strict = false)
     {
         $parentNode = null;
         if ($this->getParent() !== null) {
@@ -50,6 +52,21 @@ abstract class AbstractTag extends ElementHandler
         ), $additionalTags);
     }
     /**
+     * @param string $name
+     * @param bool $checkName
+     * @return null|\WsdlToPhp\PackageGenerator\DomHandler\Wsdl\Tag\AbstractTag
+     */
+    protected function getStrictParent($name, $checkName = false)
+    {
+        $parent = $this->getSuitableParent($checkName, array(
+            $name,
+        ), self::MAX_DEEP, true);
+        if ($parent !== null && $parent->getName() === $name) {
+            return $parent;
+        }
+        return null;
+    }
+    /**
      * @return bool
      */
     public function hasAttributeName()
@@ -61,7 +78,7 @@ abstract class AbstractTag extends ElementHandler
      */
     public function getAttributeName()
     {
-        return $this->getAttribute(Attribute::ATTRIBUTE_NAME) ? $this->getAttribute(Attribute::ATTRIBUTE_NAME)->getValue() : '';
+        return $this->getAttribute(Attribute::ATTRIBUTE_NAME) !== null ? $this->getAttribute(Attribute::ATTRIBUTE_NAME)->getValue() : '';
     }
     /**
      * @return boolean
@@ -75,7 +92,14 @@ abstract class AbstractTag extends ElementHandler
      */
     public function getAttributeValue()
     {
-        return $this->getAttribute(Attribute::ATTRIBUTE_VALUE) ? $this->getAttribute(Attribute::ATTRIBUTE_VALUE)->getValue() : '';
+        return $this->getAttribute(Attribute::ATTRIBUTE_VALUE) !== null ? $this->getAttribute(Attribute::ATTRIBUTE_VALUE)->getValue() : '';
+    }
+    /**
+     * @return AbstractWsdl
+     */
+    public function getDomDocumentHandler()
+    {
+        return $this->domDocumentHandler;
     }
     /**
      * @see \WsdlToPhp\PackageGenerator\DomHandler\AbstractElementHandler::getChildrenByName()
