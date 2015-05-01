@@ -62,7 +62,7 @@ abstract class AbstractTagParser extends AbstractParser
      * @param Tag $tag
      * @param Restriction $restriction
      */
-    private function parseRestriction(Restriction $restriction)
+    protected function parseRestriction(Restriction $restriction)
     {
         $parent = $restriction->getSuitableParent();
         if ($parent !== null) {
