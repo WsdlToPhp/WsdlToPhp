@@ -3,7 +3,6 @@
 namespace WsdlToPhp\PackageGenerator\Generator;
 
 use WsdlToPhp\PackageGenerator\Model\Wsdl;
-use WsdlToPhp\PackageGenerator\ModelContainer\WsdlContainer;
 use WsdlToPhp\PackageGenerator\Model\AbstractModel;
 use WsdlToPhp\PackageGenerator\Model\EmptyModel;
 use WsdlToPhp\PackageGenerator\Model\Struct;
@@ -12,9 +11,10 @@ use WsdlToPhp\PackageGenerator\Model\StructValue;
 use WsdlToPhp\PackageGenerator\Model\Service;
 use WsdlToPhp\PackageGenerator\Model\Method;
 use WsdlToPhp\PackageGenerator\ConfigurationReader\GeneratorOptions;
-use WsdlToPhp\PackageGenerator\ModelContainer\StructContainer;
+use WsdlToPhp\PackageGenerator\Container\Model\Wsdl as WsdlContainer;
+use WsdlToPhp\PackageGenerator\Container\Model\Struct as StructContainer;
+use WsdlToPhp\PackageGenerator\Container\Model\Service as ServiceContainer;
 use WsdlToPhp\PackageGenerator\Parser\SoapClient\Structs as StructsParser;
-use WsdlToPhp\PackageGenerator\ModelContainer\ServiceContainer;
 use WsdlToPhp\PackageGenerator\Parser\SoapClient\Functions as FunctionsParser;
 
 /**
