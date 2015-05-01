@@ -21,15 +21,14 @@ class TagDocumentation extends AbstractTag
      * Each case must be treated on the same level, this is why we test the suitableParent for each case
      * @see \WsdlToPhp\PackageGenerator\DomHandler\Wsdl\Tag\AbstractTag::getSuitableParent()
      */
-    public function getSuitableParent($checkName = true, array $additionalTags = array(), $maxDeep = self::MAX_DEEP)
+    public function getSuitableParent($checkName = true, array $additionalTags = array(), $maxDeep = self::MAX_DEEP, $strict = false)
     {
-        $enumerationTag = parent::getSuitableParent(false, array(
-            WsdlDocument::TAG_ENUMERATION,
-        ));
-        if ($enumerationTag !== null && $enumerationTag->getName() === WsdlDocument::TAG_ENUMERATION) {
-            return $enumerationTag;
+        if ($strict === false) {
+            $enumerationTag = $this->getStrictParent(WsdlDocument::TAG_ENUMERATION);
+            if ($enumerationTag !== null) {
+                return $enumerationTag;
+            }
         }
-
         return parent::getSuitableParent($checkName, $additionalTags, $maxDeep);
     }
     /**
@@ -37,7 +36,7 @@ class TagDocumentation extends AbstractTag
      */
     public function getSuitableParentTags(array $additionalTags = array())
     {
-        return array_merge(parent::getSuitableParentTags($additionalTags), array(
+        return parent::getSuitableParentTags(array(
             WsdlDocument::TAG_OPERATION,
         ));
     }
