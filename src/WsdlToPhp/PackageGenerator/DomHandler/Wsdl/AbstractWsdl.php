@@ -108,7 +108,6 @@ abstract class AbstractWsdl extends DomDocumentHandler
             $this->currentTag = $tag;
             $elements = array_merge($elements, $this->getElementsByName($tag));
         }
-        $this->currentTag = null;
         return $elements;
     }
     /**
