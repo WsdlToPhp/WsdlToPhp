@@ -58,6 +58,7 @@ abstract class AbstractTag extends ElementHandler
      */
     protected function getStrictParent($name, $checkName = false)
     {
+        $this->getDomDocumentHandler()->setCurrentTag($name);
         $parent = $this->getSuitableParent($checkName, array(
             $name,
         ), self::MAX_DEEP, true);
