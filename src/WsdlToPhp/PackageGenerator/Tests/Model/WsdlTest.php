@@ -17,6 +17,13 @@ class WsdlTest extends TestCase
     /**
      * @return Wsdl
      */
+    public static function ebayInstance()
+    {
+        return new Wsdl(dirname(__FILE__) . '/../resources/ebaySvc.wsdl', file_get_contents(dirname(__FILE__) . '/../resources/ebaySvc.wsdl'));
+    }
+    /**
+     * @return Wsdl
+     */
     public static function partnerInstance()
     {
         return new Wsdl(dirname(__FILE__) . '/../resources/PartnerService.wsdl', file_get_contents(dirname(__FILE__) . '/../resources/PartnerService.wsdl'));
