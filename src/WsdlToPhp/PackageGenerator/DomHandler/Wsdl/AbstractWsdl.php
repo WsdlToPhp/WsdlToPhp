@@ -184,7 +184,7 @@ abstract class AbstractWsdl extends DomDocumentHandler
         ));
     }
     /**
-     * @return array[WsdlToPhp\PackageGenerator\DomHandler\Wsdl\Tag\TagBodies]
+     * @return array[WsdlToPhp\PackageGenerator\DomHandler\Wsdl\Tag\TagBody]
      */
     public function getBodies()
     {
@@ -193,7 +193,7 @@ abstract class AbstractWsdl extends DomDocumentHandler
         ));
     }
     /**
-     * @return array[WsdlToPhp\PackageGenerator\DomHandler\Wsdl\Tag\TagBodies]
+     * @return array[WsdlToPhp\PackageGenerator\DomHandler\Wsdl\Tag\TagHeader]
      */
     public function getHeaders()
     {
