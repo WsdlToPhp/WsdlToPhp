@@ -18,7 +18,7 @@ abstract class AbstractContainer implements \ArrayAccess, \Iterator, \Countable
      */
     private static $cache = array();
     /**
-     * @return Container
+     * @return AbstractContainer
     */
     public function __construct()
     {
@@ -27,6 +27,7 @@ abstract class AbstractContainer implements \ArrayAccess, \Iterator, \Countable
     }
     /**
      * @param int $offset
+     * @return bool
      */
     public function offsetExists($offset)
     {
@@ -34,6 +35,7 @@ abstract class AbstractContainer implements \ArrayAccess, \Iterator, \Countable
     }
     /**
      * @param int $offset
+     * @return mixed
      */
     public function offsetGet($offset)
     {
@@ -42,7 +44,7 @@ abstract class AbstractContainer implements \ArrayAccess, \Iterator, \Countable
     /**
      * @param int $offset
      * @param mixed $value
-     * @return Container
+     * @return AbstractContainer
      */
     public function offsetSet($offset, $value)
     {
@@ -51,7 +53,7 @@ abstract class AbstractContainer implements \ArrayAccess, \Iterator, \Countable
     }
     /**
      * @param int $offset
-     * @return Container
+     * @return AbstractContainer
      */
     public function offsetUnset($offset)
     {
@@ -89,7 +91,7 @@ abstract class AbstractContainer implements \ArrayAccess, \Iterator, \Countable
         return $this->offsetExists($this->offset);
     }
     /**
-     * @return Container
+     * @return AbstractContainer
      */
     public function rewind()
     {
@@ -110,7 +112,7 @@ abstract class AbstractContainer implements \ArrayAccess, \Iterator, \Countable
     /**
      * @param unknown $object
      * @throws \InvalidArgumentException
-     * @return Container
+     * @return AbstractContainer
      */
     public function add($object)
     {
@@ -209,7 +211,7 @@ abstract class AbstractContainer implements \ArrayAccess, \Iterator, \Countable
     }
     /**
      * @param array $values
-     * @return Container
+     * @return AbstractContainer
      */
     private static function purgeCache(array $values)
     {
@@ -219,7 +221,7 @@ abstract class AbstractContainer implements \ArrayAccess, \Iterator, \Countable
     }
     /**
      * @param array $values
-     * @return Container
+     * @return AbstractContainer
      */
     public static function purgeAllCache()
     {
@@ -228,7 +230,7 @@ abstract class AbstractContainer implements \ArrayAccess, \Iterator, \Countable
     /**
      * @param array $values
      * @param mixed $value
-     * @return Container
+     * @return AbstractContainer
      */
     private static function setCache(array $values, $value)
     {
