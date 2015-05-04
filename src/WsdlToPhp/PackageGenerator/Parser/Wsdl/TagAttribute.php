@@ -4,7 +4,6 @@ namespace WsdlToPhp\PackageGenerator\Parser\Wsdl;
 
 use WsdlToPhp\PackageGenerator\DomHandler\AbstractAttributeHandler;
 use WsdlToPhp\PackageGenerator\DomHandler\Wsdl\Wsdl as WsdlDocument;
-use WsdlToPhp\PackageGenerator\DomHandler\Wsdl\Tag\AbstractTag as Tag;
 use WsdlToPhp\PackageGenerator\DomHandler\Wsdl\Tag\TagAttribute as Attribute;
 use WsdlToPhp\PackageGenerator\Model\Wsdl;
 
@@ -69,7 +68,6 @@ class TagAttribute extends AbstractTagParser
                     }
                 }
             }
-
         }
     }
 }
