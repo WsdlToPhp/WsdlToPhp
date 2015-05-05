@@ -6,7 +6,7 @@ class TagPart extends AbstractTag
 {
     const
         ATTRIBUTE_ELEMENT  = 'element',
-        ATTRIBUTE_TYPE  = 'type';
+        ATTRIBUTE_TYPE     = 'type';
     /**
      * @return string
      */
