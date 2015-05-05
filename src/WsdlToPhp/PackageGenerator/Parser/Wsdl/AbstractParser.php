@@ -3,6 +3,7 @@
 namespace WsdlToPhp\PackageGenerator\Parser\Wsdl;
 
 use WsdlToPhp\PackageGenerator\Model\Wsdl;
+use WsdlToPhp\PackageGenerator\Model\Schema;
 use WsdlToPhp\PackageGenerator\Generator\ParserInterface;
 use WsdlToPhp\PackageGenerator\Generator\Generator;
 
@@ -17,19 +18,25 @@ abstract class AbstractParser implements ParserInterface
      */
     protected $tags;
     /**
-     * List of Wsdl parsed fr the current tag
-     * @var unknown
+     * List of Wsdl parsed for the current tag
+     * @var array
      */
     private $parsedWsdls;
+    /**
+     * List of Schema parsed for the current tag
+     * @var array
+     */
+    private $parsedSchemas;
     /**
      *
      * @param Generator $generator
      */
     public function __construct(Generator $generator)
     {
-        $this->generator   = $generator;
-        $this->continue    = false;
-        $this->parsedWsdls = array();
+        $this->generator     = $generator;
+        $this->continue      = false;
+        $this->parsedWsdls   = array();
+        $this->parsedSchemas = array();
     }
     /**
      * The method takes care of looping among WSDLS as much time as it is needed
@@ -40,25 +47,43 @@ abstract class AbstractParser implements ParserInterface
         if ($this->generator->getWsdls()->count() > 0) {
             do {
                 foreach ($this->generator->getWsdls() as $wsdl) {
-                    if ($this->isWsdlParsed($wsdl) === false) {
-                        $content = $wsdl->getContent();
-                        if ($content !== null) {
+                    $content = $wsdl->getContent();
+                    if ($content !== null) {
+                        if ($this->isWsdlParsed($wsdl) === false) {
                             $this->setTags($content->getElementsByName($this->parsingTag()));
                             if (count($this->getTags()) > 0) {
                                 $this->parseWsdl($wsdl);
                             }
                         }
-                        $this->setWsdlAsParsed($wsdl);
+                        foreach ($content->getExternalSchemas() as $schema) {
+                            if ($this->isSchemaParsed($wsdl, $schema) === false) {
+                                $schemaContent = $schema->getContent();
+                                if ($schemaContent !== null) {
+                                    $this->setTags($schemaContent->getElementsByName($this->parsingTag()));
+                                    if (count($this->getTags()) > 0) {
+                                        $this->parseSchema($wsdl, $schema);
+                                    }
+                                }
+                                $this->setSchemaAsParsed($wsdl, $schema);
+                            }
+                        }
                     }
+                    $this->setWsdlAsParsed($wsdl);
                 }
             } while($this->shouldContinue());
         }
     }
     /**
-     * Actual parsing of the sdl/schema
+     * Actual parsing of the Wsdl
      * @param Wsdl $wsdl
      */
     abstract protected function parseWsdl(Wsdl $wsdl);
+    /**
+     * Actual parsing of the Schema
+     * @param Wsdl $wsdl
+     * @param Schema $schema
+     */
+    abstract protected function parseSchema(Wsdl $wsdl, Schema $schema);
     /**
      * Must return the tag that will be parsed
      * @return string
@@ -73,6 +98,11 @@ abstract class AbstractParser implements ParserInterface
         $shouldContinue = false;
         foreach ($this->generator->getWsdls() as $wsdl) {
             $shouldContinue |= $this->isWsdlParsed($wsdl) === false;
+            if ($wsdl->getContent() !== null) {
+                foreach ($wsdl->getContent()->getExternalSchemas() as $schema) {
+                    $shouldContinue |= $this->isSchemaParsed($wsdl, $schema) === false;
+                }
+            }
         }
         return (bool)$shouldContinue;
     }
@@ -114,5 +144,32 @@ abstract class AbstractParser implements ParserInterface
             array_key_exists($wsdl->getName(), $this->parsedWsdls) &&
             is_array($this->parsedWsdls[$wsdl->getName()]) &&
             in_array($this->parsingTag(), $this->parsedWsdls[$wsdl->getName()]);
+    }
+    /**
+     * @param Wsdl $wsdl
+     * @param Schema $schema
+     * @return AbstractParser
+     */
+    private function setSchemaAsParsed(Wsdl $wsdl, Schema $schema)
+    {
+        $key = $wsdl->getName() . $schema->getName();
+        if (!array_key_exists($key, $this->parsedSchemas)) {
+            $this->parsedSchemas[$key] = array();
+        }
+        $this->parsedSchemas[$key][] = $this->parsingTag();
+        return $this;
+    }
+    /**
+     * @param Wsdl $wsdl
+     * @param Schema $schema
+     * @return boolean
+     */
+    public function isSchemaParsed(Wsdl $wsdl, Schema $schema)
+    {
+        $key = $wsdl->getName() . $schema->getName();
+        return
+            array_key_exists($key, $this->parsedSchemas) &&
+            is_array($this->parsedSchemas[$key]) &&
+            in_array($this->parsingTag(), $this->parsedSchemas[$key]);
     }
 }

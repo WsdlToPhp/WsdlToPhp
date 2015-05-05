@@ -5,6 +5,7 @@ namespace WsdlToPhp\PackageGenerator\Parser\Wsdl;
 use WsdlToPhp\PackageGenerator\DomHandler\Wsdl\Wsdl as WsdlDocument;
 use WsdlToPhp\PackageGenerator\DomHandler\Wsdl\Tag\TagDocumentation as Documentation;
 use WsdlToPhp\PackageGenerator\Model\Wsdl;
+use WsdlToPhp\PackageGenerator\Model\Schema;
 use WsdlToPhp\PackageGenerator\Container\Model\Struct;
 
 class TagDocumentation extends AbstractTagParser
@@ -25,6 +26,13 @@ class TagDocumentation extends AbstractTagParser
         foreach ($this->getTags() as $tag) {
             $this->parseDocumentation($tag);
         }
+    }
+    /**
+     * @see \WsdlToPhp\PackageGenerator\Parser\Wsdl\AbstractParser::parseSchema()
+     */
+    protected function parseSchema(Wsdl $wsdl, Schema $schema)
+    {
+        $this->parseWsdl($wsdl);
     }
     /**
      * @see \WsdlToPhp\PackageGenerator\Parser\Wsdl\AbstractParser::parsingTag()

@@ -6,6 +6,7 @@ use WsdlToPhp\PackageGenerator\DomHandler\AbstractAttributeHandler;
 use WsdlToPhp\PackageGenerator\DomHandler\Wsdl\Wsdl as WsdlDocument;
 use WsdlToPhp\PackageGenerator\DomHandler\Wsdl\Tag\TagAttribute as Attribute;
 use WsdlToPhp\PackageGenerator\Model\Wsdl;
+use WsdlToPhp\PackageGenerator\Model\Schema;
 
 class TagAttribute extends AbstractTagParser
 {
@@ -25,6 +26,13 @@ class TagAttribute extends AbstractTagParser
         foreach ($this->getTags() as $tag) {
             $this->parseAttribute($tag);
         }
+    }
+    /**
+     * @see \WsdlToPhp\PackageGenerator\Parser\Wsdl\AbstractParser::parseSchema()
+     */
+    protected function parseSchema(Wsdl $wsdl, Schema $schema)
+    {
+        $this->parseWsdl($wsdl);
     }
     /**
      * @see \WsdlToPhp\PackageGenerator\Parser\Wsdl\AbstractParser::parsingTag()

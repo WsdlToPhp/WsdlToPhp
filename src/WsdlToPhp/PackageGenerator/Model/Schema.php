@@ -2,14 +2,14 @@
 
 namespace WsdlToPhp\PackageGenerator\Model;
 
-class Wsdl extends AbstractDocument
+class Schema extends AbstractDocument
 {
     /**
      * @return string
      */
     protected function contentClass()
     {
-        return '\\WsdlToPhp\\PackageGenerator\\DomHandler\\Wsdl\\Wsdl';
+        return '\\WsdlToPhp\\PackageGenerator\\DomHandler\\Wsdl\\Schema';
     }
     /**
      * @return \WsdlToPhp\PackageGenerator\DomHandler\Wsdl\Wsdl

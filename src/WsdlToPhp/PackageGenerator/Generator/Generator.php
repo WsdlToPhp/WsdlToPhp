@@ -2,6 +2,7 @@
 
 namespace WsdlToPhp\PackageGenerator\Generator;
 
+use WsdlToPhp\PackageGenerator\Model\Schema;
 use WsdlToPhp\PackageGenerator\Model\Wsdl;
 use WsdlToPhp\PackageGenerator\Model\AbstractModel;
 use WsdlToPhp\PackageGenerator\Model\EmptyModel;
@@ -1472,6 +1473,18 @@ class Generator extends \SoapClient
     {
         if (!empty($wsdlLocation) && $this->wsdls->getWsdlByName($wsdlLocation) === null) {
             $this->wsdls->add(new Wsdl($wsdlLocation, $this->getUrlContent($wsdlLocation)));
+        }
+        return $this;
+    }
+    /**
+     * Adds Wsdl location
+     * @param Wsdl $wsdl
+     * @param string $schemaLocation
+     */
+    public function addSchemaToWsdl(Wsdl $wsdl, $schemaLocation)
+    {
+        if (!empty($schemaLocation) && $wsdl->getContent() !== null && $wsdl->getContent()->getExternalSchema($schemaLocation) === null) {
+            $wsdl->getContent()->addExternalSchema(new Schema($schemaLocation, $this->getUrlContent($schemaLocation)));
         }
         return $this;
     }

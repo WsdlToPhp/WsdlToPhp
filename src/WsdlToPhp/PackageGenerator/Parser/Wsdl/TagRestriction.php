@@ -6,6 +6,7 @@ use WsdlToPhp\PackageGenerator\DomHandler\Wsdl\Wsdl as WsdlDocument;
 use WsdlToPhp\PackageGenerator\DomHandler\Wsdl\Tag\AbstractTag as Tag;
 use WsdlToPhp\PackageGenerator\DomHandler\Wsdl\Tag\TagRestriction as Restriction;
 use WsdlToPhp\PackageGenerator\Model\Wsdl;
+use WsdlToPhp\PackageGenerator\Model\Schema;
 
 class TagRestriction extends AbstractTagParser
 {
@@ -27,6 +28,13 @@ class TagRestriction extends AbstractTagParser
                 $this->parseRestriction($tag);
             }
         }
+    }
+    /**
+     * @see \WsdlToPhp\PackageGenerator\Parser\Wsdl\AbstractParser::parseSchema()
+     */
+    protected function parseSchema(Wsdl $wsdl, Schema $schema)
+    {
+        $this->parseWsdl($wsdl);
     }
     /**
      * @see \WsdlToPhp\PackageGenerator\Parser\Wsdl\AbstractParser::parsingTag()

@@ -3,6 +3,8 @@
 namespace WsdlToPhp\PackageGenerator\Parser\Wsdl;
 
 use WsdlToPhp\PackageGenerator\Model\Wsdl;
+use WsdlToPhp\PackageGenerator\Model\Schema;
+
 
 class TagHeader extends AbstractParser
 {
@@ -11,6 +13,13 @@ class TagHeader extends AbstractParser
      */
     protected function parseWsdl(Wsdl $wsdl)
     {
+    }
+    /**
+     * @see \WsdlToPhp\PackageGenerator\Parser\Wsdl\AbstractParser::parseSchema()
+     */
+    protected function parseSchema(Wsdl $wsdl, Schema $schema)
+    {
+        $this->parseWsdl($wsdl);
     }
     /**
      * @see \WsdlToPhp\PackageGenerator\Parser\Wsdl\AbstractParser::parsingTag()
