@@ -51,13 +51,61 @@ class Wsdl extends AbstractDocument
      */
     public function getElementByName($name, $includeExternals = false)
     {
-        $element = parent::getElementByName($name);
-        if ($includeExternals === true && $element === null) {
-            $element = $this->useExternalSchemas(__FUNCTION__, array(
-                $name,
-            ), true);
+        return $this->useParentMethodAndExternals(__FUNCTION__, array(
+            $name,
+        ), $includeExternals, true);
+    }
+    /**
+     * @see \WsdlToPhp\PackageGenerator\DomHandler\AbstractDomDocumentHandler::getElementByNameAndAttributes()
+     * @param bool $includeExternals force search among external schemas
+     */
+    public function getElementByNameAndAttributes($name, array $attributes, $includeExternals = false)
+    {
+        return $this->useParentMethodAndExternals(__FUNCTION__, array(
+            $name,
+            $attributes,
+        ), $includeExternals, true);
+    }
+    /**
+     * @see \WsdlToPhp\PackageGenerator\DomHandler\Wsdl\AbstractDocument::getElementsByName()
+     * @param bool $includeExternals force search among external schemas
+     */
+    public function getElementsByName($name, $includeExternals = false)
+    {
+        return $this->useParentMethodAndExternals(__FUNCTION__, array(
+            $name,
+        ), $includeExternals);
+    }
+    /**
+     * @see \WsdlToPhp\PackageGenerator\DomHandler\AbstractDomDocumentHandler::getElementsByNameAndAttributes()
+     * @param bool $includeExternals force search among external schemas
+     */
+    public function getElementsByNameAndAttributes($name, array $attributes, $includeExternals = false)
+    {
+        return $this->useParentMethodAndExternals(__FUNCTION__, array(
+            $name,
+            $attributes,
+        ), $includeExternals);
+    }
+    /**
+     * Handler any method that exist within the parant class,
+     * in addition it handles the case when we want to use the external schemas to search in
+     * @param string $method
+     * @param array $parameters
+     * @param string $includeExternals
+     * @param string $returnOne
+     * @return mixed
+     */
+    private function useParentMethodAndExternals($method, $parameters, $includeExternals = false, $returnOne = false)
+    {
+        $result = call_user_func_array(array(
+            $this,
+            sprintf('parent::%s', $method),
+        ), $parameters);
+        if ($includeExternals === true && (($returnOne === true && $result === null) || $returnOne === false)) {
+            $result = $this->useExternalSchemas($method, $parameters, $result, $returnOne);
         }
-        return $element;
+        return $result;
     }
     /**
      * @param string $method
@@ -65,20 +113,22 @@ class Wsdl extends AbstractDocument
      * @param bool $returnOne
      * @return mixed
      */
-    public function useExternalSchemas($method, $parameters, $returnOne = false)
+    private function useExternalSchemas($method, $parameters, $parentResult, $returnOne = false)
     {
-        $result = $returnOne === true ? null : array();
+        $result = $parentResult;
         if ($this->getExternalSchemas()->count() > 0) {
             foreach ($this->getExternalSchemas() as $externalSchema) {
-                $externalResult = call_user_func_array(array(
-                    $externalSchema,
-                    $method,
-                ), $parameters);
-                if ($returnOne === true && $externalResult !== null) {
-                    $result = $externalResult;
-                    break;
-                } elseif (is_array($externalResult)) {
-                    $result = array_merge($result, $externalResult);
+                if ($externalSchema->getContent() !== null) {
+                    $externalResult = call_user_func_array(array(
+                        $externalSchema->getContent(),
+                        $method,
+                    ), $parameters);
+                    if ($returnOne === true && $externalResult !== null) {
+                        $result = $externalResult;
+                        break;
+                    } elseif (is_array($externalResult) && !empty($externalResult)) {
+                        $result = array_merge($result, $externalResult);
+                    }
                 }
             }
         }
