@@ -1,6 +1,6 @@
 <?php
 
-namespace WsdlToPhp\PackageGenerator\Test\DomHandler\Wsdl\Tag;
+namespace WsdlToPhp\PackageGenerator\Tests\DomHandler\Wsdl\Tag;
 
 use WsdlToPhp\PackageGenerator\Tests\TestCase;
 use WsdlToPhp\PackageGenerator\Tests\Model\WsdlTest;
