@@ -45,4 +45,43 @@ class Wsdl extends AbstractDocument
     {
         return $this->externalSchemas;
     }
+    /**
+     * @see \WsdlToPhp\PackageGenerator\DomHandler\Wsdl\AbstractDocument::getElementByName()
+     * @param bool $includeExternals force search among external schemas
+     */
+    public function getElementByName($name, $includeExternals = false)
+    {
+        $element = parent::getElementByName($name);
+        if ($includeExternals === true && $element === null) {
+            $element = $this->useExternalSchemas(__FUNCTION__, array(
+                $name,
+            ), true);
+        }
+        return $element;
+    }
+    /**
+     * @param string $method
+     * @param array $parameters
+     * @param bool $returnOne
+     * @return mixed
+     */
+    public function useExternalSchemas($method, $parameters, $returnOne = false)
+    {
+        $result = $returnOne === true ? null : array();
+        if ($this->getExternalSchemas()->count() > 0) {
+            foreach ($this->getExternalSchemas() as $externalSchema) {
+                $externalResult = call_user_func_array(array(
+                    $externalSchema,
+                    $method,
+                ), $parameters);
+                if ($returnOne === true && $externalResult !== null) {
+                    $result = $externalResult;
+                    break;
+                } elseif (is_array($externalResult)) {
+                    $result = array_merge($result, $externalResult);
+                }
+            }
+        }
+        return $result;
+    }
 }
