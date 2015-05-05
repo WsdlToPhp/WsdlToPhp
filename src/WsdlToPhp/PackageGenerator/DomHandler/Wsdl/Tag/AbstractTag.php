@@ -5,7 +5,7 @@ namespace WsdlToPhp\PackageGenerator\DomHandler\Wsdl\Tag;
 use WsdlToPhp\PackageGenerator\DomHandler\Wsdl\Wsdl as WsdlDocument;
 use WsdlToPhp\PackageGenerator\DomHandler\AbstractAttributeHandler as Attribute;
 use WsdlToPhp\PackageGenerator\DomHandler\ElementHandler;
-use WsdlToPhp\PackageGenerator\DomHandler\Wsdl\AbstractWsdl;
+use WsdlToPhp\PackageGenerator\DomHandler\Wsdl\AbstractDocument;
 
 abstract class AbstractTag extends ElementHandler
 {
@@ -96,7 +96,7 @@ abstract class AbstractTag extends ElementHandler
         return $this->getAttribute(Attribute::ATTRIBUTE_VALUE) !== null ? $this->getAttribute(Attribute::ATTRIBUTE_VALUE)->getValue() : '';
     }
     /**
-     * @return AbstractWsdl
+     * @return AbstractDocument
      */
     public function getDomDocumentHandler()
     {
