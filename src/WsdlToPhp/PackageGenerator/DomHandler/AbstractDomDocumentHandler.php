@@ -93,7 +93,7 @@ abstract class AbstractDomDocumentHandler
     public function getElementByName($name)
     {
         $node = $this->getNodeByName($name);
-        if ($node->getNode() instanceof \DOMElement) {
+        if ($node !== null && $node->getNode() instanceof \DOMElement) {
             return $this->getElementHandler($node->getNode(), $this);
         }
         return null;
