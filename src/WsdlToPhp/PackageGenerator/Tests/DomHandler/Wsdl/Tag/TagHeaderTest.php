@@ -4,6 +4,7 @@ namespace WsdlToPhp\PackageGenerator\Tests\DomHandler\Wsdl\Tag;
 
 use WsdlToPhp\PackageGenerator\Tests\TestCase;
 use WsdlToPhp\PackageGenerator\Tests\Model\WsdlTest;
+use WsdlToPhp\PackageGenerator\DomHandler\Wsdl\Wsdl;
 
 class TagHeaderTest extends TestCase
 {
@@ -14,7 +15,7 @@ class TagHeaderTest extends TestCase
     {
         $wsdl = WsdlTest::ebayInstance();
 
-        $headers = $wsdl->getContent()->getHeaders();
+        $headers = $wsdl->getContent()->getElementsByName(Wsdl::TAG_HEADER);
 
         foreach ($headers as $index=>$header) {
             $this->assertInstanceOf('\\WsdlToPhp\\PackageGenerator\\DomHandler\\Wsdl\\Tag\\TagOperation', $header->getParentOperation());
@@ -34,7 +35,7 @@ class TagHeaderTest extends TestCase
     {
         $wsdl = WsdlTest::ebayInstance();
 
-        $headers = $wsdl->getContent()->getHeaders();
+        $headers = $wsdl->getContent()->getElementsByName(Wsdl::TAG_HEADER);
 
         $this->assertInstanceOf('\\WsdlToPhp\\PackageGenerator\\DomHandler\\Wsdl\\Tag\\TagMessage', $headers[0]->getMessage());
     }
@@ -45,7 +46,7 @@ class TagHeaderTest extends TestCase
     {
         $wsdl = WsdlTest::ebayInstance();
 
-        $headers = $wsdl->getContent()->getHeaders();
+        $headers = $wsdl->getContent()->getElementsByName(Wsdl::TAG_HEADER);
 
         $this->assertInstanceOf('\\WsdlToPhp\\PackageGenerator\\DomHandler\\Wsdl\\Tag\\TagPart', $headers[0]->getPart());
     }
