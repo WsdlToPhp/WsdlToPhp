@@ -35,9 +35,9 @@ class TagHeaderTest extends TestCase
     {
         $wsdl = WsdlTest::ebayInstance();
 
-        $headers = $wsdl->getContent()->getElementsByName(Wsdl::TAG_HEADER);
+        $header = $wsdl->getContent()->getElementByName(Wsdl::TAG_HEADER);
 
-        $this->assertInstanceOf('\\WsdlToPhp\\PackageGenerator\\DomHandler\\Wsdl\\Tag\\TagMessage', $headers[0]->getMessage());
+        $this->assertInstanceOf('\\WsdlToPhp\\PackageGenerator\\DomHandler\\Wsdl\\Tag\\TagMessage', $header->getMessage());
     }
     /**
      *
@@ -46,8 +46,19 @@ class TagHeaderTest extends TestCase
     {
         $wsdl = WsdlTest::ebayInstance();
 
-        $headers = $wsdl->getContent()->getElementsByName(Wsdl::TAG_HEADER);
+        $header = $wsdl->getContent()->getElementByName(Wsdl::TAG_HEADER);
 
-        $this->assertInstanceOf('\\WsdlToPhp\\PackageGenerator\\DomHandler\\Wsdl\\Tag\\TagPart', $headers[0]->getPart());
+        $this->assertInstanceOf('\\WsdlToPhp\\PackageGenerator\\DomHandler\\Wsdl\\Tag\\TagPart', $header->getPart());
+    }
+    /**
+     *
+     */
+    public function testGetPartFinalType()
+    {
+        $wsdl = WsdlTest::ebayInstance();
+
+        $header = $wsdl->getContent()->getElementByName(Wsdl::TAG_HEADER);
+
+        $this->assertSame('CustomSecurityHeaderType', $header->getPart()->getFinalType());
     }
 }
