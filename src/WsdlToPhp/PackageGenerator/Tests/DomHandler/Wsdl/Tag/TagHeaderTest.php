@@ -11,21 +11,21 @@ class TagHeaderTest extends TestCase
     /**
      *
      */
-    public function testIsEnumeration()
+    public function testHeaders()
     {
         $wsdl = WsdlTest::ebayInstance();
 
         $headers = $wsdl->getContent()->getElementsByName(Wsdl::TAG_HEADER);
 
         foreach ($headers as $index=>$header) {
-            $this->assertInstanceOf('\\WsdlToPhp\\PackageGenerator\\DomHandler\\Wsdl\\Tag\\TagOperation', $header->getParentOperation());
             if ($header->getParentInput() !== null) {
+                $this->assertInstanceOf('\\WsdlToPhp\\PackageGenerator\\DomHandler\\Wsdl\\Tag\\TagOperation', $header->getParentOperation());
                 $this->assertInstanceOf('\\WsdlToPhp\\PackageGenerator\\DomHandler\\Wsdl\\Tag\\TagInput', $header->getParentInput());
+                $this->assertSame('RequesterCredentials', $header->getAttributePart());
+                $this->assertSame('RequesterCredentials', $header->getAttributeMessage());
+                $this->assertSame('', $header->getAttributeRequired());
+                $this->assertSame('', $header->getAttributeNamespace());
             }
-            $this->assertSame('RequesterCredentials', $header->getAttributePart());
-            $this->assertSame('RequesterCredentials', $header->getAttributeMessage());
-            $this->assertSame('', $header->getAttributeRequired());
-            $this->assertSame('', $header->getAttributeNamespace());
         }
     }
     /**
@@ -75,12 +75,12 @@ class TagHeaderTest extends TestCase
     /**
      *
      */
-    public function testGetNamespace()
+    public function testGetHeaderNamespace()
     {
         $wsdl = WsdlTest::ebayInstance();
 
         $header = $wsdl->getContent()->getElementByName(Wsdl::TAG_HEADER);
 
-        $this->assertSame('urn:ebay:apis:eBLBaseComponents', $header->getNamespace());
+        $this->assertSame('urn:ebay:apis:eBLBaseComponents', $header->getHeaderNamespace());
     }
 }
