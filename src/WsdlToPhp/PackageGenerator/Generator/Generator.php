@@ -1211,7 +1211,7 @@ class Generator extends \SoapClient
      * @param string $methodInfoValue the method info value
      * @return void
      */
-    private function addServiceFunctionMeta($methodName, $methodInfoName, $methodInfoValue)
+    public function addServiceFunctionMeta($methodName, $methodInfoName, $methodInfoValue)
     {
         if ($this->getServiceMethod($methodName) !== null) {
             $this->getServiceMethod($methodName)->addMeta($methodInfoName, $methodInfoValue);
