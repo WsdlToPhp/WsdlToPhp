@@ -10,13 +10,20 @@ class TagHeader extends AbstractTag
     const
         ATTRIBUTE_MESSAGE  = 'message',
         ATTRIBUTE_PART     = 'part',
-        ATTRIBUTE_REQUIRED = 'required';
+        ATTRIBUTE_REQUIRED = 'required',
+
+        REQUIRED_HEADER    = 'required',
+        OPTIONAL_HEADER    = 'optional';
     /**
      * @return TagOperation|null
      */
     public function getParentOperation()
     {
-        return $this->getStrictParent(WsdlDocument::TAG_OPERATION);
+        $input = $this->getParentInput();
+        if ($input !== null) {
+            return $input->getParentOperation();
+        }
+        return null;
     }
     /**
      * @return TagInput|null
@@ -51,7 +58,7 @@ class TagHeader extends AbstractTag
      */
     public function getAttributeRequired()
     {
-        return $this->hasAttribute(self::ATTRIBUTE_REQUIRED) === true ? $this->getAttribute(self::ATTRIBUTE_REQUIRED)->getValue() : '';
+        return $this->hasAttribute(self::ATTRIBUTE_REQUIRED) === true ? $this->getAttribute(self::ATTRIBUTE_REQUIRED)->getValue(true, 'bool') : '';
     }
     /**
      * @return string
@@ -86,10 +93,26 @@ class TagHeader extends AbstractTag
         return null;
     }
     /**
+     * @return string
+     */
+    public function getHeaderType()
+    {
+        $part = $this->getPart();
+        return $part !== null ? $part->getFinalType() : '';
+    }
+    /**
+     * @return string
+     */
+    public function getHeaderName()
+    {
+        $part = $this->getPart();
+        return $part !== null ? $part->getFinalName() : '';
+    }
+    /**
      * @see \WsdlToPhp\PackageGenerator\DomHandler\AbstractNodeHandler::getNamespace()
      * @return string
      */
-    public function getNamespace()
+    public function getHeaderNamespace()
     {
         $messageNamespace = $this->getAttributeMessageNamespace();
         if (empty($messageNamespace) || ($namespace = $this->getDomDocumentHandler()->getNamespaceUri($messageNamespace)) === '') {
@@ -103,5 +126,12 @@ class TagHeader extends AbstractTag
             }
         }
         return $namespace;
+    }
+    /**
+     * @return string
+     */
+    public function getHeaderRequired()
+    {
+        return $this->getAttributeRequired() === true ? self::REQUIRED_HEADER : self::OPTIONAL_HEADER;
     }
 }
