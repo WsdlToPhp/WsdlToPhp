@@ -70,6 +70,6 @@ class TagPart extends AbstractTag
                 return $attribute;
             }
         }
-        return $attribute->getNamespace();
+        return $attribute->getValueNamespace();
     }
 }
