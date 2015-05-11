@@ -63,7 +63,7 @@ abstract class AbstractNodeHandler
     public function getName()
     {
         $name = $this->getNode()->nodeName;
-        if (strpos($name, ':')) {
+        if (strpos($name, ':') !== false) {
             $name = implode('', array_slice(explode(':', $name), -1, 1));
         }
         return $name;
@@ -75,7 +75,7 @@ abstract class AbstractNodeHandler
     public function getNamespace()
     {
         $name = $this->getNode()->nodeName;
-        if (strpos($name, ':')) {
+        if (strpos($name, ':') !== false) {
             return implode('', array_slice(explode(':', $name), 0, -1));
         }
         return null;
