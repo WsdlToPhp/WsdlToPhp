@@ -59,6 +59,17 @@ class TagPart extends AbstractTag
         return $type;
     }
     /**
+     * @return string
+     */
+    public function getFinalName()
+    {
+        $name = $this->getAttributeType();
+        if (empty($name)) {
+            $name = $this->getAttributeElement();
+        }
+        return $name;
+    }
+    /**
      * @return null|string
      */
     public function getFinalNamespace()
