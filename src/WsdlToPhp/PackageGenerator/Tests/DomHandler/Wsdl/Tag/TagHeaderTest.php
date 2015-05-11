@@ -61,4 +61,15 @@ class TagHeaderTest extends TestCase
 
         $this->assertSame('CustomSecurityHeaderType', $header->getPart()->getFinalType());
     }
+    /**
+     *
+     */
+    public function testGetPartFinalNamespace()
+    {
+        $wsdl = WsdlTest::ebayInstance();
+
+        $header = $wsdl->getContent()->getElementByName(Wsdl::TAG_HEADER);
+
+        $this->assertSame('ns', $header->getPart()->getFinalNamespace());
+    }
 }
