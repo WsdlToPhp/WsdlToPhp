@@ -22,6 +22,7 @@ abstract class AbstractDocument extends DomDocumentHandler
         TAG_CHOICE          = 'choice',
         TAG_COMPLEX_CONTENT = 'complexContent',
         TAG_COMPLEX_TYPE    = 'complexType',
+        TAG_DEFINITIONS     = 'definitions',
         TAG_DOCUMENTATION   = 'documentation',
         TAG_ELEMENT         = 'element',
         TAG_ENUMERATION     = 'enumeration',
@@ -96,5 +97,18 @@ abstract class AbstractDocument extends DomDocumentHandler
     {
         $this->currentTag = $name;
         return parent::getElementsByName($name);
+    }
+    /**
+     * @param string $namespace
+     * @return string
+     */
+    public function getNamespaceUri($namespace)
+    {
+        $rootElement = $this->getRootElement();
+        $uri = '';
+        if ($rootElement !== null && $rootElement->hasAttribute(sprintf('xmlns:%s', $namespace)) === true) {
+            $uri = $rootElement->getAttribute(sprintf('xmlns:%s', $namespace))->getValue();
+        }
+        return $uri;
     }
 }
