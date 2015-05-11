@@ -42,6 +42,13 @@ class TagHeader extends AbstractTag
     /**
      * @return string
      */
+    public function getAttributeMessageNamespace()
+    {
+        return $this->hasAttribute(self::ATTRIBUTE_MESSAGE) === true ? $this->getAttribute(self::ATTRIBUTE_MESSAGE)->getValueNamespace() : '';
+    }
+    /**
+     * @return string
+     */
     public function getAttributeRequired()
     {
         return $this->hasAttribute(self::ATTRIBUTE_REQUIRED) === true ? $this->getAttribute(self::ATTRIBUTE_REQUIRED)->getValue() : '';
@@ -77,5 +84,24 @@ class TagHeader extends AbstractTag
             return $message->getPart($partName);
         }
         return null;
+    }
+    /**
+     * @see \WsdlToPhp\PackageGenerator\DomHandler\AbstractNodeHandler::getNamespace()
+     * @return string
+     */
+    public function getNamespace()
+    {
+        $messageNamespace = $this->getAttributeMessageNamespace();
+        if (empty($messageNamespace) || ($namespace = $this->getDomDocumentHandler()->getNamespaceUri($messageNamespace)) === '') {
+            $part      = $this->getPart();
+            $namespace = '';
+            if ($part !== null) {
+                $finalNamespace = $part->getFinalNamespace();
+                if (!empty($finalNamespace)) {
+                    $namespace = $this->getDomDocumentHandler()->getNamespaceUri($finalNamespace);
+                }
+            }
+        }
+        return $namespace;
     }
 }
