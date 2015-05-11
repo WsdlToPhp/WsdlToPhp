@@ -286,7 +286,7 @@ abstract class AbstractModel
      * @uses AbstractModel::updateModels()
      * @param string $metaName
      * @param mixed $metaValue
-     * @return mixed
+     * @return AbstractModel
      */
     public function addMeta($metaName, $metaValue)
     {
@@ -308,7 +308,7 @@ abstract class AbstractModel
         }
         ksort($this->meta);
         self::updateModels($this);
-        return $metaValue;
+        return $this;
     }
     /**
      * Sets the documentation meta value.
@@ -316,7 +316,7 @@ abstract class AbstractModel
      * @uses AbstractModel::META_DOCUMENTATION
      * @uses AbstractModel::addMeta()
      * @param string $documentation the documentation from the WSDL
-     * @return string the documentation from the WSDL
+     * @return AbstractModel
      */
     public function setDocumentation($documentation)
     {
@@ -338,7 +338,7 @@ abstract class AbstractModel
      * @uses AbstractModel::META_FROM_SCHEMA
      * @uses AbstractModel::addMeta()
      * @param string $fromSchema the url from which the element comes from
-     * @return string the url from which the element comes from
+     * @return AbstractModel
      */
     public function setFromSchema($fromSchema)
     {
