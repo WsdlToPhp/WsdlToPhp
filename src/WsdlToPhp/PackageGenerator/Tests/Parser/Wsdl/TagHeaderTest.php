@@ -15,6 +15,13 @@ class TagHeaderTest extends WsdlParser
         return new TagHeader(self::generatorInstance(self::wsdlImageViewServicePath()));
     }
     /**
+     * @return \WsdlToPhp\PackageGenerator\Parser\Wsdl\TagHeader
+     */
+    public static function actonInstance()
+    {
+        return new TagHeader(self::generatorInstance(self::wsdlActonPath()));
+    }
+    /**
      *
      */
     public function testParseImageViewService()
@@ -41,6 +48,47 @@ class TagHeaderTest extends WsdlParser
                                 'AuthenticationType',
                             ),
                             TagHeader::META_SOAP_HEADERS => array(
+                                'optional',
+                            ),
+                        ), $method->getMeta());
+                        $ok = true;
+                    }
+                }
+            }
+        }
+        $this->assertTrue((bool)$ok);
+    }
+    /**
+     *
+     */
+    public function testParseActon()
+    {
+        $tagHeaderParser = self::actonInstance();
+        AbstractObjectContainer::purgeAllCache();
+
+        $tagHeaderParser->parse();
+
+        $ok = false;
+        $services = $tagHeaderParser->getGenerator()->getServices();
+        if ($services->count() > 0) {
+            foreach ($services as $service) {
+                if ($service->getName() === 'List' || $service->getName() === 'Send') {
+                    foreach ($service->getMethods() as $method) {
+                        $this->assertSame(array(
+                            TagHeader::META_SOAP_HEADER_NAMES => array(
+                                'SessionHeader',
+                                'ClusterHeader',
+                            ),
+                            TagHeader::META_SOAP_HEADER_NAMESPACES => array(
+                                'urn:api.actonsoftware.com',
+                                'urn:api.actonsoftware.com',
+                            ),
+                            TagHeader::META_SOAP_HEADER_TYPES => array(
+                                'SessionHeader',
+                                'ClusterHeader',
+                            ),
+                            TagHeader::META_SOAP_HEADERS => array(
+                                'optional',
                                 'optional',
                             ),
                         ), $method->getMeta());
