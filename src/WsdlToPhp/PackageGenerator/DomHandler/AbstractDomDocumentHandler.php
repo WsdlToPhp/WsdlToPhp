@@ -11,25 +11,25 @@ abstract class AbstractDomDocumentHandler
     /**
      * @var AbsractNodeHandler
      */
-    protected $rootNode;
+    protected $rootElement;
     /**
      * @param \DOMDocument $domDocument
      */
     public function __construct(\DOMDocument $domDocument)
     {
         $this->domDocument = $domDocument;
-        $this->initRootNode();
+        $this->initRootElement();
     }
     /**
      * Find valid root node (not a comment, at least a DOMElement node)
      * @throws \InvalidArgumentException
      */
-    protected function initRootNode()
+    protected function initRootElement()
     {
         if ($this->domDocument->hasChildNodes()) {
             foreach ($this->domDocument->childNodes as $node) {
                 if ($node instanceof \DOMElement) {
-                    $this->rootNode = $this->getNodeHandler($node, $this);
+                    $this->rootElement = $this->getElementHandler($node, $this);
                     break;
                 }
             }
@@ -39,22 +39,27 @@ abstract class AbstractDomDocumentHandler
     }
     /**
      * Return the matching node handler based on current \DomNode type
-     * @param \DOMNode $node
+     * @param \DOMNode|\DOMNameSpaceNode $node
      * @param int $index
      * @return NodeHandler|ElementHandler
      */
-    public function getHandler(\DOMNode $node, $index = -1)
+    public function getHandler($node, $index = -1)
     {
-        switch ($node->nodeType) {
-            case XML_ELEMENT_NODE:
-                return $this->getElementHandler($node, $this, $index);
-                break;
-            case XML_ATTRIBUTE_NODE:
-                return $this->getAttributeHandler($node, $this, $index);
-                break;
-            default:
-                return $this->getNodeHandler($node, $this, $index);
-                break;
+
+        if ($node instanceof \DOMNode) {
+            switch ($node->nodeType) {
+                case XML_ELEMENT_NODE:
+                    return $this->getElementHandler($node, $this, $index);
+                    break;
+                case XML_ATTRIBUTE_NODE:
+                    return $this->getAttributeHandler($node, $this, $index);
+                    break;
+                default:
+                    return $this->getNodeHandler($node, $this, $index);
+                    break;
+            }
+        } elseif ($node instanceof \DOMNameSpaceNode) {
+            return new NameSpaceHandler($node, $this, $index);
         }
     }
     /**
