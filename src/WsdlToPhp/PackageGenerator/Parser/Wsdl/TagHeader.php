@@ -52,7 +52,7 @@ class TagHeader extends AbstractTagParser
     {
         $operation = $header->getParentOperation();
         if ($operation !== null) {
-            $serviceMethod = $this->getGenerator()->getServiceMethod($operation->getName());
+            $serviceMethod = $this->getModel($operation);
             if ($serviceMethod !== null) {
                 $serviceMethod
                     ->addMeta(self::META_SOAP_HEADERS, array($header->getHeaderRequired()))
