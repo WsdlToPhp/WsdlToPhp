@@ -31,10 +31,10 @@ class DomDocumentHandler extends AbstractDomDocumentHandler
         return new AttributeHandler($attribute, $domDocument, $index);
     }
     /**
-     * @return NodeHandler
+     * @return ElementHandler
      */
-    public function getRootNode()
+    public function getRootElement()
     {
-        return $this->rootNode;
+        return $this->rootElement;
     }
 }
