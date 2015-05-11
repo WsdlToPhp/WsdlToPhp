@@ -54,6 +54,13 @@ class WsdlParser extends TestCase
         return dirname(__FILE__) . '/../../resources/ebaySvc.wsdl';
     }
     /**
+     * @return string
+     */
+    public static function wsdlActonPath()
+    {
+        return dirname(__FILE__) . '/../../resources/ActonService2.local.wsdl';
+    }
+    /**
      * @param srting $wsdlPath
      * @return Generator
      */

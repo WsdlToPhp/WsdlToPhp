@@ -72,8 +72,9 @@ class TagHeaderTest extends WsdlParser
         $services = $tagHeaderParser->getGenerator()->getServices();
         if ($services->count() > 0) {
             foreach ($services as $service) {
-                if ($service->getName() === 'List' || $service->getName() === 'Send') {
+            if ($service->getName() === 'List' || $service->getName() === 'Send') {
                     foreach ($service->getMethods() as $method) {
+                        echo ' => '. $method->getName() ;
                         $this->assertSame(array(
                             TagHeader::META_SOAP_HEADER_NAMES => array(
                                 'SessionHeader',
@@ -89,6 +90,25 @@ class TagHeaderTest extends WsdlParser
                             ),
                             TagHeader::META_SOAP_HEADERS => array(
                                 'optional',
+                                'optional',
+                            ),
+                        ), $method->getMeta());
+                        $ok = true;
+                    }
+                } elseif ($service->getName() === 'Login') {
+                    foreach ($service->getMethods() as $method) {
+                        echo ' => '. $method->getName() ;
+                        $this->assertSame(array(
+                            TagHeader::META_SOAP_HEADER_NAMES => array(
+                                'ClusterHeader',
+                            ),
+                            TagHeader::META_SOAP_HEADER_NAMESPACES => array(
+                                'urn:api.actonsoftware.com',
+                            ),
+                            TagHeader::META_SOAP_HEADER_TYPES => array(
+                                'ClusterHeader',
+                            ),
+                            TagHeader::META_SOAP_HEADERS => array(
                                 'optional',
                             ),
                         ), $method->getMeta());

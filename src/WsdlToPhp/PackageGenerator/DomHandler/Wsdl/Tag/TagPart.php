@@ -53,6 +53,8 @@ class TagPart extends AbstractTag
                 ), true);
                 if ($element !== null && $element->hasAttribute(self::ATTRIBUTE_TYPE)) {
                     $type = $element->getAttribute(self::ATTRIBUTE_TYPE)->getValue();
+                } else {
+                    $type = $elementName;
                 }
             }
         }
