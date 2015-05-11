@@ -72,4 +72,15 @@ class TagHeaderTest extends TestCase
 
         $this->assertSame('ns', $header->getPart()->getFinalNamespace());
     }
+    /**
+     *
+     */
+    public function testGetNamespace()
+    {
+        $wsdl = WsdlTest::ebayInstance();
+
+        $header = $wsdl->getContent()->getElementByName(Wsdl::TAG_HEADER);
+
+        $this->assertSame('urn:ebay:apis:eBLBaseComponents', $header->getNamespace());
+    }
 }
