@@ -17,7 +17,7 @@ class NodeHandlerTest extends TestCase
         $element = $domDocument->getNodeByName('element');
 
         $this->assertEquals('element', $element->getName());
-        $this->assertEquals('definitions', $domDocument->getRootNode()->getName());
+        $this->assertEquals('definitions', $domDocument->getRootElement()->getName());
     }
     /**
      *
@@ -30,7 +30,7 @@ class NodeHandlerTest extends TestCase
         $element = $domDocument->getNodeByName('element');
 
         $this->assertEquals('xsd', $element->getNamespace());
-        $this->assertEquals('wsdl', $domDocument->getRootNode()->getNamespace());
+        $this->assertEquals('wsdl', $domDocument->getRootElement()->getNamespace());
     }
     /**
      *
@@ -111,6 +111,6 @@ class NodeHandlerTest extends TestCase
         $this->assertInstanceOf('\\WsdlToPhp\\PackageGenerator\\DomHandler\\AbstractNodeHandler', $schema->getParent());
         $this->assertInstanceOf('\\WsdlToPhp\\PackageGenerator\\DomHandler\\AbstractNodeHandler', $element->getParent());
         $this->assertSame('sequence', $element->getParent()->getName());
-        $this->assertInstanceOf('\\WsdlToPhp\\PackageGenerator\\DomHandler\\AbstractNodeHandler', $domDocument->getRootNode()->getParent());
+        $this->assertInstanceOf('\\WsdlToPhp\\PackageGenerator\\DomHandler\\AbstractNodeHandler', $domDocument->getRootElement()->getParent());
     }
 }
