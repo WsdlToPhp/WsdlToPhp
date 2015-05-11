@@ -134,4 +134,12 @@ class Wsdl extends AbstractDocument
         }
         return $result;
     }
+    /**
+     * @see \WsdlToPhp\PackageGenerator\DomHandler\AbstractDomDocumentHandler::initRootElement()
+     */
+    protected function initRootElement()
+    {
+        $this->setCurrentTag(parent::TAG_DEFINITIONS);
+        return parent::initRootElement();
+    }
 }
