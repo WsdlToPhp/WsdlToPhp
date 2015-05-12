@@ -119,7 +119,8 @@ abstract class AbstractObjectContainer implements \ArrayAccess, \Iterator, \Coun
         if (!is_object($object)) {
             throw new \InvalidArgumentException(sprintf('You must only pass object to this container (%s), "%s" passed as parameter!', get_called_class(), gettype($object)));
         }
-        if (get_class($object) !== $this->objectClass()) {
+        $instanceOf = $this->objectClass();
+        if (get_class($object) !== $this->objectClass() && !$object instanceof $instanceOf) {
             throw new \InvalidArgumentException(sprintf('Model of type "%s" does not match the object contained by this class: "%s"', get_class($object), $this->objectClass()));
         }
         $this->objects[] = $object;
