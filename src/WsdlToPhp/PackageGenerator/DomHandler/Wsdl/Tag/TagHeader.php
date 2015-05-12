@@ -10,7 +10,7 @@ class TagHeader extends AbstractTag
     const
         ATTRIBUTE_MESSAGE  = 'message',
         ATTRIBUTE_PART     = 'part',
-        ATTRIBUTE_REQUIRED = 'required',
+        ATTRIBUTE_REQUIRED = 'wsdl:required',
 
         REQUIRED_HEADER    = 'required',
         OPTIONAL_HEADER    = 'optional';
@@ -58,7 +58,7 @@ class TagHeader extends AbstractTag
      */
     public function getAttributeRequired()
     {
-        return $this->hasAttribute(self::ATTRIBUTE_REQUIRED) === true ? $this->getAttribute(self::ATTRIBUTE_REQUIRED)->getValue(true, 'bool') : true;
+        return $this->hasAttribute(self::ATTRIBUTE_REQUIRED) === true ? $this->getAttribute(self::ATTRIBUTE_REQUIRED)->getValue(true, true, 'bool') : true;
     }
     /**
      * @return string
