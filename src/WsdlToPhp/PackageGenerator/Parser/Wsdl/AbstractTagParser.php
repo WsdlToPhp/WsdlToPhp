@@ -26,12 +26,28 @@ abstract class AbstractTagParser extends AbstractParser
         $model = null;
         switch ($tag->getName()) {
             case WsdlDocument::TAG_OPERATION:
-                $model = $this->generator->getServiceMethod($tag->getAttributeName());
+                $model = $this->getMethodByName($tag->getAttributeName());
                 break;
             default:
-                $model = $this->generator->getStruct($tag->getAttributeName());
+                $model = $this->getStructByName($tag->getAttributeName());
                 break;
         }
         return $model;
+    }
+    /**
+     * @param string $name
+     * @return null|\WsdlToPhp\PackageGenerator\Model\Struct
+     */
+    protected function getStructByName($name)
+    {
+        return $this->generator->getStruct($name);
+    }
+    /**
+     * @param string $name
+     * @return null|\WsdlToPhp\PackageGenerator\Model\Method
+     */
+    protected function getMethodByName($name)
+    {
+        return $this->generator->getServiceMethod($name);
     }
 }
