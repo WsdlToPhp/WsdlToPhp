@@ -56,4 +56,11 @@ class WsdlTest extends TestCase
     {
         return new Wsdl(dirname(__FILE__) . '/../resources/ActonService2.local.wsdl', file_get_contents(dirname(__FILE__) . '/../resources/ActonService2.local.wsdl'));
     }
+    /**
+     * @return Wsdl
+     */
+    public static function odigeoInstance()
+    {
+        return new Wsdl(dirname(__FILE__) . '/../resources/odigeo.wsdl', file_get_contents(dirname(__FILE__) . '/../resources/odigeo.wsdl'));
+    }
 }
