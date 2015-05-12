@@ -40,16 +40,18 @@ class AbstractAttributeHandler extends AbstractNodeHandler
     }
     /**
      * @param bool $withNamespace
+     * @param bool $withinItsType
+     * @param string $asType
      * @return string
      */
-    public function getValue($withNamespace = false, $withinItsType = true)
+    public function getValue($withNamespace = false, $withinItsType = true, $asType = null)
     {
         $value = $this->getAttribute()->value;
         if ($withNamespace === false && !empty($value)) {
             $value = implode('', array_slice(explode(':', $value), -1, 1));
         }
         if ($value !== null && $withinItsType === true) {
-            $value = Utils::getValueWithinItsType($value, $this->getType());
+            $value = Utils::getValueWithinItsType($value, empty($asType) ? $this->getType() : $asType);
         }
         return $value;
     }
