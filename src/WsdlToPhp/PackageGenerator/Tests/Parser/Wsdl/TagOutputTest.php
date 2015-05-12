@@ -32,14 +32,17 @@ class TagOutputTest extends WsdlParser
 
         $tagOutputParser->parse();
 
+        $count = 0;
         $soapFunctions = $soapClient->__getFunctions();
         foreach ($soapFunctions as $soapFunction) {
             $methodData = self::getMethodDataFromSoapFunction($soapFunction);
             $method = $tagOutputParser->getGenerator()->getServiceMethod($methodData['name']);
             if (strtolower($methodData['return']) === TagOutput::UNKNOWN) {
                 $this->assertNotSame(TagOutput::UNKNOWN, strtolower($method->getReturnType()));
+                $count++;
             }
         }
+        $this->assertSame(126, $count);
     }
     /**
      * @param string $soapFunction
