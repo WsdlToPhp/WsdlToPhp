@@ -72,7 +72,7 @@ class TagHeaderTest extends WsdlParser
         $services = $tagHeaderParser->getGenerator()->getServices();
         if ($services->count() > 0) {
             foreach ($services as $service) {
-            if ($service->getName() === 'List' || $service->getName() === 'Send') {
+                if ($service->getName() === 'Send') {
                     foreach ($service->getMethods() as $method) {
                         $this->assertSame(array(
                             TagHeader::META_SOAP_HEADER_NAMES => array(
@@ -88,7 +88,29 @@ class TagHeaderTest extends WsdlParser
                                 'ClusterHeader',
                             ),
                             TagHeader::META_SOAP_HEADERS => array(
-                                'required',
+                                'optional',
+                                'optional',
+                            ),
+                        ), $method->getMeta());
+                        $ok = true;
+                    }
+                } elseif ($service->getName() === 'List') {
+                    foreach ($service->getMethods() as $method) {
+                        $this->assertSame(array(
+                            TagHeader::META_SOAP_HEADER_NAMES => array(
+                                'SessionHeader',
+                                'ClusterHeader',
+                            ),
+                            TagHeader::META_SOAP_HEADER_NAMESPACES => array(
+                                'urn:api.actonsoftware.com',
+                                'urn:api.actonsoftware.com',
+                            ),
+                            TagHeader::META_SOAP_HEADER_TYPES => array(
+                                'SessionHeader',
+                                'ClusterHeader',
+                            ),
+                            TagHeader::META_SOAP_HEADERS => array(
+                                'optional',
                                 'required',
                             ),
                         ), $method->getMeta());

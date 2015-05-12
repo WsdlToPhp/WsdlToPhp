@@ -23,7 +23,6 @@ class TagHeaderTest extends TestCase
                 $this->assertInstanceOf('\\WsdlToPhp\\PackageGenerator\\DomHandler\\Wsdl\\Tag\\TagInput', $header->getParentInput());
                 $this->assertSame('RequesterCredentials', $header->getAttributePart());
                 $this->assertSame('RequesterCredentials', $header->getAttributeMessage());
-                $this->assertSame('', $header->getAttributeRequired());
                 $this->assertSame('', $header->getAttributeNamespace());
             }
         }
@@ -82,5 +81,31 @@ class TagHeaderTest extends TestCase
         $header = $wsdl->getContent()->getElementByName(Wsdl::TAG_HEADER);
 
         $this->assertSame('urn:ebay:apis:eBLBaseComponents', $header->getHeaderNamespace());
+    }
+    /**
+     *
+     */
+    public function testGetAttributeRequired()
+    {
+        $wsdl = WsdlTest::actonInstance();
+
+        $binding = $wsdl->getContent()->getElementByNameAndAttributes(Wsdl::TAG_BINDING, array(
+            'name' => 'SoapBinding',
+            'type' => 'SOAP',
+        ));
+
+        $operation = $binding->getChildByNameAndAttributes(Wsdl::TAG_OPERATION, array(
+            'name' => 'list',
+        ));
+
+        $sessionHeader = $operation->getChildByNameAndAttributes(Wsdl::TAG_HEADER, array(
+            'part' => 'SessionHeader',
+        ));
+        $clusterHeader = $operation->getChildByNameAndAttributes(Wsdl::TAG_HEADER, array(
+            'part' => 'ClusterHeader',
+        ));
+
+        $this->assertFalse($sessionHeader->getAttributeRequired());
+        $this->assertTrue($clusterHeader->getAttributeRequired());
     }
 }

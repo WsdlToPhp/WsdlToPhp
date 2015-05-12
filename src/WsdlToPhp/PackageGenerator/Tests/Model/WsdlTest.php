@@ -49,4 +49,11 @@ class WsdlTest extends TestCase
     {
         $this->assertSame(dirname(__FILE__) . '/../resources/bingsearch.wsdl', self::bingInstance()->getName());
     }
+    /**
+     * @return Wsdl
+     */
+    public static function actonInstance()
+    {
+        return new Wsdl(dirname(__FILE__) . '/../resources/ActonService2.local.wsdl', file_get_contents(dirname(__FILE__) . '/../resources/ActonService2.local.wsdl'));
+    }
 }
