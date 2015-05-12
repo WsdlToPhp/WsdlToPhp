@@ -4,10 +4,10 @@ namespace WsdlToPhp\PackageGenerator\Parser\Wsdl;
 
 use WsdlToPhp\PackageGenerator\Model\Wsdl;
 use WsdlToPhp\PackageGenerator\Model\Schema;
-use WsdlToPhp\PackageGenerator\Parser\ParserInterface;
+use WsdlToPhp\PackageGenerator\Parser\AbstractParser as Parser;
 use WsdlToPhp\PackageGenerator\Generator\Generator;
 
-abstract class AbstractParser implements ParserInterface
+abstract class AbstractParser extends Parser
 {
     /**
      * @var Generator
