@@ -1,6 +1,8 @@
 <?php
 
-namespace WsdlToPhp\PackageGenerator\Generator;
+namespace WsdlToPhp\PackageGenerator\Parser;
+
+use WsdlToPhp\PackageGenerator\Generator\Generator;
 
 interface ParserInterface
 {

@@ -4,7 +4,7 @@ namespace WsdlToPhp\PackageGenerator\Parser\Wsdl;
 
 use WsdlToPhp\PackageGenerator\Model\Wsdl;
 use WsdlToPhp\PackageGenerator\Model\Schema;
-use WsdlToPhp\PackageGenerator\Generator\ParserInterface;
+use WsdlToPhp\PackageGenerator\Parser\ParserInterface;
 use WsdlToPhp\PackageGenerator\Generator\Generator;
 
 abstract class AbstractParser implements ParserInterface
