@@ -33,11 +33,13 @@ class NameSpaceHandler extends AttributeHandler
     /**
      * value is always with [http|https]:// so we need to keep the full value
      * @param bool $withNamespace
+     * @param bool $withinItsType
+     * @param string $asType
      * @return string
      */
-    public function getValue($withNamespace = false, $withinItsType = true)
+    public function getValue($withNamespace = false, $withinItsType = true, $asType = null)
     {
-        return parent::getValue(true, $withNamespace);
+        return parent::getValue(true, $withNamespace, $asType);
     }
     /**
      * @return null
