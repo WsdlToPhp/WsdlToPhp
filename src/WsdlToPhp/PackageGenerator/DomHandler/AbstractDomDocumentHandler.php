@@ -143,17 +143,21 @@ abstract class AbstractDomDocumentHandler
      */
     public function getElementsByNameAndAttributes($name, array $attributes)
     {
-        $matchingElements = $elements = $this->getElementsByName($name);
-        if (!empty($attributes) && !empty($elements)) {
-            $matchingElements = array();
-            foreach ($elements as $element) {
-                if ($element->hasAttributes()) {
-                    $elementMatches = true;
-                    foreach ($attributes as $attributeName=>$attributeValue) {
-                        $elementMatches &= $element->hasAttribute($attributeName) ? $element->getAttribute($attributeName)->getValue() === $attributeValue : false;
-                    }
-                    if ((bool)$elementMatches === true) {
-                        $matchingElements[] = $element;
+        $matchingElements = $this->getElementsByName($name);
+        if (!empty($attributes) && !empty($matchingElements)) {
+            $xpath = new \DOMXPath($this->domDocument);
+            $xQuery = sprintf("//*[local-name() = '%s']", $name);
+            foreach ($attributes as $attributeName=>$attributeValue) {
+                $xQuery .= sprintf("[@%s='%s']", $attributeName, $attributeValue);
+            }
+            $nodes = $xpath->query($xQuery);
+            if (!empty($nodes)) {
+                $matchingElements = array();
+                $index = 0;
+                foreach ($nodes as $node) {
+                    if ($node instanceof \DOMElement) {
+                        $matchingElements[] = $this->getElementHandler($node, $this, $index);
+                        $index++;
                     }
                 }
             }

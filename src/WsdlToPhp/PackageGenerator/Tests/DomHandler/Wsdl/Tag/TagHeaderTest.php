@@ -91,7 +91,7 @@ class TagHeaderTest extends TestCase
 
         $binding = $wsdl->getContent()->getElementByNameAndAttributes(Wsdl::TAG_BINDING, array(
             'name' => 'SoapBinding',
-            'type' => 'SOAP',
+            'type' => 'tns:SOAP',
         ));
 
         $operation = $binding->getChildByNameAndAttributes(Wsdl::TAG_OPERATION, array(

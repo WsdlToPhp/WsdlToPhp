@@ -74,7 +74,7 @@ class DomDocumentHandlerTest extends TestCase
 
         $parts = $instance->getElementsByNameAndAttributes('part', array(
             'name'    => 'parameters',
-            'element' => 'SearchRequest',
+            'element' => 'tns:SearchRequest',
         ));
         $this->assertNotEmpty($parts);
         $this->assertContainsOnlyInstancesOf('\\WsdlToPhp\\PackageGenerator\\DomHandler\\ElementHandler', $parts);
@@ -88,7 +88,7 @@ class DomDocumentHandlerTest extends TestCase
 
         $part = $instance->getElementByNameAndAttributes('part', array(
             'name'    => 'parameters',
-            'element' => 'SearchRequest',
+            'element' => 'tns:SearchRequest',
         ));
         $this->assertInstanceOf('\\WsdlToPhp\\PackageGenerator\\DomHandler\\ElementHandler', $part);
     }
