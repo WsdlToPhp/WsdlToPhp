@@ -75,6 +75,13 @@ class WsdlParser extends TestCase
         return dirname(__FILE__) . '/../../resources/OrderContract.wsdl';
     }
     /**
+     * @return string
+     */
+    public static function wsdlMyBoardPackPath()
+    {
+        return dirname(__FILE__) . '/../../resources/MyBoardPack.wsdl';
+    }
+    /**
      * @param srting $wsdlPath
      * @return Generator
      */
