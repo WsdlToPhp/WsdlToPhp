@@ -84,9 +84,9 @@ abstract class AbstractElementHandler extends AbstractNodeHandler
      */
     public function getChildrenByNameAndAttributes($name, array $attributes)
     {
-        $machingChildren = $children = $this->getChildrenByName($name);
+        $matchingChildren = $children = $this->getChildrenByName($name);
         if (!empty($attributes) && !empty($children)) {
-            $machingChildren = array();
+            $matchingChildren = array();
             foreach ($children as $child) {
                 if ($child->hasAttributes()) {
                     $elementMatches = true;
@@ -94,12 +94,12 @@ abstract class AbstractElementHandler extends AbstractNodeHandler
                         $elementMatches &= $child->hasAttribute($attributeName) ? $child->getAttribute($attributeName)->getValue() === $attributeValue : false;
                     }
                     if ((bool)$elementMatches === true) {
-                        $machingChildren[] = $child;
+                        $matchingChildren[] = $child;
                     }
                 }
             }
         }
-        return $machingChildren;
+        return $matchingChildren;
     }
     /**
      * @param string $name
