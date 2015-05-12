@@ -58,7 +58,7 @@ class TagHeader extends AbstractTag
      */
     public function getAttributeRequired()
     {
-        return $this->hasAttribute(self::ATTRIBUTE_REQUIRED) === true ? $this->getAttribute(self::ATTRIBUTE_REQUIRED)->getValue(true, 'bool') : '';
+        return $this->hasAttribute(self::ATTRIBUTE_REQUIRED) === true ? $this->getAttribute(self::ATTRIBUTE_REQUIRED)->getValue(true, 'bool') : true;
     }
     /**
      * @return string
