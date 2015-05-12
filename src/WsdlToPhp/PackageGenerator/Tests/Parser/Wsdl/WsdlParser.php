@@ -68,6 +68,13 @@ class WsdlParser extends TestCase
         return dirname(__FILE__) . '/../../resources/odigeo.wsdl';
     }
     /**
+     * @return string
+     */
+    public static function wsdlOrderContractPath()
+    {
+        return dirname(__FILE__) . '/../../resources/OrderContract.wsdl';
+    }
+    /**
      * @param srting $wsdlPath
      * @return Generator
      */
