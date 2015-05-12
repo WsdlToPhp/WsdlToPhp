@@ -5,53 +5,20 @@ namespace WsdlToPhp\PackageGenerator\DomHandler\Wsdl\Tag;
 use WsdlToPhp\PackageGenerator\DomHandler\Wsdl\Wsdl as WsdlDocument;
 use WsdlToPhp\PackageGenerator\DomHandler\AbstractAttributeHandler as Attribute;
 
-class TagHeader extends AbstractTag
+class TagHeader extends AbstractTagOperationElement
 {
     const
-        ATTRIBUTE_MESSAGE  = 'message',
         ATTRIBUTE_PART     = 'part',
         ATTRIBUTE_REQUIRED = 'wsdl:required',
 
         REQUIRED_HEADER    = 'required',
         OPTIONAL_HEADER    = 'optional';
     /**
-     * @return TagOperation|null
-     */
-    public function getParentOperation()
-    {
-        $input = $this->getParentInput();
-        if ($input !== null) {
-            return $input->getParentOperation();
-        }
-        return null;
-    }
-    /**
      * @return TagInput|null
      */
     public function getParentInput()
     {
         return $this->getStrictParent(WsdlDocument::TAG_INPUT);
-    }
-    /**
-     * @return string
-     */
-    public function getAttributePart()
-    {
-        return $this->hasAttribute(self::ATTRIBUTE_PART) === true ? $this->getAttribute(self::ATTRIBUTE_PART)->getValue() : '';
-    }
-    /**
-     * @return string
-     */
-    public function getAttributeMessage()
-    {
-        return $this->hasAttribute(self::ATTRIBUTE_MESSAGE) === true ? $this->getAttribute(self::ATTRIBUTE_MESSAGE)->getValue() : '';
-    }
-    /**
-     * @return string
-     */
-    public function getAttributeMessageNamespace()
-    {
-        return $this->hasAttribute(self::ATTRIBUTE_MESSAGE) === true ? $this->getAttribute(self::ATTRIBUTE_MESSAGE)->getValueNamespace() : '';
     }
     /**
      * @return string
@@ -68,36 +35,25 @@ class TagHeader extends AbstractTag
         return $this->hasAttribute(Attribute::ATTRIBUTE_NAMESPACE) === true ? $this->getAttribute(Attribute::ATTRIBUTE_NAMESPACE)->getValue() : '';
     }
     /**
-     * @return \WsdlToPhp\PackageGenerator\DomHandler\Wsdl\Tag\TagMessage
+     * @return string
      */
-    public function getMessage()
+    public function getAttributePart()
     {
-        $messageName = $this->getAttributeMessage();
-        if (!empty($messageName)) {
-            return $this->getDomDocumentHandler()->getElementByNameAndAttributes('message', array(
-                'name' => $messageName,
-            ));
-        }
-        return null;
+        return $this->hasAttribute(self::ATTRIBUTE_PART) === true ? $this->getAttribute(self::ATTRIBUTE_PART)->getValue() : '';
     }
     /**
      * @return null|\WsdlToPhp\PackageGenerator\DomHandler\Wsdl\Tag\TagPart
      */
-    public function getPart()
+    public function getPartTag()
     {
-        $message  = $this->getMessage();
-        $partName = $this->getAttributePart();
-        if ($message !== null && !empty($partName)) {
-            return $message->getPart($partName);
-        }
-        return null;
+        return parent::getPart($this->getAttributePart());
     }
     /**
      * @return string
      */
     public function getHeaderType()
     {
-        $part = $this->getPart();
+        $part = $this->getPartTag();
         return $part !== null ? $part->getFinalType() : '';
     }
     /**
@@ -105,7 +61,7 @@ class TagHeader extends AbstractTag
      */
     public function getHeaderName()
     {
-        $part = $this->getPart();
+        $part = $this->getPartTag();
         return $part !== null ? $part->getFinalName() : '';
     }
     /**
@@ -116,7 +72,7 @@ class TagHeader extends AbstractTag
     {
         $messageNamespace = $this->getAttributeMessageNamespace();
         if (empty($messageNamespace) || ($namespace = $this->getDomDocumentHandler()->getNamespaceUri($messageNamespace)) === '') {
-            $part      = $this->getPart();
+            $part      = $this->getPartTag();
             $namespace = '';
             if ($part !== null) {
                 $finalNamespace = $part->getFinalNamespace();
