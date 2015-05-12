@@ -17,6 +17,21 @@ use WsdlToPhp\PackageGenerator\Container\Model\Struct as StructContainer;
 use WsdlToPhp\PackageGenerator\Container\Model\Service as ServiceContainer;
 use WsdlToPhp\PackageGenerator\Parser\SoapClient\Structs as StructsParser;
 use WsdlToPhp\PackageGenerator\Parser\SoapClient\Functions as FunctionsParser;
+use WsdlToPhp\PackageGenerator\Parser\Wsdl\TagAttribute as TagAttributeParser;
+use WsdlToPhp\PackageGenerator\Parser\Wsdl\TagDocumentation as TagDocumentationParser;
+use WsdlToPhp\PackageGenerator\Parser\Wsdl\TagElement as TagElementParser;
+use WsdlToPhp\PackageGenerator\Parser\Wsdl\TagEnumeration as TagEnumerationParser;
+use WsdlToPhp\PackageGenerator\Parser\Wsdl\TagExtension as TagExtensionParser;
+use WsdlToPhp\PackageGenerator\Parser\Wsdl\TagHeader as TagHeaderParser;
+use WsdlToPhp\PackageGenerator\Parser\Wsdl\TagImport as TagImportParser;
+use WsdlToPhp\PackageGenerator\Parser\Wsdl\TagInclude as TagIncludeParser;
+use WsdlToPhp\PackageGenerator\Parser\Wsdl\TagInput as TagInputParser;
+use WsdlToPhp\PackageGenerator\Parser\Wsdl\TagList as TagListParser;
+use WsdlToPhp\PackageGenerator\Parser\Wsdl\TagOutput as TagOutputParser;
+use WsdlToPhp\PackageGenerator\Parser\Wsdl\TagRestriction as TagRestrictionParser;
+use WsdlToPhp\PackageGenerator\Parser\Wsdl\TagUnion as TagUnionParser;
+use WsdlToPhp\PackageGenerator\Container\Parser as ParserContainer;
+use WsdlToPhp\PackageGenerator\Parser\AbstractParser;
 
 /**
  * Class Generator
@@ -350,6 +365,11 @@ class Generator extends \SoapClient
      */
     private static $instance;
     /**
+     * Used parsers
+     * @var ParserContainer
+     */
+    private $parsers;
+    /**
      * Constructor
      * @uses \SoapClient::__construct()
      * @uses Generator::setStructs()
@@ -394,6 +414,27 @@ class Generator extends \SoapClient
         $this->setStructs(new StructContainer());
         $this->setServices(new ServiceContainer());
         $this->setWsdls(new WsdlContainer());
+        $this->setParser(new ParserContainer());
+        /**
+         * add parsers
+         */
+        $this->addParser(new FunctionsParser($this));
+        $this->addParser(new StructsParser($this));
+        $this->addParser(new TagIncludeParser($this));
+        $this->addParser(new TagImportParser($this));
+        $this->addParser(new TagAttributeParser($this));
+        $this->addParser(new TagDocumentationParser($this));
+        $this->addParser(new TagElementParser($this));
+        $this->addParser(new TagEnumerationParser($this));
+        $this->addParser(new TagExtensionParser($this));
+        $this->addParser(new TagHeaderParser($this));
+        $this->addParser(new TagInputParser($this));
+        $this->addParser(new TagOutputParser($this));
+        $this->addParser(new TagRestrictionParser($this));
+        $this->addParser(new TagUnionParser($this));
+        /**
+         * add WSDL
+         */
         $this->addWsdl($pathToWsdl);
     }
     /**
@@ -459,25 +500,9 @@ class Generator extends \SoapClient
              * Begin process
              */
             if (is_dir($rootDirectory)) {
-                /**
-                 * Initialize elements
-                 */
-                $init = false;
-                if ($this->getStructs()->count() === 0) {
-                    $this->initStructs();
-                } else {
-                    $init = true;
+                foreach ($this->parsers as $parser) {
+                    $parser->parse();
                 }
-                if ($this->getServices()->count() === 0) {
-                    $this->initServices();
-                }
-                if (!$init && $this->getWsdls()->count()) {
-                    $this->loadWsdls($wsdlLocation);
-                }
-                /**
-                 * Initialize specific elements when all wsdls are loaded
-                 */
-                $this->wsdlsLoaded();
                 /**
                  * Generates Wsdl Class ?
                  */
@@ -2863,6 +2888,24 @@ class Generator extends \SoapClient
     protected function setServices(ServiceContainer $serviceContainer)
     {
         $this->services = $serviceContainer;
+        return $this;
+    }
+    /**
+     * @param ParserContainer $container
+     * @return \WsdlToPhp\PackageGenerator\Generator\Generator
+     */
+    protected function setParser(ParserContainer $container)
+    {
+        $this->parsers = $container;
+        return $this;
+    }
+    /**
+     * @param AbstractParser; $parser
+     * @return \WsdlToPhp\PackageGenerator\Generator\Generator
+     */
+    protected function addParser(AbstractParser $parser)
+    {
+        $this->parsers->add($parser);
         return $this;
     }
     /**
