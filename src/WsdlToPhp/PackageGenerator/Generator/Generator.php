@@ -2339,7 +2339,6 @@ class Generator extends \SoapClient
         if ($domNode->hasAttributes()) {
             $parentNode = self::findSuitableParent($domNode);
             if ($parentNode) {
-                $parentNodeStruct = $this->getStruct($parentNode->getAttribute('name'));
                 $attributes = $domNode->attributes;
                 $attributesCount = $attributes->length;
                 for ($i = 0; $i < $attributesCount; $i++) {
