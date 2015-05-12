@@ -48,6 +48,7 @@ class Wsdl extends AbstractDocument
     /**
      * @see \WsdlToPhp\PackageGenerator\DomHandler\Wsdl\AbstractDocument::getElementByName()
      * @param bool $includeExternals force search among external schemas
+     * @return null|\WsdlToPhp\PackageGenerator\DomHandler\ElementHandler
      */
     public function getElementByName($name, $includeExternals = false)
     {
@@ -58,6 +59,7 @@ class Wsdl extends AbstractDocument
     /**
      * @see \WsdlToPhp\PackageGenerator\DomHandler\AbstractDomDocumentHandler::getElementByNameAndAttributes()
      * @param bool $includeExternals force search among external schemas
+     * @return null|\WsdlToPhp\PackageGenerator\DomHandler\ElementHandler
      */
     public function getElementByNameAndAttributes($name, array $attributes, $includeExternals = false)
     {
@@ -69,6 +71,7 @@ class Wsdl extends AbstractDocument
     /**
      * @see \WsdlToPhp\PackageGenerator\DomHandler\Wsdl\AbstractDocument::getElementsByName()
      * @param bool $includeExternals force search among external schemas
+     * @return array[AbstractElementHandler]
      */
     public function getElementsByName($name, $includeExternals = false)
     {
@@ -79,6 +82,7 @@ class Wsdl extends AbstractDocument
     /**
      * @see \WsdlToPhp\PackageGenerator\DomHandler\AbstractDomDocumentHandler::getElementsByNameAndAttributes()
      * @param bool $includeExternals force search among external schemas
+     * @return array[AbstractElementHandler]
      */
     public function getElementsByNameAndAttributes($name, array $attributes, $includeExternals = false)
     {
