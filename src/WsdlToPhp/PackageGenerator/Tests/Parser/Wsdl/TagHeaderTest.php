@@ -48,7 +48,7 @@ class TagHeaderTest extends WsdlParser
                                 'AuthenticationType',
                             ),
                             TagHeader::META_SOAP_HEADERS => array(
-                                'optional',
+                                'required',
                             ),
                         ), $method->getMeta());
                         $ok = true;
@@ -88,8 +88,8 @@ class TagHeaderTest extends WsdlParser
                                 'ClusterHeader',
                             ),
                             TagHeader::META_SOAP_HEADERS => array(
-                                'optional',
-                                'optional',
+                                'required',
+                                'required',
                             ),
                         ), $method->getMeta());
                         $ok = true;
@@ -107,7 +107,7 @@ class TagHeaderTest extends WsdlParser
                                 'ClusterHeader',
                             ),
                             TagHeader::META_SOAP_HEADERS => array(
-                                'optional',
+                                'required',
                             ),
                         ), $method->getMeta());
                         $ok = true;
