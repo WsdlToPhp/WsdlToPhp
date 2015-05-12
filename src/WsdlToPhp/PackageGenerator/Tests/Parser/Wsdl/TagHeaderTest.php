@@ -74,7 +74,6 @@ class TagHeaderTest extends WsdlParser
             foreach ($services as $service) {
             if ($service->getName() === 'List' || $service->getName() === 'Send') {
                     foreach ($service->getMethods() as $method) {
-                        echo ' => '. $method->getName() ;
                         $this->assertSame(array(
                             TagHeader::META_SOAP_HEADER_NAMES => array(
                                 'SessionHeader',
@@ -97,7 +96,6 @@ class TagHeaderTest extends WsdlParser
                     }
                 } elseif ($service->getName() === 'Login') {
                     foreach ($service->getMethods() as $method) {
-                        echo ' => '. $method->getName() ;
                         $this->assertSame(array(
                             TagHeader::META_SOAP_HEADER_NAMES => array(
                                 'ClusterHeader',
