@@ -47,7 +47,7 @@ class TagHeaderTest extends TestCase
 
         $header = $wsdl->getContent()->getElementByName(Wsdl::TAG_HEADER);
 
-        $this->assertInstanceOf('\\WsdlToPhp\\PackageGenerator\\DomHandler\\Wsdl\\Tag\\TagPart', $header->getPart());
+        $this->assertInstanceOf('\\WsdlToPhp\\PackageGenerator\\DomHandler\\Wsdl\\Tag\\TagPart', $header->getPartTag());
     }
     /**
      *
@@ -58,7 +58,7 @@ class TagHeaderTest extends TestCase
 
         $header = $wsdl->getContent()->getElementByName(Wsdl::TAG_HEADER);
 
-        $this->assertSame('CustomSecurityHeaderType', $header->getPart()->getFinalType());
+        $this->assertSame('CustomSecurityHeaderType', $header->getPartTag()->getFinalType());
     }
     /**
      *
@@ -69,7 +69,7 @@ class TagHeaderTest extends TestCase
 
         $header = $wsdl->getContent()->getElementByName(Wsdl::TAG_HEADER);
 
-        $this->assertSame('ns', $header->getPart()->getFinalNamespace());
+        $this->assertSame('ns', $header->getPartTag()->getFinalNamespace());
     }
     /**
      *
