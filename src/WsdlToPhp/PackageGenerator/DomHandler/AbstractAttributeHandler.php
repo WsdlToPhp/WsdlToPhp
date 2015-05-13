@@ -10,7 +10,8 @@ class AbstractAttributeHandler extends AbstractNodeHandler
         ATTRIBUTE_NAMESPACE = 'namespace',
         ATTRIBUTE_NAME      = 'name',
         ATTRIBUTE_VALUE     = 'value',
-        ATTRIBUTE_TYPE      = 'type';
+        ATTRIBUTE_TYPE      = 'type',
+        ATTRIBUTE_ABSTRACT  = 'abstract';
     /**
      * @see \WsdlToPhp\PackageGenerator\DomHandler\AbstractNodeHandler::getNode()
      * @return \DOMAttr
