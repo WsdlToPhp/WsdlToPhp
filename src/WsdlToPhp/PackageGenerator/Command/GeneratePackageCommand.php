@@ -116,7 +116,7 @@ class GeneratePackageCommand extends AbstractCommand
         }
 
         $end = new \DateTime();
-        $this->writeLn(sprintf(" End at %s, duration: %s", $end->format('Y-m-d H:i:s'), $start->diff($end)->format('%s')));
+        $this->writeLn(sprintf(" End at %s, duration: %s", $end->format('Y-m-d H:i:s'), $start->diff($end)->format('%H:%I:%S')));
     }
 
     /**
