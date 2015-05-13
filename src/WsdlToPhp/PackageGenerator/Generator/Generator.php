@@ -16,6 +16,7 @@ use WsdlToPhp\PackageGenerator\Container\Model\Service as ServiceContainer;
 use WsdlToPhp\PackageGenerator\Parser\SoapClient\Structs as StructsParser;
 use WsdlToPhp\PackageGenerator\Parser\SoapClient\Functions as FunctionsParser;
 use WsdlToPhp\PackageGenerator\Parser\Wsdl\TagAttribute as TagAttributeParser;
+use WsdlToPhp\PackageGenerator\Parser\Wsdl\TagComplexType as TagComplexTypeParser;
 use WsdlToPhp\PackageGenerator\Parser\Wsdl\TagDocumentation as TagDocumentationParser;
 use WsdlToPhp\PackageGenerator\Parser\Wsdl\TagElement as TagElementParser;
 use WsdlToPhp\PackageGenerator\Parser\Wsdl\TagEnumeration as TagEnumerationParser;
@@ -139,6 +140,7 @@ class Generator extends \SoapClient
         $this->addParser(new TagIncludeParser($this));
         $this->addParser(new TagImportParser($this));
         $this->addParser(new TagAttributeParser($this));
+        $this->addParser(new TagComplexTypeParser($this));
         $this->addParser(new TagDocumentationParser($this));
         $this->addParser(new TagElementParser($this));
         $this->addParser(new TagEnumerationParser($this));
