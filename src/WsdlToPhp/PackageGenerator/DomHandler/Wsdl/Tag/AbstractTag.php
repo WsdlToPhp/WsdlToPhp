@@ -93,9 +93,9 @@ abstract class AbstractTag extends ElementHandler
     /**
      * @return null|string
      */
-    public function getAttributeValue()
+    public function getAttributeValue($withNamespace = false, $withinItsType = true, $asType = null)
     {
-        return $this->getAttribute(Attribute::ATTRIBUTE_VALUE) !== null ? $this->getAttribute(Attribute::ATTRIBUTE_VALUE)->getValue() : '';
+        return $this->getAttribute(Attribute::ATTRIBUTE_VALUE) !== null ? $this->getAttribute(Attribute::ATTRIBUTE_VALUE)->getValue($withNamespace, $withinItsType, $asType) : '';
     }
     /**
      * @return AbstractDocument|Wsdl|Schema
