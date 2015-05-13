@@ -32,19 +32,6 @@ use WsdlToPhp\PackageGenerator\Parser\Wsdl\TagUnion as TagUnionParser;
 use WsdlToPhp\PackageGenerator\Container\Parser as ParserContainer;
 use WsdlToPhp\PackageGenerator\Parser\AbstractParser;
 
-/**
- * Class Generator
- * This class replaces the original WsdlToPhp class.
- * It uses the AbstractModel's classes (Struct, Service, Method, StructAttribute, StructValue) in order to rationalize informations.
- * From now, each class is clearly identified depending on its behaviour :
- * <ul>
- * <li>{PackageName}Service* : class which gathers the operations/functions (based on their name)</li>
- * <li>{PackageName}Struct* : class which represents a struct type which can be used either for requesting or catching response</li>
- * <li>{PackageName}Enum* : class which represents an enumeration of values. Each value is defined with a constant</li>
- * <li>{PackageName}WsdlClass : mother class of all generated class if enabled. This class defines all the generic methods and the needed configurations/methods to call the SOAP WS</li>
- * <li>{PackageName}ClassMap : class that constains one final public static method which returns the array to map structs/enums to generated classes</li>
- * </ul>
- */
 class Generator extends \SoapClient
 {
     /**
