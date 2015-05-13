@@ -7,8 +7,6 @@ use WsdlToPhp\PackageGenerator\Model\Wsdl;
 use WsdlToPhp\PackageGenerator\Model\AbstractModel;
 use WsdlToPhp\PackageGenerator\Model\EmptyModel;
 use WsdlToPhp\PackageGenerator\Model\Struct;
-use WsdlToPhp\PackageGenerator\Model\StructAttribute;
-use WsdlToPhp\PackageGenerator\Model\StructValue;
 use WsdlToPhp\PackageGenerator\Model\Service;
 use WsdlToPhp\PackageGenerator\Model\Method;
 use WsdlToPhp\PackageGenerator\ConfigurationReader\GeneratorOptions;
@@ -48,16 +46,6 @@ use WsdlToPhp\PackageGenerator\Parser\AbstractParser;
  */
 class Generator extends \SoapClient
 {
-    /**
-     * Index where global values are stored in order to unset them once when it's necessary and to clean GLOBALS
-     * @var string
-     */
-    const WSDL_TO_PHP_GENERATOR_GLOBAL_KEY = '__GeneratorGlobalKey__';
-    /**
-     * Index where audit values are stored in the global var
-     * @var string
-     */
-    const WSDL_TO_PHP_GENERATOR_AUDIT_KEY = '__GeneratorAuditKey__';
     /**
      * Structs
      * @var StructContainer
@@ -185,10 +173,7 @@ class Generator extends \SoapClient
      * @uses Generator::setPackageName()
      * @uses Generator::getWsdl()
      * @uses Generator::getStructs()
-     * @uses Generator::initStructs()
      * @uses Generator::getServices()
-     * @uses Generator::initServices()
-     * @uses Generator::loadWsdls()
      * @uses Generator::getOptionGenerateWsdlClassFile()
      * @uses Generator::generateWsdlClassFile()
      * @uses Generator::setOptionGenerateWsdlClassFile()
@@ -199,9 +184,6 @@ class Generator extends \SoapClient
      * @uses Generator::generateAutoloadFile()
      * @uses Generator::getOptionGenerateTutorialFile()
      * @uses Generator::generateTutorialFile()
-     * @uses Generator::initGlobals()
-     * @uses Generator::auditInit()
-     * @uses Generator::audit()
      * @param string $packageName the string used to prefix all generate classes
      * @param string $rootDirectory path where classes should be generated
      * @param int $rootDirectoryRights system rights to apply on folder
@@ -210,10 +192,8 @@ class Generator extends \SoapClient
      */
     public function generateClasses($packageName, $rootDirectory, $rootDirectoryRights = 0775, $createRootDirectory = true)
     {
-        self::initGlobals();
         $wsdl = $this->getWsdl(0);
         $wsdlLocation = $wsdl !== null ? $wsdl->getName() : '';
-        self::auditInit('generate_classes', $wsdlLocation);
         if (!empty($wsdlLocation)) {
             self::setPackageName($packageName);
             $rootDirectory = $rootDirectory . (substr($rootDirectory, -1) != '/' ? '/' : '');
@@ -230,9 +210,7 @@ class Generator extends \SoapClient
              */
             if (is_dir($rootDirectory)) {
                 foreach ($this->parsers as $parser) {
-                    self::auditInit(get_class($parser), $wsdlLocation);
                     $parser->parse();
-                    self::audit(get_class($parser), $wsdlLocation);
                 }
                 /**
                  * Generates Wsdl Class ?
@@ -263,28 +241,12 @@ class Generator extends \SoapClient
                 if ($this->getOptionGenerateTutorialFile() === true) {
                     $this->generateTutorialFile($rootDirectory, $servicesClassesFiles);
                 }
-                return self::audit('generate_classes', $wsdlLocation);
+                return true;
             } else {
-                return !self::audit('generate_classes', $wsdlLocation);
+                return false;
             }
         }
-        return !self::audit('generate_classes', $wsdlLocation);
-    }
-    /**
-     * Initialize structs defined in WSDL :
-     * - Get structs defined
-     * - Parse each struct definition
-     * - Analyze each struct paramaters
-     * @uses Generator::auditInit()
-     * @uses Generator::audit()
-     * @return bool true|false depending on the well types catching from the WSDL
-     */
-    private function initStructs()
-    {
-        self::auditInit('init_structs');
-        $structsParser = new StructsParser($this);
-        $structsParser->parse();
-        return self::audit('init_structs');
+        return false;
     }
     /**
      * Generates structs classes based on structs collected
@@ -305,7 +267,6 @@ class Generator extends \SoapClient
      */
     private function generateStructsClasses($rootDirectory, $rootDirectoryRights)
     {
-        self::auditInit('generate_structs');
         $structs = $this->getStructs();
         $structsClassesFiles = array();
         if (count($structs)) {
@@ -348,23 +309,7 @@ class Generator extends \SoapClient
                 self::populateFile($structClassFileName, $struct->getClassDeclaration());
             }
         }
-        self::audit('generate_structs');
         return $structsClassesFiles;
-    }
-    /**
-     * Initialize functions :
-     * - Get structs defined
-     * - Parse each struct definition
-     * @uses Generator::auditInit()
-     * @uses Generator::audit()
-     * @return bool true|false depending on the well functions catching from the WSDL
-     */
-    private function initServices()
-    {
-        self::auditInit('init_services');
-        $servicesParser = new FunctionsParser($this);
-        $servicesParser->parse();
-        return !self::audit('init_services');
     }
     /**
      * Generates methods by class
@@ -381,7 +326,6 @@ class Generator extends \SoapClient
      */
     private function generateServicesClasses($rootDirectory, $rootDirectoryRights)
     {
-        self::auditInit('generate_services');
         $services = $this->getServices();
         $servicesClassesFiles = array();
         if (count($services)) {
@@ -394,21 +338,17 @@ class Generator extends \SoapClient
                 self::populateFile($serviceClassFileName, $service->getClassDeclaration());
             }
         }
-        self::audit('generate_services');
         return $servicesClassesFiles;
     }
     /**
      * Populate the php file with the object and the declarations
      * @uses AbstractModel::cleanComment()
-     * @uses Generator::auditInit()
-     * @uses Generator::audit()
      * @param string $fileName the file name
      * @param array $declarations the lines of code and comments
      * @return void
      */
     private static function populateFile($fileName, array $declarations)
     {
-        self::auditInit('populate');
         $content = array('<?php');
         $indentationString = "    ";
         $indentationLevel = 0;
@@ -436,7 +376,6 @@ class Generator extends \SoapClient
         }
         array_push($content, str_repeat($indentationString, $indentationLevel));
         file_put_contents($fileName, implode("\n", $content));
-        self::audit('populate', $fileName);
     }
     /**
      * Generates classMap class
@@ -444,8 +383,6 @@ class Generator extends \SoapClient
      * @uses Generator::getPackageName()
      * @uses Generator::getOptionAddComments()
      * @uses Generator::populateFile()
-     * @uses Generator::auditInit()
-     * @uses Generator::audit()
      * @uses AbstractModel::getName()
      * @uses AbstractModel::getCleanName()
      * @param string $rootDirectory the directory
@@ -453,7 +390,6 @@ class Generator extends \SoapClient
      */
     private function generateClassMap($rootDirectory)
     {
-        self::auditInit('generate_classmap');
         $classMapDeclaration = array();
         /**
          * class map comments
@@ -510,7 +446,6 @@ class Generator extends \SoapClient
          */
         self::populateFile($filename = $rootDirectory . self::getPackageName() . 'ClassMap.php', $classMapDeclaration);
         unset($comments, $classMapDeclaration, $structs, $classesToMap);
-        self::audit('generate_classmap');
         return array($filename);
     }
     /**
@@ -519,8 +454,6 @@ class Generator extends \SoapClient
      * @uses Generator::getPackageName()
      * @uses Generator::getOptionAddComments()
      * @uses Generator::populateFile()
-     * @uses Generator::auditInit()
-     * @uses Generator::audit()
      * @param string $rootDirectory the directory
      * @param array $classesFiles the generated classes files
      * @return void
@@ -528,7 +461,6 @@ class Generator extends \SoapClient
     private function generateAutoloadFile($rootDirectory, array $classesFiles = array())
     {
         if (count($classesFiles)) {
-            self::auditInit('generate_autoload');
             $autoloadDeclaration = array();
             $comments = array();
             array_push($comments, 'File to load generated classes once at once time');
@@ -554,14 +486,11 @@ class Generator extends \SoapClient
             }
             self::populateFile($rootDirectory . '/' . self::getPackageName() . 'Autoload.php', $autoloadDeclaration);
             unset($autoloadDeclaration, $comments);
-            self::audit('generate_autoload');
         }
     }
     /**
      * Generates Wsdl Class file
      * @uses Generator::getPackageName()
-     * @uses Generator::auditInit()
-     * @uses Generator::audit()
      * @uses AbstractModel::cleanComment()
      * @param string $rootDirectory the directory
      * @return array the absolute path to the generated file
@@ -570,7 +499,6 @@ class Generator extends \SoapClient
     {
         $pathToWsdlClassTemplate = dirname(__FILE__) . '/../Resources/templates/Default/Class.php';
         if (is_file($pathToWsdlClassTemplate)) {
-            self::auditInit('generate_wsdlclass');
             /**
              * Adds additional PHP doc block tags if needed to the two main PHP doc block
              */
@@ -616,7 +544,6 @@ class Generator extends \SoapClient
                 var_export(self::getWsdl(0)->getName(), true)
             ), $content);
             file_put_contents($rootDirectory . self::getPackageName() . 'WsdlClass.php', $content);
-            self::audit('generate_wsdlclass');
             return array($rootDirectory . self::getPackageName() . 'WsdlClass.php');
         } else {
             return array();
@@ -628,8 +555,6 @@ class Generator extends \SoapClient
      * @uses Generator::getWsdls()
      * @uses Generator::getWsdl()
      * @uses Generator::getPackageName()
-     * @uses Generator::auditInit()
-     * @uses Generator::audit()
      * @uses ReflectionClass::getMethods()
      * @uses ReflectionMethod::getName()
      * @uses ReflectionMethod::getParameters()
@@ -650,7 +575,6 @@ class Generator extends \SoapClient
                 require_once $rootDirectory . '/' . self::getPackageName() . 'Autoload.php';
             }
             if (class_exists('ReflectionClass') && count($methodsClassesFiles)) {
-                self::auditInit('generate_tutorial');
                 $content = '';
                 foreach ($methodsClassesFiles as $classFilePath) {
                     $pathinfo = pathinfo($classFilePath);
@@ -678,10 +602,7 @@ class Generator extends \SoapClient
                                 $parameters = array();
                                 for ($i = 0; $i < $end; $i++) {
                                     $methodParameter = $methodParameters[$i];
-                                    /**
-                                     * Remove first _
-                                     */
-                                    $methodParameterName = substr($methodParameter->getName(), 1);
+                                    $methodParameterName = $methodParameter->getName();
                                     /**
                                      * Retrieve parameter type based on the method doc comment
                                      */
@@ -748,7 +669,6 @@ class Generator extends \SoapClient
                     ), $fileContent);
                     file_put_contents($rootDirectory . 'sample.php', $fileContent);
                 }
-                self::audit('generate_tutorial');
                 return true;
             } elseif (!class_exists('ReflectionClass')) {
                 throw new \InvalidArgumentException("Generator::generateTutorialFile() needs ReflectionClass, see http://fr2.php.net/manual/fr/class.reflectionclass.php");
@@ -764,63 +684,6 @@ class Generator extends \SoapClient
     public function getStruct($structName)
     {
         return $this->structs->getStructByName($structName);
-    }
-    /**
-     * Adds an info to the struct
-     * @uses Generator::getStruct()
-     * @uses AbstractModel::addMeta()
-     * @param string $structName the original struct name
-     * @param string $structInfoName the struct info name
-     * @param mixed $structInfoValue the struct info value
-     * @return void
-     */
-    public function addStructMeta($structName, $structInfoName, $structInfoValue)
-    {
-        if ($this->getStruct($structName) !== null) {
-            $this->getStruct($structName)->addMeta($structInfoName, $structInfoValue);
-        }
-    }
-    /**
-     * Gets the struct by its name
-     * @uses Generator::getStruct()
-     * @uses Struct::getAttribute()
-     * @param string $structName the original struct name
-     * @param string $attributeName the attribute name
-     * @return StructAttribute|null
-     */
-    public function getStructAttribute($structName, $attributeName)
-    {
-        return $this->getStruct($structName) !== null ? $this->getStruct($structName)->getAttribute($attributeName) : null;
-    }
-    /**
-     * Gets the struct value by its name
-     * @uses Generator::getStruct()
-     * @uses Struct::getValue()
-     * @param string $structName the original struct name
-     * @param string $valueName the value name
-     * @return StructValue|null
-     */
-    public function getStructValue($structName, $valueName)
-    {
-        return $this->getStruct($structName) !== null ? $this->getStruct($structName)->getValue($valueName) : null;
-    }
-    /**
-     * Adds value to restriction struct
-     * @uses Generator::getStruct()
-     * @uses Generator::setStructIsRestriction()
-     * @uses Generator::setStructIsStruct()
-     * @uses Struct::addValue()
-     * @param string $structName the original struct name
-     * @param mixed $value the value
-     * @return void
-     */
-    public function addRestrictionValue($structName, $value)
-    {
-        if ($this->getStruct($structName) !== null) {
-            $this->setStructIsRestriction($structName);
-            $this->setStructIsStruct($structName);
-            $this->getStruct($structName)->addValue($value);
-        }
     }
     /**
      * Gets a service by its name
@@ -843,21 +706,6 @@ class Generator extends \SoapClient
     public function getServiceMethod($methodName)
     {
         return $this->getService($this->getServiceName($methodName)) !== null ? $this->getService($this->getServiceName($methodName))->getMethod($methodName) : null;
-    }
-    /**
-     * Adds the service function a meta information
-     * @uses Generator::getServiceMethod()
-     * @uses AbstractModel::addMeta()
-     * @param string $methodName the service name
-     * @param string $methodInfoName the method name
-     * @param string $methodInfoValue the method info value
-     * @return void
-     */
-    public function addServiceFunctionMeta($methodName, $methodInfoName, $methodInfoValue)
-    {
-        if ($this->getServiceMethod($methodName) !== null) {
-            $this->getServiceMethod($methodName)->addMeta($methodInfoName, $methodInfoValue);
-        }
     }
     /**
      * Sets the optionCategory value
@@ -1131,20 +979,6 @@ class Generator extends \SoapClient
         return $this;
     }
     /**
-     * Adds Wsdl location meta information
-     * @uses Generator::getWsdl()
-     * @param string $metaName meta name
-     * @param mixed $metaValue meta value
-     * @return string
-     */
-    public function addWsdlMeta($wsdlLocation, $metaName, $metaValue)
-    {
-        if ($this->getWsdls()->getWsdlByName($wsdlLocation) !== null) {
-            $this->getWsdls()->getWsdlByName($wsdlLocation)->addMeta($metaName, $metaValue);
-        }
-        return $this;
-    }
-    /**
      * Returns directory where to store class and create it if needed
      * @uses Generator::getCategory()
      * @uses Generator::getSubCategory()
@@ -1208,164 +1042,6 @@ class Generator extends \SoapClient
     public function getServiceName($methodName)
     {
         return ucfirst($this->getGather(new EmptyModel($methodName)));
-    }
-    /**
-     * Inits global array dedicated to the class
-     * @uses Generator::WSDL_TO_PHP_GENERATOR_GLOBAL_KEY
-     * @return bool true
-     */
-    private static function initGlobals()
-    {
-        self::$globals[self::WSDL_TO_PHP_GENERATOR_GLOBAL_KEY] = array();
-        return true;
-    }
-    /**
-     * Clears the global array dedicated the the class
-     * @uses Generator::WSDL_TO_PHP_GENERATOR_GLOBAL_KEY
-     * @return bool true
-     */
-    public static function unsetGlobals()
-    {
-        if (array_key_exists(self::WSDL_TO_PHP_GENERATOR_GLOBAL_KEY, self::$globals))
-            unset(self::$globals[self::WSDL_TO_PHP_GENERATOR_GLOBAL_KEY]);
-        return true;
-    }
-    /**
-     * Sets a global value
-     * @uses Generator::WSDL_TO_PHP_GENERATOR_GLOBAL_KEY
-     * @param scalar $globalKey the index where to store the data in the global array dedicated the the class
-     * @param mixed $globalValue the value to store
-     * @return mixed
-     */
-    private static function setGlobal($globalKey, $globalValue)
-    {
-        if (!is_scalar($globalKey)) {
-            return null;
-        }
-        if (array_key_exists(self::WSDL_TO_PHP_GENERATOR_GLOBAL_KEY, self::$globals)) {
-            return (self::$globals[self::WSDL_TO_PHP_GENERATOR_GLOBAL_KEY][$globalKey] = $globalValue);
-        } else {
-            return null;
-        }
-    }
-    /**
-     * Gets a global value
-     * @uses Generator::WSDL_TO_PHP_GENERATOR_GLOBAL_KEY
-     * @param scalar $globalKey the index where to store the data in the global array dedicated the the class
-     * @param mixed $globalFallback the fallback value
-     * @return mixed
-     */
-    private static function getGlobal($globalKey, $globalFallback = null)
-    {
-        if (!is_scalar($globalKey)) {
-            return $globalFallback;
-        }
-        if (array_key_exists(self::WSDL_TO_PHP_GENERATOR_GLOBAL_KEY, self::$globals) && array_key_exists($globalKey, self::$globals[self::WSDL_TO_PHP_GENERATOR_GLOBAL_KEY])) {
-            return self::$globals[self::WSDL_TO_PHP_GENERATOR_GLOBAL_KEY][$globalKey];
-        } else {
-            return $globalFallback;
-        }
-    }
-    /**
-     * Method to store audit timing during the process
-     * @uses Generator::WSDL_TO_PHP_GENERATOR_AUDIT_KEY
-     * @uses Generator::getGlobal()
-     * @uses Generator::setGlobal()
-     * @param string $auditName the type of audit (parsing, generating, etc..). If audit name is parsing_DOM, than parsing is created to cumulate time for all parsing processes
-     * @param string $auditElement audit specific element
-     * @param int $spentTime already spent time on the current audit category (and element)
-     * @param bool $createOnly indicates if the element must be only created or not
-     * @return bool true
-     */
-    private static function audit($auditName, $auditElement = '', $spentTime = 0, $createOnly = false)
-    {
-        if (!is_scalar($auditName) || empty($auditName)) {
-            return false;
-        }
-        /**
-         * Current time used
-         */
-        $time = time();
-        /**
-         * Variables contained by an audit entry
-         */
-        $variables = array('spent_time' => $spentTime, 'last_time' => $time, 'calls' => 0);
-        /**
-         * Audit content
-         */
-        $audit = self::getGlobal(self::WSDL_TO_PHP_GENERATOR_AUDIT_KEY, array());
-        /**
-         * Main audit category based on the current audit
-         */
-        if (strpos($auditName, '_')) {
-            $mainAuditName = '';
-            $mainAuditName = implode('', array_slice(explode('_', $auditName), 0, 1));
-            if (!empty($mainAuditName)) {
-                if (!array_key_exists($mainAuditName, $audit)) {
-                    $audit[$mainAuditName] = $variables;
-                } elseif (!$createOnly) {
-                    $audit[$mainAuditName]['spent_time'] += $spentTime > 0 ? $spentTime : ($time - $audit[$mainAuditName]['last_time']);
-                    $audit[$mainAuditName]['last_time'] = $time;
-                    $audit[$mainAuditName]['calls']++;
-                } else {
-                    $audit[$mainAuditName]['last_time'] = $time;
-                }
-            }
-        }
-        /**
-         * Current audit name
-         */
-        if (!array_key_exists($auditName, $audit)) {
-            $audit[$auditName] = array('own' => $variables, 'elements' => array());
-        }
-        elseif (!$createOnly) {
-            $audit[$auditName]['own']['spent_time'] += $spentTime > 0 ? $spentTime : ($time - $audit[$auditName]['own']['last_time']);
-            $audit[$auditName]['own']['last_time'] = $time;
-            $audit[$auditName]['own']['calls']++;
-        } else {
-            $audit[$auditName]['own']['last_time'] = $time;
-        }
-        /**
-         * Current audit element
-         */
-        if (!empty($auditElement)) {
-            if (!array_key_exists($auditElement, $audit[$auditName]['elements'])) {
-                $audit[$auditName]['elements'][$auditElement] = $variables;
-            }
-            elseif (!$createOnly) {
-                $audit[$auditName]['elements'][$auditElement]['spent_time'] += $spentTime > 0 ? $spentTime : ($time - $audit[$auditName]['elements'][$auditElement]['last_time']);
-                $audit[$auditName]['elements'][$auditElement]['last_time'] = $time;
-                $audit[$auditName]['elements'][$auditElement]['calls']++;
-            } else {
-                $audit[$auditName]['elements'][$auditElement]['last_time'] = $time;
-            }
-        }
-        /**
-         * Update global audit
-         */
-        self::setGlobal(self::WSDL_TO_PHP_GENERATOR_AUDIT_KEY, $audit);
-        return true;
-    }
-    /**
-     * Method to initialize audit for an element
-     * @uses Generator::audit()
-     * @param string $auditName the type of audit (parsing, generating, etc..). If audit name is parsing_DOM, than parsing is created to cumulate time for all parsing processes
-     * @param string $auditElement audit specific element
-     * @return bool true
-     */
-    private static function auditInit($auditName, $auditElement = '')
-    {
-        return self::audit($auditName, $auditElement, 0, true);
-    }
-    /**
-     * Returns the audit informations
-     * @uses Generator::getGlobal()
-     * @uses Generator::WSDL_TO_PHP_GENERATOR_AUDIT_KEY
-     * @return array
-     */
-    public static function getAudit()
-    {
-        return self::getGlobal(self::WSDL_TO_PHP_GENERATOR_AUDIT_KEY, array());
     }
     /**
      * @param GeneratorOptions $options
