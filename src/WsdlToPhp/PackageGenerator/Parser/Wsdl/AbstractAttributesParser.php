@@ -65,7 +65,7 @@ abstract class AbstractAttributesParser extends AbstractTagParser
                         $model->setIsAbstract($tagAttribute->getValue(false, true, 'bool'));
                         break;
                     default:
-                        $modelAttribute->addMeta($tagAttribute->getName(), $tagAttribute->getValue());
+                        $modelAttribute->addMeta($tagAttribute->getName(), $tagAttribute->getValue(true));
                         break;
                 }
             }
