@@ -7,6 +7,7 @@ use WsdlToPhp\PackageGenerator\DomHandler\Wsdl\Wsdl as WsdlDocument;
 use WsdlToPhp\PackageGenerator\DomHandler\Wsdl\Tag\TagComplexType as ComplexType;
 use WsdlToPhp\PackageGenerator\Model\Wsdl;
 use WsdlToPhp\PackageGenerator\Model\Schema;
+use WsdlToPhp\PackageGenerator\DomHandler\Wsdl\Tag\AbstractTag;
 
 class TagComplexType extends AbstractTagParser
 {
@@ -44,11 +45,19 @@ class TagComplexType extends AbstractTagParser
     /**
      * @param ComplexType $complexType
      */
-    protected function parseComplexType(ComplexType $complexType)
+    public function parseComplexType(ComplexType $complexType)
     {
-        $model = $this->getModel($complexType);
-        if ($model !== null && $complexType->hasAttributes()) {
-            foreach ($complexType->getAttributes() as $attribute) {
+        return $this->parseTagAttributes($complexType);
+    }
+    /**
+     * Generic method to be used by TagElement
+     * @param AbstractTag $tag
+     */
+    public function parseTagAttributes(AbstractTag $tag)
+    {
+        $model = $this->getModel($tag);
+        if ($model !== null && $tag->hasAttributes()) {
+            foreach ($tag->getAttributes() as $attribute) {
                 switch ($attribute->getName()) {
                     case AbstractAttributeHandler::ATTRIBUTE_NAME:
                         /**
