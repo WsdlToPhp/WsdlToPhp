@@ -98,8 +98,9 @@ class Struct extends AbstractModel
              */
             $comments = array();
             array_push($comments, 'Return true if value is allowed');
-            foreach ($constantsDefined as $constantName)
+            foreach ($constantsDefined as $constantName) {
                 array_push($comments, '@uses ' . $constantName);
+            }
             array_push($comments, '@param mixed $value value');
             array_push($comments, '@return bool true|false');
             array_push($body, array('comment' => $comments));

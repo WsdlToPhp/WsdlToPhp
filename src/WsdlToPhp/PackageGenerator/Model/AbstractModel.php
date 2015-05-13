@@ -257,16 +257,19 @@ abstract class AbstractModel
         if (count($this->getMeta())) {
             foreach ($this->getMeta() as $metaName => $metaValue) {
                 $cleanedMetaValue = self::cleanComment($metaValue, $metaName == self::META_DOCUMENTATION ? ' ' : ',', stripos($metaName, 'SOAPHeader') === false);
-                if (($ignoreDocumentation && $metaName == self::META_DOCUMENTATION) || $cleanedMetaValue === '')
+                if (($ignoreDocumentation && $metaName == self::META_DOCUMENTATION) || $cleanedMetaValue === '') {
                     continue;
+                }
                 array_push($metaComments, ($addStars ? ' * ' : '') . "    - $metaName : " . (($metaName == self::META_FROM_SCHEMA && stripos($cleanedMetaValue, 'http') === 0) ? "{@link $cleanedMetaValue}" : $cleanedMetaValue));
             }
         }
         if (count($metaComments)) {
-            if (!in_array('Meta informations extracted from the WSDL', $comments))
+            if (!in_array('Meta informations extracted from the WSDL', $comments)) {
                 array_push($comments, 'Meta informations extracted from the WSDL');
-            foreach ($metaComments as $metaComment)
+            }
+            foreach ($metaComments as $metaComment) {
                 array_push($comments, $metaComment);
+            }
         }
         unset($metaComments);
     }
