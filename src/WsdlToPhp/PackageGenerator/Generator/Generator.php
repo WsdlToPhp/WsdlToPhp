@@ -128,6 +128,9 @@ class Generator extends \SoapClient
             }
         }
         $this->setOptions(GeneratorOptions::instance());
+        /**
+         * init containers
+         */
         $this->setStructs(new StructContainer());
         $this->setServices(new ServiceContainer());
         $this->setWsdls(new WsdlContainer());
@@ -255,8 +258,6 @@ class Generator extends \SoapClient
      * @uses Generator::getStructs()
      * @uses Generator::getDirectory()
      * @uses Generator::populateFile()
-     * @uses Generator::auditInit()
-     * @uses Generator::audit()
      * @uses AbstractModel::getName()
      * @uses AbstractModel::getModelByName()
      * @uses AbstractModel::getInheritance()
@@ -317,8 +318,6 @@ class Generator extends \SoapClient
      * Generates methods by class
      * @uses Generator::getServices()
      * @uses Generator::getDirectory()
-     * @uses Generator::auditInit()
-     * @uses Generator::audit()
      * @uses AbstractModel::getCleanName()
      * @uses AbstractModel::getPackagedName()
      * @uses AbstractModel::getClassDeclaration()
