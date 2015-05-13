@@ -10,6 +10,8 @@ use WsdlToPhp\PackageGenerator\Model\Schema;
 
 class TagElement extends AbstractTagParser
 {
+    const
+        ATTRIBUTE_ABSTRACT = 'abstract';
     /**
      * @see \WsdlToPhp\PackageGenerator\Parser\Wsdl\AbstractParser::getTags()
      * @return array[\WsdlToPhp\PackageGenerator\DomHandler\Wsdl\Tag\TagElement]
@@ -69,6 +71,9 @@ class TagElement extends AbstractTagParser
                                     }
                                 }
                             }
+                            break;
+                        case self::ATTRIBUTE_ABSTRACT:
+                            $model->setIsAbstract($elementAttribute->getValue(false, true, 'bool'));
                             break;
                         default:
                             $modelAttribute->addMeta($elementAttribute->getName(), $elementAttribute->getValue());
