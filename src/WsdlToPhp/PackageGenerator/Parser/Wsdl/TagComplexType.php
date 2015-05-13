@@ -68,7 +68,7 @@ class TagComplexType extends AbstractTagParser
                         $model->setIsAbstract($attribute->getValue(false, true, 'bool'));
                         break;
                     default:
-                        $model->addMeta($attribute->getName(), $attribute->getValue());
+                        $model->addMeta($attribute->getName(), $attribute->getValue(true));
                         break;
                 }
             }

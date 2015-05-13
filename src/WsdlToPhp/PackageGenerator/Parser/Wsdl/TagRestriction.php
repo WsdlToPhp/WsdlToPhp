@@ -59,7 +59,7 @@ class TagRestriction extends AbstractTagParser
                     if ($attribute->getName() === 'base' && $attribute->getValue() !== $parent->getAttributeName()) {
                         $this->getModel($parent)->setInheritance($attribute->getValue());
                     } else {
-                        $this->getModel($parent)->addMeta($attribute->getName(), $attribute->getValue());
+                        $this->getModel($parent)->addMeta($attribute->getName(), $attribute->getValue(true));
                     }
                 }
             }
@@ -76,7 +76,7 @@ class TagRestriction extends AbstractTagParser
     private function parseRestrictionChild(Tag $tag, Tag $child)
     {
         if ($child->hasAttributeValue() && $this->getModel($tag) !== null) {
-            $this->getModel($tag)->addMeta($child->getName(), $child->getAttributeValue());
+            $this->getModel($tag)->addMeta($child->getName(), $child->getAttributeValue(true));
         }
     }
 }
