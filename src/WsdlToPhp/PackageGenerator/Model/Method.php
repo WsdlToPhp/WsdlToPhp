@@ -113,10 +113,11 @@ class Method extends AbstractModel
         }
         if (is_string($this->getParameterType())) {
             $model = self::getModelByName($this->getParameterType());
-            if ($model && $model->getIsStruct() && !$model->getIsRestriction())
+            if ($model && $model->getIsStruct() && !$model->getIsRestriction()) {
                 array_push($comments, '@param ' . $model->getPackagedName() . ' $' . lcfirst($model->getPackagedName()));
-            else
+            } else {
                 array_push($comments, '@param ' . $this->getParameterType() . ' $' . lcfirst($this->getParameterType()));
+            }
         } elseif (is_array($this->getParameterType())) {
             foreach ($this->getParameterType() as $parameterName => $parameterType) {
                 $model = self::getModelByName($parameterType);
@@ -171,8 +172,9 @@ class Method extends AbstractModel
             if ($parameterModelAttributesCount > 0) {
                 $parameterName = '$' . lcfirst($parameterModel->getPackagedName());
                 $parameter = $parameterModel->getPackagedName() . ' ' . $parameterName;
-            } else
+            } else {
                 $parameterName = $parameter = '';
+            }
         } elseif (is_string($this->getParameterType())) {
             $parameterName = $parameter = '$' . lcfirst(self::cleanString($this->getParameterType()));
         } elseif (is_array($this->getParameterType())) {
@@ -206,8 +208,9 @@ class Method extends AbstractModel
             if ($parameterModelAttributesCount > 0) {
                 $soapParametersStart = $parameterName;
                 $soapParametersEnd = '';
-            } else
+            } else {
                 $soapParametersStart = $soapParametersEnd = '';
+            }
         } elseif (is_string($this->getParameterType())) {
             $soapParametersStart = Generator::instance()->getOptionSendArrayAsParameter() ? '\'' . addslashes($this->getParameterType()) . '\'=>' : '';
             $soapParametersEnd = '$' . lcfirst(self::cleanString($this->getParameterType()));
