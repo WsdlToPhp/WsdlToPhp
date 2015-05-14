@@ -13,7 +13,7 @@ Usage
 -----
 
 To generate a package, nothing as simple as this:
-
+```
     $ cd /path/to/WsdlToPhp/PackageGenerator/
     $ composer install
     $ php console wsdltophp:generate:package -h => display help
@@ -29,7 +29,7 @@ Usage with full options
 -----------------------
 
 To generate a package, nothing as simple as this:
-
+```
     $ cd /path/to/WsdlToPhp/PackageGenerator/
     $ composer install
     $ php console wsdltophp:generate:package -h => display help
@@ -59,16 +59,16 @@ To generate a package, nothing as simple as this:
         --force
     $ cd /var/www/Api/
     $ ls -la => enjoy!
-
+```
 Tests
 -----
 
 You can run the unit tests with the following command:
-
+```
     $ cd /path/to/WsdlToPhp/PackageGenerator/
     $ composer install
     $ phpunit
-
+```
 You have several ```testsuite```s available which run test in the proper order:
 
 - configuration: tests configuration readers
@@ -78,6 +78,8 @@ You have several ```testsuite```s available which run test in the proper order:
 - container : tests containers
 - parser: tests parsers
 
+```
     $ cd /path/to/WsdlToPhp/PackageGenerator/
     $ composer install
     $ phpunit --testsuite=model
+```
