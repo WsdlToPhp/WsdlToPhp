@@ -1,5 +1,5 @@
 {
-    "name": "wsdltophp/wsdltophp",
+    "name": "wsdltophp/generators",
     "description": "Wsdl to php components",
     "version": "1.0.0",
     "type": "library",
