@@ -56,7 +56,7 @@ To generate a package, nothing as simple as this:
     $ cd /var/www/Api/
     $ ls -la => enjoy!
 ```
-### Programmactic usage
+### Programmatic usage
 ```
     $ cd /path/to/src/WsdlToPhp/PackageGenerator/
     $ composer install
@@ -112,7 +112,7 @@ Then:
     $generator->setOptionGenerateTutorialFile(VALUE_TRUE);
     $generator->setOptionAddComments(array(
         'date'    => date('Y-m-d'),
-        'team'    => 'Dream,
+        'team'    => 'Dream',
         'author'  => 'Me',
         'release' => 1.1.0,
     ));
