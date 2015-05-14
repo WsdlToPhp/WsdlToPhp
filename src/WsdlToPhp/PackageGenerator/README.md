@@ -24,7 +24,7 @@ To generate a package, nothing as simple as this:
         --force
     $ cd /path/to/where/the/package/must/be/generated/
     $ ls -la => enjoy!
-
+```
 Usage with full options
 -----------------------
 
