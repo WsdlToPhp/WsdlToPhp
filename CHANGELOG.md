@@ -1,7 +1,7 @@
 CHANGELOG
 =========
 
-3.0.0
+1.0.0
 -----
 Initial version created from original project WsdlToPhp.
 
