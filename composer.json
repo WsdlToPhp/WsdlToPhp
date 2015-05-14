@@ -1,0 +1,20 @@
+{
+    "name": "wsdltophp/generators",
+    "description": "Wsdl to php components",
+    "version": "1.0.0",
+    "type": "library",
+    "keywords" : ["soap","wsdl","php","generator"],
+    "homepage" : "https://github.com/WsdlToPhp/WsdlToPhp",
+    "license" : "MIT",
+    "authors" : [
+        {
+            "name": "Mikaël DELSOL",
+            "email": "contact@wsdltophp.com",
+            "homepage": "https://www.wsdltophp.com",
+            "role": "Owner"
+        }
+    ],
+    "support" : {
+        "email" : "contact@wsdltophp.com"
+    }
+}
