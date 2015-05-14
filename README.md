@@ -25,7 +25,7 @@ Nevertheless, it still remains some code parts that are not optimal and require 
 
 This step will be developed under the ```feature/mandevilla``` branch.
 
-### Second step: optimize that can be optimized
+### Second step: optimize what can be optimized
 In order to be able to provide a real interesting bundle generation experience, it's essential to be sure that the package generator is as fast as possible.
 
 This step will be developed under the ```feature/anthurium``` branch.
