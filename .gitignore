@@ -1,4 +1,6 @@
-/.settings
-/.buildpath
-/.project
-samples/*
+.settings
+.buildpath
+.project
+vendor/
+composer.lock
+phpunit.xml
