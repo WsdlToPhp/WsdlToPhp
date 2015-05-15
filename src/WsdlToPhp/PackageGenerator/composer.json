@@ -4,8 +4,7 @@
     "version": "1.0.0",
     "type": "library",
     "keywords" : ["soap","wsdl","php","generator"],
-    "homepage" : "https://github.com/mikaelcom/WsdlToPhp",
-    "time" : "2013-09-06 10:28:27",
+    "homepage" : "https://github.com/WsdlToPhp/PackageGenerator",
     "license" : "MIT",
     "authors" : [
         {
@@ -30,7 +29,6 @@
         "symfony/yaml": "~2.6"
     },
     "autoload": {
-        "psr-0": { "WsdlToPhp": "src" }
-    },
-    "target-dir": "WsdlToPhp/PackageGenerator"
+        "psr-4": { "WsdlToPhp\\PackageGenerator\\": "" }
+    }
 }
