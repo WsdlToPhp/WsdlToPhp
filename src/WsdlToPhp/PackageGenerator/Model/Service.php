@@ -20,7 +20,6 @@ class Service extends AbstractModel
      * @see AbstractModel::__construct()
      * @uses Service::setMethods()
      * @param string $name the service name
-     * @return Service
      */
     public function __construct($name)
     {
@@ -200,8 +199,8 @@ class Service extends AbstractModel
      * Adds a method to the service
      * @uses Method::setIsUnique()
      * @param string $methodName original method name
-     * @param string $methodParameterType original parameter type/name
-     * @param string $methodReturnType original return type/name
+     * @param string|array $methodParameterType original parameter type/name
+     * @param string|array $methodReturnType original return type/name
      * @param bool $methodIsUnique original isUnique value
      * @return Method
      */

@@ -9,7 +9,7 @@ abstract class AbstractDomDocumentHandler
      */
     protected $domDocument;
     /**
-     * @var AbsractNodeHandler
+     * @var ElementHandler
      */
     protected $rootElement;
     /**
@@ -45,18 +45,14 @@ abstract class AbstractDomDocumentHandler
      */
     public function getHandler($node, $index = -1)
     {
-
         if ($node instanceof \DOMNode) {
             switch ($node->nodeType) {
                 case XML_ELEMENT_NODE:
                     return $this->getElementHandler($node, $this, $index);
-                    break;
                 case XML_ATTRIBUTE_NODE:
                     return $this->getAttributeHandler($node, $this, $index);
-                    break;
                 default:
                     return $this->getNodeHandler($node, $this, $index);
-                    break;
             }
         } elseif ($node instanceof \DOMNameSpaceNode) {
             return new NameSpaceHandler($node, $this, $index);
@@ -77,7 +73,7 @@ abstract class AbstractDomDocumentHandler
      */
     abstract protected function getElementHandler(\DOMElement $element, AbstractDomDocumentHandler $domDocument, $index = -1);
     /**
-     * @param \DOMAttr $element
+     * @param \DOMAttr $attribute
      * @param AbstractDomDocumentHandler $domDocument
      * @param int $index
      * @return AttributeHandler
@@ -98,14 +94,14 @@ abstract class AbstractDomDocumentHandler
     public function getElementByName($name)
     {
         $node = $this->getNodeByName($name);
-        if ($node !== null && $node->getNode() instanceof \DOMElement) {
+        if ($node instanceof AbstractNodeHandler && $node->getNode() instanceof \DOMElement) {
             return $this->getElementHandler($node->getNode(), $this);
         }
         return null;
     }
     /**
      * @param string $name
-     * @return array[NodeHandler]
+     * @return NodeHandler[]
      */
     public function getNodesByName($name)
     {
@@ -119,7 +115,7 @@ abstract class AbstractDomDocumentHandler
     }
     /**
      * @param string $name
-     * @return array[ElementHandler]
+     * @return ElementHandler[]
      */
     public function getElementsByName($name)
     {
@@ -139,7 +135,7 @@ abstract class AbstractDomDocumentHandler
     /**
      * @param string $name
      * @param array $attributes
-     * @return array[\WsdlToPhp\PackageGenerator\DomHandler\ElementHandler]
+     * @return ElementHandler[]
      */
     public function getElementsByNameAndAttributes($name, array $attributes)
     {
@@ -167,7 +163,7 @@ abstract class AbstractDomDocumentHandler
     /**
      * @param string $name
      * @param array $attributes
-     * @return null|\WsdlToPhp\PackageGenerator\DomHandler\ElementHandler
+     * @return null|ElementHandler
      */
     public function getElementByNameAndAttributes($name, array $attributes)
     {

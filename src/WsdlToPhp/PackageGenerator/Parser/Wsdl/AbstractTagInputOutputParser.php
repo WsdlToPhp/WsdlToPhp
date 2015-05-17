@@ -7,11 +7,11 @@ use WsdlToPhp\PackageGenerator\Model\Wsdl;
 use WsdlToPhp\PackageGenerator\Model\Schema;
 use WsdlToPhp\PackageGenerator\DomHandler\Wsdl\Tag\TagPart;
 use WsdlToPhp\PackageGenerator\DomHandler\Wsdl\Tag\AbstractTagOperationElement;
+use WsdlToPhp\PackageGenerator\DomHandler\Wsdl\Tag\TagOperation;
 
 abstract class AbstractTagInputOutputParser extends AbstractTagParser
 {
-    const
-        UNKNOWN = 'unknown';
+    const UNKNOWN = 'unknown';
     /**
      * @param Method $method
      * @return string|array
@@ -43,21 +43,21 @@ abstract class AbstractTagInputOutputParser extends AbstractTagParser
      */
     public function parseInputOutput(AbstractTagOperationElement $tag)
     {
-        if ($tag->hasAttributeMessage() === false) {
+        if (!$tag->hasAttributeMessage()) {
             return null;
         }
         $operation = $tag->getParentOperation();
-        if ($operation === null) {
+        if (!$operation instanceof TagOperation) {
             return null;
         }
         $method = $this->getModel($operation);
-        if ($method === null) {
+        if (!$method instanceof Method) {
             return null;
         }
-        if ($this->isKnownTypeUnknown($method) === false) {
+        if ($this->isKnownTypeUnknown($method)) {
             $parts         = $tag->getParts();
             $multipleParts = count($parts);
-            if ($multipleParts > 1) {
+            if (is_array($parts) && $multipleParts > 1) {
                 $types = array();
                 foreach ($parts as $part) {
                     if (($type = $this->getTypeFromPart($part)) !== '') {
@@ -65,8 +65,11 @@ abstract class AbstractTagInputOutputParser extends AbstractTagParser
                     }
                 }
                 $this->setKnownType($method, $types);
-            } elseif ($multipleParts > 0 && ($type = $this->getTypeFromPart(array_shift($parts))) !== '') {
-                $this->setKnownType($method, $type);
+            } elseif (is_array($parts) && $multipleParts > 0) {
+                $part = array_shift($parts);
+                if ($part instanceof TagPart && ($type = $this->getTypeFromPart($part)) !== '') {
+                    $this->setKnownType($method, $type);
+                }
             }
         }
     }
@@ -93,6 +96,6 @@ abstract class AbstractTagInputOutputParser extends AbstractTagParser
                 $isKnown &= !empty($knownType) && strtolower($knownValue) !== self::UNKNOWN;
             }
         }
-        return (bool) $isKnown;
+        return (bool) !$isKnown;
     }
 }

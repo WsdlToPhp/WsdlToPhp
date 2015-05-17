@@ -22,7 +22,6 @@ class StructAttribute extends AbstractModel
      * @param string $name the original name
      * @param string $type the type
      * @param Struct $struct defines the struct which owns this value
-     * @return StructAttribute
      */
     public function __construct($name, $type, Struct $struct)
     {
@@ -148,11 +147,12 @@ class StructAttribute extends AbstractModel
          */
         array_push($body, 'public function ' . $this->getGetterName() . '(' . ($isXml ? '$asString = true' : '') . ')');
         array_push($body, "{");
-        $thisAccess = '';
-        if ($this->nameIsClean())
+        if ($this->nameIsClean()) {
             $thisAccess = '$this->' . $this->getName();
-        else
+        }
+        else {
             $thisAccess = '$this->{\'' . addslashes($this->getName()) . '\'}';
+        }
         /**
          * format XML data
          */

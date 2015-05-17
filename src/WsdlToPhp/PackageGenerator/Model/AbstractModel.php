@@ -67,7 +67,6 @@ abstract class AbstractModel
      * @uses AbstractModel::setName()
      * @uses AbstractModel::updateModels()
      * @param string $name the original name
-     * @return AbstractModel
      */
     public function __construct($name)
     {
@@ -251,7 +250,7 @@ abstract class AbstractModel
      * @param bool $ignoreDocumentation ignore documentation info or not
      * @return void
      */
-    protected function addMetaComment(array &$comments = array(), $addStars = false, $ignoreDocumentation = false)
+    public function addMetaComment(array &$comments = array(), $addStars = false, $ignoreDocumentation = false)
     {
         $metaComments = array();
         if (count($this->getMeta())) {
@@ -294,6 +293,7 @@ abstract class AbstractModel
      * Add meta information to the operation
      * @uses AbstractModel::getMeta()
      * @uses AbstractModel::updateModels()
+     * @throws \InvalidArgumentException
      * @param string $metaName
      * @param mixed $metaValue
      * @return AbstractModel
@@ -301,23 +301,22 @@ abstract class AbstractModel
     public function addMeta($metaName, $metaValue)
     {
         if (!is_scalar($metaName) || (!is_scalar($metaValue) && !is_array($metaValue))) {
-            return '';
+            throw new \InvalidArgumentException(sprintf('Invalid meta name "%s" or value "%s". Please provide scalar meta name and scalar or array meta value.', gettype($metaName), gettype($metaValue)));
         }
         $metaValue = is_scalar($metaValue) ? trim($metaValue) : $metaValue;
-        if (is_scalar($metaValue) && $metaValue === '') {
-            return false;
+        if ((is_scalar($metaValue) && $metaValue !== '') || is_array($metaValue)) {
+            if (!array_key_exists($metaName, $this->getMeta())) {
+                $this->meta[$metaName] = $metaValue;
+            } elseif (is_array($this->meta[$metaName]) && is_array($metaValue)) {
+                $this->meta[$metaName] = array_merge($this->meta[$metaName], $metaValue);
+            } elseif (is_array($this->meta[$metaName])) {
+                array_push($this->meta[$metaName], $metaValue);
+            } else {
+                $this->meta[$metaName] = $metaValue;
+            }
+            ksort($this->meta);
+            self::updateModels($this);
         }
-        if (!array_key_exists($metaName, $this->getMeta())) {
-            $this->meta[$metaName] = $metaValue;
-        } elseif (is_array($this->meta[$metaName]) && is_array($metaValue)) {
-            $this->meta[$metaName] = array_merge($this->meta[$metaName], $metaValue);
-        } elseif (is_array($this->meta[$metaName])) {
-            array_push($this->meta[$metaName], $metaValue);
-        } else {
-            $this->meta[$metaName] = $metaValue;
-        }
-        ksort($this->meta);
-        self::updateModels($this);
         return $this;
     }
     /**
@@ -378,7 +377,7 @@ abstract class AbstractModel
     /**
      * Returns the value of the first meta value assigned to the name
      * @param array $names the meta names to check
-     * @param string $fallback the fallback value if anyone is set
+     * @param mixed $fallback the fallback value if anyone is set
      * @return mixed the meta information value
      */
     public function getMetaValueFirstSet(array $names, $fallback = null)

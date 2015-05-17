@@ -31,6 +31,7 @@ use WsdlToPhp\PackageGenerator\Parser\Wsdl\TagRestriction as TagRestrictionParse
 use WsdlToPhp\PackageGenerator\Parser\Wsdl\TagUnion as TagUnionParser;
 use WsdlToPhp\PackageGenerator\Container\Parser as ParserContainer;
 use WsdlToPhp\PackageGenerator\Parser\AbstractParser;
+use WsdlToPhp\PackageGenerator\DomHandler\Wsdl\Wsdl as WsdlDocument;
 
 class Generator extends \SoapClient
 {
@@ -84,7 +85,6 @@ class Generator extends \SoapClient
      * @param string $login login to get access to WSDL
      * @param string $password password to get access to WSDL
      * @param array $wsdlOptions options to get access to WSDL
-     * @return Generator
      */
     public function __construct($pathToWsdl, $login = false, $password = false, array $wsdlOptions = array())
     {
@@ -147,10 +147,14 @@ class Generator extends \SoapClient
         $this->addWsdl($pathToWsdl);
     }
     /**
-     * @param string options's file to parse
-     * @return Generator
+     * @param string $pathToWsdl
+     * @param string $login
+     * @param string $password
+     * @param array $wsdlOptions
+     * @throws \InvalidArgumentException
+     * @return \WsdlToPhp\PackageGenerator\Generator\Generator
      */
-    public static function instance($pathToWsdl = null, $login = false, $password = false, array $wsdlOptions = array())
+    public static function instance($pathToWsdl = null, $login = null, $password = null, array $wsdlOptions = array())
     {
         if (!isset(self::$instance)) {
             if (empty($pathToWsdl)) {
@@ -185,7 +189,7 @@ class Generator extends \SoapClient
     public function generateClasses($packageName, $rootDirectory, $rootDirectoryRights = 0775, $createRootDirectory = true)
     {
         $wsdl = $this->getWsdl(0);
-        $wsdlLocation = $wsdl !== null ? $wsdl->getName() : '';
+        $wsdlLocation = $wsdl instanceof Wsdl ? $wsdl->getName() : '';
         if (!empty($wsdlLocation)) {
             self::setPackageName($packageName);
             $rootDirectory = $rootDirectory . (substr($rootDirectory, -1) != '/' ? '/' : '');
@@ -693,7 +697,7 @@ class Generator extends \SoapClient
      */
     public function getServiceMethod($methodName)
     {
-        return $this->getService($this->getServiceName($methodName)) !== null ? $this->getService($this->getServiceName($methodName))->getMethod($methodName) : null;
+        return $this->getService($this->getServiceName($methodName)) instanceof Service ? $this->getService($this->getServiceName($methodName))->getMethod($methodName) : null;
     }
     /**
      * Sets the optionCategory value
@@ -961,7 +965,7 @@ class Generator extends \SoapClient
      */
     public function addSchemaToWsdl(Wsdl $wsdl, $schemaLocation)
     {
-        if (!empty($schemaLocation) && $wsdl->getContent() !== null && $wsdl->getContent()->getExternalSchema($schemaLocation) === null) {
+        if (!empty($schemaLocation) && $wsdl->getContent() instanceof WsdlDocument && $wsdl->getContent()->getExternalSchema($schemaLocation) === null) {
             $wsdl->getContent()->addExternalSchema(new Schema($schemaLocation, $this->getUrlContent($schemaLocation)));
         }
         return $this;
@@ -1089,7 +1093,7 @@ class Generator extends \SoapClient
         return $this;
     }
     /**
-     * @param AbstractParser; $parser
+     * @param AbstractParser $parser
      * @return \WsdlToPhp\PackageGenerator\Generator\Generator
      */
     protected function addParser(AbstractParser $parser)

@@ -6,8 +6,7 @@ use WsdlToPhp\PackageGenerator\DomHandler\Wsdl\Wsdl as WsdlDocument;
 
 abstract class AbstractTagOperationElement extends AbstractTag
 {
-    const
-        ATTRIBUTE_MESSAGE  = 'message';
+    const ATTRIBUTE_MESSAGE  = 'message';
     /**
      * @return TagOperation|null
      */
@@ -27,17 +26,17 @@ abstract class AbstractTagOperationElement extends AbstractTag
      */
     public function getAttributeMessage()
     {
-        return $this->hasAttributeMessage() === true ? $this->getAttribute(self::ATTRIBUTE_MESSAGE)->getValue() : '';
+        return $this->hasAttributeMessage() ? $this->getAttribute(self::ATTRIBUTE_MESSAGE)->getValue() : '';
     }
     /**
      * @return string
      */
     public function getAttributeMessageNamespace()
     {
-        return $this->hasAttribute(self::ATTRIBUTE_MESSAGE) === true ? $this->getAttribute(self::ATTRIBUTE_MESSAGE)->getValueNamespace() : '';
+        return $this->hasAttribute(self::ATTRIBUTE_MESSAGE) ? $this->getAttribute(self::ATTRIBUTE_MESSAGE)->getValueNamespace() : '';
     }
     /**
-     * @return \WsdlToPhp\PackageGenerator\DomHandler\Wsdl\Tag\TagMessage
+     * @return TagMessage
      */
     public function getMessage()
     {
@@ -50,23 +49,23 @@ abstract class AbstractTagOperationElement extends AbstractTag
         return null;
     }
     /**
-     * @return null|array[\WsdlToPhp\PackageGenerator\DomHandler\Wsdl\Tag\TagPart]
+     * @return null|TagPart[]
      */
     public function getParts()
     {
         $message = $this->getMessage();
-        if ($message !== null) {
+        if ($message instanceof TagMessage) {
             return $message->getChildrenByName(WsdlDocument::TAG_PART);
         }
         return null;
     }
     /**
-     * @return null|\WsdlToPhp\PackageGenerator\DomHandler\Wsdl\Tag\TagPart
+     * @return null|TagPart
      */
     public function getPart($partName)
     {
         $message = $this->getMessage();
-        if ($message !== null && !empty($partName)) {
+        if ($message instanceof TagMessage && !empty($partName)) {
             return $message->getPart($partName);
         }
         return null;

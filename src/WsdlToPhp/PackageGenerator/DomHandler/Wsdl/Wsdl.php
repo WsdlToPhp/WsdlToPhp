@@ -10,7 +10,6 @@ class Wsdl extends AbstractDocument
     /**
      * @see \WsdlToPhp\PackageGenerator\DomHandler\AbstractDomDocumentHandler::__construct()
      * @param \DOMDocument $domDocument
-     * @return Wsdl
      */
     public function __construct(\DOMDocument $domDocument)
     {
@@ -59,7 +58,7 @@ class Wsdl extends AbstractDocument
     /**
      * @see \WsdlToPhp\PackageGenerator\DomHandler\AbstractDomDocumentHandler::getElementByNameAndAttributes()
      * @param bool $includeExternals force search among external schemas
-     * @return null|\WsdlToPhp\PackageGenerator\DomHandler\ElementHandler
+     * @return null|ElementHandler
      */
     public function getElementByNameAndAttributes($name, array $attributes, $includeExternals = false)
     {
@@ -71,7 +70,7 @@ class Wsdl extends AbstractDocument
     /**
      * @see \WsdlToPhp\PackageGenerator\DomHandler\Wsdl\AbstractDocument::getElementsByName()
      * @param bool $includeExternals force search among external schemas
-     * @return array[AbstractElementHandler]
+     * @return ElementHandler[]
      */
     public function getElementsByName($name, $includeExternals = false)
     {
@@ -82,7 +81,7 @@ class Wsdl extends AbstractDocument
     /**
      * @see \WsdlToPhp\PackageGenerator\DomHandler\AbstractDomDocumentHandler::getElementsByNameAndAttributes()
      * @param bool $includeExternals force search among external schemas
-     * @return array[AbstractElementHandler]
+     * @return ElementHandler[]
      */
     public function getElementsByNameAndAttributes($name, array $attributes, $includeExternals = false)
     {
@@ -96,8 +95,8 @@ class Wsdl extends AbstractDocument
      * in addition it handles the case when we want to use the external schemas to search in
      * @param string $method
      * @param array $parameters
-     * @param string $includeExternals
-     * @param string $returnOne
+     * @param bool $includeExternals
+     * @param bool $returnOne
      * @return mixed
      */
     private function useParentMethodAndExternals($method, $parameters, $includeExternals = false, $returnOne = false)
@@ -122,7 +121,7 @@ class Wsdl extends AbstractDocument
         $result = $parentResult;
         if ($this->getExternalSchemas()->count() > 0) {
             foreach ($this->getExternalSchemas() as $externalSchema) {
-                if ($externalSchema->getContent() !== null) {
+                if ($externalSchema->getContent() instanceof AbstractDocument) {
                     $externalResult = call_user_func_array(array(
                         $externalSchema->getContent(),
                         $method,

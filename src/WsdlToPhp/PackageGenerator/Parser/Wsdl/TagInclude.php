@@ -6,24 +6,17 @@ use WsdlToPhp\PackageGenerator\Generator\Utils;
 use WsdlToPhp\PackageGenerator\Model\Wsdl;
 use WsdlToPhp\PackageGenerator\Model\Schema;
 use WsdlToPhp\PackageGenerator\DomHandler\Wsdl\Wsdl as WsdlDocument;
+use WsdlToPhp\PackageGenerator\DomHandler\Wsdl\Tag\TagInclude as IncludeTag;
 
 class TagInclude extends AbstractTagParser
 {
-    /**
-     * @see \WsdlToPhp\PackageGenerator\Parser\Wsdl\AbstractParser::getTags()
-     * @return array[\WsdlToPhp\PackageGenerator\DomHandler\Wsdl\Tag\TagInclude]
-     */
-    public function getTags()
-    {
-        return parent::getTags();
-    }
     /**
      * @see \WsdlToPhp\PackageGenerator\Parser\Wsdl\AbstractParser::parseWsdl()
      */
     protected function parseWsdl(Wsdl $wsdl)
     {
         foreach ($this->getTags() as $tag) {
-            if ($tag->getLocationAttribute() != '') {
+            if ($tag instanceof IncludeTag && $tag->getLocationAttribute() != '') {
                 $finalLocation = Utils::resolveCompletePath($wsdl->getName(), $tag->getLocationAttribute());
                 $this->generator->addSchemaToWsdl($wsdl, $finalLocation);
             }

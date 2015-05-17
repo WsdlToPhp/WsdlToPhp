@@ -46,11 +46,10 @@ class TagInputTest extends WsdlParser
     }
     /**
      * @param string $soapFunction
-     * @return array[string]
+     * @return string[]
      */
     public static function getMethodDataFromSoapFunction($soapFunction)
     {
-        $parameterType = '';
         if (stripos($soapFunction, TagInput::UNKNOWN) !== false) {
             $parameterType = TagInput::UNKNOWN;
         } else {

@@ -46,11 +46,10 @@ class TagOutputTest extends WsdlParser
     }
     /**
      * @param string $soapFunction
-     * @return array[string]
+     * @return string[]
      */
     public static function getMethodDataFromSoapFunction($soapFunction)
     {
-        $returnType = '';
         if (stripos($soapFunction, TagOutput::UNKNOWN) === 0) {
             $returnType = sprintf('(%s)', TagOutput::UNKNOWN);
         } else {
