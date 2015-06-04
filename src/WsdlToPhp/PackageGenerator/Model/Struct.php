@@ -200,9 +200,7 @@ class Struct extends AbstractModel
              * A array struct
              */
             if ($this->isArray()) {
-                foreach ($this->getAttributes() as $attr) {
-                    $attribute = $attr;
-                }
+                $attribute = $this->getAttributes()->offsetGet(0);
                 if ($attribute instanceof StructAttribute) {
                     $model = self::getModelByName($attribute->getType());
                     $return = ($model && $model->getIsStruct()) ? $model->getPackagedName() : $attribute->getType();
@@ -393,7 +391,6 @@ class Struct extends AbstractModel
         if ($includeInheritanceAttributes === false && $requiredFirst === false) {
             $attributes = $this->attributes;
         } else {
-            $attributes    = new StructAttributeContainer();
             $allAttributes = new StructAttributeContainer();
             /**
              * Returns the inherited attributes
@@ -467,17 +464,23 @@ class Struct extends AbstractModel
     }
     /**
      * Adds attribute based on its original name
+     * @throws \InvalidArgumentException
      * @uses AbstractModel::updateModels()
      * @param string $attributeName the attribute name
      * @param string $attributeType the attribute type
-     * @return StructAttribute
+     * @return Struct
      */
     public function addAttribute($attributeName, $attributeType)
     {
-        $structAttribute = new StructAttribute($attributeName, $attributeType, $this);
-        $this->attributes->add($structAttribute);
-        self::updateModels($this);
-        return $structAttribute;
+        if (empty($attributeName) || empty($attributeName)) {
+            throw new \InvalidArgumentException(sprintf('Attribute name "%s" and/or attribute type "%s" is invalid for Struct "%s"', $attributeName, $attributeType, $this->getName()));
+        }
+        if ($this->attributes->getStructAttributeByName($attributeName) === null) {
+            $structAttribute = new StructAttribute($attributeName, $attributeType, $this);
+            $this->attributes->add($structAttribute);
+            self::updateModels($this);
+        }
+        return $this;
     }
     /**
      * Returns the attribute by its name, otherwise null

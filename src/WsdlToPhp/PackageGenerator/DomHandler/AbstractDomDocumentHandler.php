@@ -41,22 +41,18 @@ abstract class AbstractDomDocumentHandler
      * Return the matching node handler based on current \DomNode type
      * @param \DOMNode|\DOMNameSpaceNode $node
      * @param int $index
-     * @return NodeHandler|ElementHandler
+     * @return NodeHandler|ElementHandler|AttributeHandler|NameSpaceHandler
      */
     public function getHandler($node, $index = -1)
     {
-        if ($node instanceof \DOMNode) {
-            switch ($node->nodeType) {
-                case XML_ELEMENT_NODE:
-                    return $this->getElementHandler($node, $this, $index);
-                case XML_ATTRIBUTE_NODE:
-                    return $this->getAttributeHandler($node, $this, $index);
-                default:
-                    return $this->getNodeHandler($node, $this, $index);
-            }
+        if ($node instanceof \DOMElement) {
+            return $this->getElementHandler($node, $this, $index);
+        } elseif ($node instanceof \DOMAttr) {
+            return $this->getAttributeHandler($node, $this, $index);
         } elseif ($node instanceof \DOMNameSpaceNode) {
             return new NameSpaceHandler($node, $this, $index);
         }
+        return $this->getNodeHandler($node, $this, $index);
     }
     /**
      * @param \DOMNode $node
@@ -101,14 +97,17 @@ abstract class AbstractDomDocumentHandler
     }
     /**
      * @param string $name
+     * @param string $checkInstance
      * @return NodeHandler[]
      */
-    public function getNodesByName($name)
+    public function getNodesByName($name, $checkInstance = null)
     {
         $nodes = array();
         if ($this->domDocument->getElementsByTagName($name)->length > 0) {
-            foreach ($this->domDocument->getElementsByTagName($name) as $index=>$node) {
-                $nodes[] = $this->getNodeHandler($node, $this, $index);
+            foreach ($this->domDocument->getElementsByTagName($name) as $node) {
+                if ($checkInstance === null || $node instanceof $checkInstance) {
+                    $nodes[] = $this->getHandler($node, count($nodes));
+                }
             }
         }
         return $nodes;
@@ -119,18 +118,7 @@ abstract class AbstractDomDocumentHandler
      */
     public function getElementsByName($name)
     {
-        $nodes    = $this->getNodesByName($name);
-        $elements = array();
-        if (!empty($nodes)) {
-            $index = 0;
-            foreach ($nodes as $node) {
-                if ($node->getNode() instanceof \DOMElement) {
-                    $elements[] = $this->getElementHandler($node->getNode(), $this, $index);
-                    $index++;
-                }
-            }
-        }
-        return $elements;
+        return $this->getNodesByName($name, 'DOMElement');
     }
     /**
      * @param string $name

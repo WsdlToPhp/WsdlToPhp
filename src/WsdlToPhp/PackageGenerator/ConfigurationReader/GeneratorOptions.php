@@ -44,17 +44,22 @@ class GeneratorOptions extends AbstractYamlReader
     }
     /**
      * Parse options for generator
-     * @param string options's file to parse
+     * @param string $filename options's file to parse
      */
     protected function parseOptions($filename)
     {
-        $this->options = $this->loadYaml($filename);
+        $options = $this->loadYaml($filename);
+        if (is_array($options)) {
+            $this->options = $options;
+        } else {
+            throw new \InvalidArgumentException(sprintf('Settings contained by "%s" are not valid as the settings are not contained by an array: "%s"', $filename, gettype($options)));
+        }
     }
     /**
      * Returns the option value
      * @throws InvalidArgumentException
      * @param string $optionName
-     * @return string|bool
+     * @return mixed
      */
     public function getOptionValue($optionName)
     {
@@ -67,16 +72,16 @@ class GeneratorOptions extends AbstractYamlReader
      * Allows to add an option and set its value
      * @throws InvalidArgumentException
      * @param string $optionName
-     * @return \WsdlToPhp\Generator\Options
+     * @return GeneratorOptions
      */
     public function setOptionValue($optionName, $optionValue, array $values = array())
     {
         if (!isset($this->options[$optionName])) {
             $this->options[$optionName] = array(
-                    'value'  => $optionValue,
-                    'values' => $values,
+                'value'  => $optionValue,
+                'values' => $values,
             );
-        } elseif(!empty($this->options[$optionName]['values']) && !in_array($optionValue, $this->options[$optionName]['values'], true)) {
+        } elseif (!empty($this->options[$optionName]['values']) && !in_array($optionValue, $this->options[$optionName]['values'], true)) {
             throw new \InvalidArgumentException(sprintf('Invalid value "%s" for option "%s", possible values: %s', $optionValue, $optionName, implode(', ', $this->options[$optionName]['values'])));
         } else {
             $this->options[$optionName]['value'] = $optionValue;
@@ -93,7 +98,7 @@ class GeneratorOptions extends AbstractYamlReader
     }
     /**
      * Get category option value
-     * @return string
+     * @return string|bool
      */
     public function getCategory()
     {
@@ -111,7 +116,7 @@ class GeneratorOptions extends AbstractYamlReader
     }
     /**
      * Get subcategory option value
-     * @return string
+     * @return string|bool
      */
     public function getSubCategory()
     {
@@ -129,7 +134,7 @@ class GeneratorOptions extends AbstractYamlReader
     }
     /**
      * Get add comments option value
-     * @return string
+     * @return array
      */
     public function getAddComments()
     {
@@ -159,7 +164,7 @@ class GeneratorOptions extends AbstractYamlReader
     }
     /**
      * Get gather methods option value
-     * @return string
+     * @return string|bool
      */
     public function getGatherMethods()
     {
@@ -177,7 +182,7 @@ class GeneratorOptions extends AbstractYamlReader
     }
     /**
      * Get generate wsdl class option value
-     * @return bool
+     * @return string|bool
      */
     public function getGenerateWsdlClass()
     {
@@ -195,7 +200,7 @@ class GeneratorOptions extends AbstractYamlReader
     }
     /**
      * Get generate autoload file option value
-     * @return bool
+     * @return string|bool
      */
     public function getGenerateAutoloadFile()
     {
@@ -213,7 +218,7 @@ class GeneratorOptions extends AbstractYamlReader
     }
     /**
      * Get generate tutorial file option value
-     * @return bool
+     * @return string|bool
      */
     public function getGenerateTutorialFile()
     {
@@ -231,7 +236,7 @@ class GeneratorOptions extends AbstractYamlReader
     }
     /**
      * Get send array as parameter option value
-     * @return bool
+     * @return string|bool
      */
     public function getSendArrayAsParameter()
     {
@@ -249,7 +254,7 @@ class GeneratorOptions extends AbstractYamlReader
     }
     /**
      * Get generic constants name option value
-     * @return bool
+     * @return string|bool
      */
     public function getGenericConstantsName()
     {
@@ -267,7 +272,7 @@ class GeneratorOptions extends AbstractYamlReader
     }
     /**
      * Get get response as wsdl object option value
-     * @return bool
+     * @return string|bool
      */
     public function getGetResponseAsWsdlObject()
     {
@@ -285,7 +290,7 @@ class GeneratorOptions extends AbstractYamlReader
     }
     /**
      * Get inherits from identifier option value
-     * @return string
+     * @return string|bool
      */
     public function getInheritsFromIdentifier()
     {
@@ -303,7 +308,7 @@ class GeneratorOptions extends AbstractYamlReader
     }
     /**
      * Get send parameters as array option value
-     * @return bool
+     * @return string|bool
      */
     public function getSendParametersAsArray()
     {

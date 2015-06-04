@@ -149,8 +149,7 @@ class StructAttribute extends AbstractModel
         array_push($body, "{");
         if ($this->nameIsClean()) {
             $thisAccess = '$this->' . $this->getName();
-        }
-        else {
+        } else {
             $thisAccess = '$this->{\'' . addslashes($this->getName()) . '\'}';
         }
         /**
@@ -170,8 +169,7 @@ class StructAttribute extends AbstractModel
         }
         if ($isXml) {
             array_push($body, 'return ($asString && (' . $thisAccess . ' instanceof DOMDocument) && ' . $thisAccess . '->hasChildNodes())?' . $thisAccess . '->saveXML(' . $thisAccess . '->childNodes->item(0)):' . $thisAccess . ';');
-        }
-        else {
+        } else {
             array_push($body, 'return ' . $thisAccess . ';');
         }
         array_push($body, "}");
@@ -202,8 +200,9 @@ class StructAttribute extends AbstractModel
          */
         $comments = array();
         array_push($comments, 'Set ' . $this->getName() . ' value');
-        if ($model && $model->getIsRestriction() && !$struct->isArray())
+        if ($model && $model->getIsRestriction() && !$struct->isArray()) {
             array_push($comments, '@uses ' . $model->getPackagedName() . '::valueIsValid()');
+        }
         if ($model) {
             if ($model->getIsStruct() && $model->getPackagedName() != $this->getOwner()->getPackagedName()) {
                 array_push($comments, '@param ' . $model->getPackagedName() . ' $' . lcfirst($this->getCleanName()) . ' the ' . $this->getName());
@@ -230,8 +229,7 @@ class StructAttribute extends AbstractModel
         }
         if ($this->nameIsClean()) {
             array_push($body, 'return ($this->' . $this->getName() . ' = $' . lcfirst($this->getCleanName()) . ');');
-        }
-        else {
+        } else {
             array_push($body, 'return ($this->' . $this->getCleanName() . ' = $this->{\'' . addslashes($this->getName()) . '\'} = $' . lcfirst($this->getCleanName()) . ');');
         }
         array_push($body, '}');

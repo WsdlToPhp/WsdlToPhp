@@ -38,7 +38,6 @@ class TagRestriction extends AbstractTagParser
         return WsdlDocument::TAG_RESTRICTION;
     }
     /**
-     * @param Tag $tag
      * @param Restriction $restriction
      */
     public function parseRestriction(Restriction $restriction)
@@ -86,7 +85,7 @@ class TagRestriction extends AbstractTagParser
     private function parseRestrictionChildren(Tag $parent, Restriction $restriction)
     {
         foreach ($restriction->getElementChildren() as $child) {
-            if ($parent instanceof Tag) {
+            if ($child instanceof Tag) {
                 $this->parseRestrictionChild($parent, $child);
             }
         }

@@ -10,6 +10,13 @@ The generated package then provides all the methods to send any request to any o
 
 You can find this component under ```src/WsdlToPhp/PackageGenerator``` directory.
 
+## The php generator
+This component as it is named provides an easy way to generate a PHP source code.
+
+This component is used by the package generator to ensure stability and consistency among generated PHP files.
+
+You can find this component under ```src/WsdlToPhp/PhpGenerator``` directory.
+
 ## The bundle generator
 The bundle generator will aim to provide an easy way to generate a symfony bundle based on the generated package.
 
