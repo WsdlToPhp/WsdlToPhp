@@ -6,7 +6,7 @@ class Structs extends AbstractParser
 {
     public function parse()
     {
-        $types   = $this->generator->__getTypes();
+        $types = $this->generator->__getTypes();
         $structs = $this->generator->getStructs();
         if (is_array($types) && count($types)) {
             $structsDefined = array();
@@ -47,7 +47,7 @@ class Structs extends AbstractParser
                 $struct = $typeDef[0];
                 if ($struct != 'struct') {
                     if (!empty($typeDef[1])) {
-                        $structs->addVirtualStruct($typeDef[1]);
+                        $structs->addVirtualStruct($this->generator, $typeDef[1]);
                     }
                     continue;
                 }
@@ -71,13 +71,12 @@ class Structs extends AbstractParser
                  */
                 $start = false;
                 $then = false;
-                $structParamName = '';
                 $structParamType = '';
                 $typeDefCount = count($typeDef);
                 if ($typeDefCount > 3) {
-                    for ($i = 2; $i < $typeDefCount; $i ++) {
+                    for ($i = 2; $i < $typeDefCount; $i++) {
                         $typeVal = $typeDef[$i];
-                        if ($typeVal != '{' && is_string($typeVal) && !empty($typeVal) && ! $start) {
+                        if ($typeVal != '{' && is_string($typeVal) && !empty($typeVal) && !$start) {
                             $then = false;
                             $start = true;
                         }
@@ -88,13 +87,12 @@ class Structs extends AbstractParser
                         if ($then) {
                             $structParamName = $typeVal;
                             if (!empty($structParamType) && !empty($structParamName) && !empty($structName)) {
-                                $structs->addStruct($structName, $structParamName, $structParamType);
+                                $structs->addStructWithAttribute($this->generator, $structName, $structParamName, $structParamType);
                                 array_push($structsDefined, $typeSignature);
-                                $structParamName = '';
                                 $structParamType = '';
                             }
                         }
-                        if ($start && ! $then) {
+                        if ($start && !$then) {
                             /**
                              * Replace some weird definition to known valid type
                              */
@@ -104,7 +102,7 @@ class Structs extends AbstractParser
                         }
                     }
                 } else {
-                    $structs->addStruct($structName, $structParamName, $structParamType);
+                    $structs->addStruct($this->generator, $structName);
                 }
             }
         }

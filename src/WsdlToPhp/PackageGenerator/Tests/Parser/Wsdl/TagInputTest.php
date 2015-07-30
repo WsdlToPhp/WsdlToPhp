@@ -2,7 +2,6 @@
 
 namespace WsdlToPhp\PackageGenerator\Tests\Parser\Wsdl;
 
-use WsdlToPhp\PackageGenerator\Container\AbstractObjectContainer;
 use WsdlToPhp\PackageGenerator\Parser\Wsdl\TagInput;
 
 class TagInputTest extends WsdlParser
@@ -27,8 +26,7 @@ class TagInputTest extends WsdlParser
     public function testParseMyBoardpack()
     {
         $tagInputParser = self::myBoardPackInstance();
-        $soapClient     = self::myBoardPackSoapClient();
-        AbstractObjectContainer::purgeAllCache();
+        $soapClient = self::myBoardPackSoapClient();
 
         $tagInputParser->parse();
 
@@ -58,7 +56,7 @@ class TagInputTest extends WsdlParser
         $matches = array();
         preg_match(sprintf('/[a-zA-Z_]*\s([a-zA-Z_]*)\((%s)\s/i', $parameterType), $soapFunction, $matches);
         return array(
-            'name'      => $matches[1],
+            'name' => $matches[1],
             'parameter' => $matches[2],
         );
     }

@@ -6,7 +6,7 @@ use WsdlToPhp\PackageGenerator\DomHandler\Wsdl\Wsdl as WsdlDocument;
 
 abstract class AbstractTagOperationElement extends AbstractTag
 {
-    const ATTRIBUTE_MESSAGE  = 'message';
+    const ATTRIBUTE_MESSAGE = 'message';
     /**
      * @return TagOperation|null
      */
@@ -40,34 +40,38 @@ abstract class AbstractTagOperationElement extends AbstractTag
      */
     public function getMessage()
     {
+        $message = null;
         $messageName = $this->getAttributeMessage();
         if (!empty($messageName)) {
-            return $this->getDomDocumentHandler()->getElementByNameAndAttributes('message', array(
+            $message = $this->getDomDocumentHandler()->getElementByNameAndAttributes('message', array(
                 'name' => $messageName,
             ));
         }
-        return null;
+        return $message;
     }
     /**
-     * @return null|TagPart[]
+     * @return TagPart[]|null
      */
     public function getParts()
     {
+        $parts = null;
         $message = $this->getMessage();
         if ($message instanceof TagMessage) {
-            return $message->getChildrenByName(WsdlDocument::TAG_PART);
+            $parts = $message->getChildrenByName(WsdlDocument::TAG_PART);
         }
-        return null;
+        return $parts;
     }
     /**
-     * @return null|TagPart
+     * @param string $partName
+     * @return TagPart|null
      */
     public function getPart($partName)
     {
+        $part = null;
         $message = $this->getMessage();
         if ($message instanceof TagMessage && !empty($partName)) {
-            return $message->getPart($partName);
+            $part = $message->getPart($partName);
         }
-        return null;
+        return $part;
     }
 }

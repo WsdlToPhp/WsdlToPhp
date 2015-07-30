@@ -3,11 +3,9 @@
 namespace WsdlToPhp\PackageGenerator\DomHandler\Wsdl\Tag;
 
 use WsdlToPhp\PackageGenerator\DomHandler\Wsdl\Wsdl as WsdlDocument;
+use WsdlToPhp\PackageGenerator\DomHandler\Wsdl\Schema as SchemaDocument;
 use WsdlToPhp\PackageGenerator\DomHandler\AbstractAttributeHandler as Attribute;
 use WsdlToPhp\PackageGenerator\DomHandler\ElementHandler;
-use WsdlToPhp\PackageGenerator\DomHandler\Wsdl\AbstractDocument;
-use WsdlToPhp\PackageGenerator\DomHandler\Wsdl\Wsdl;
-use WsdlToPhp\PackageGenerator\DomHandler\Wsdl\Schema;
 use WsdlToPhp\PackageGenerator\DomHandler\AbstractNodeHandler;
 
 abstract class AbstractTag extends ElementHandler
@@ -28,7 +26,7 @@ abstract class AbstractTag extends ElementHandler
     {
         $parentNode = null;
         if ($this->getParent() instanceof AbstractNodeHandler) {
-            $parentTags = $this->getSuitableParentTags($additionalTags);
+            $parentTags = $strict ? $additionalTags : $this->getSuitableParentTags($additionalTags);
             $parentNode = $this->getParent()->getNode();
             while ($maxDeep-- > 0 && ($parentNode instanceof \DOMElement) && !empty($parentNode->nodeName) && (!preg_match('/' . implode('|', $parentTags) . '/i', $parentNode->nodeName) || ($checkName && preg_match('/' . implode('|', $parentTags) . '/i', $parentNode->nodeName) && (!$parentNode->hasAttribute('name') || $parentNode->getAttribute('name') === '')))) {
                 $parentNode = $parentNode->parentNode;
@@ -57,7 +55,7 @@ abstract class AbstractTag extends ElementHandler
     /**
      * @param string $name
      * @param bool $checkName
-     * @return null|\WsdlToPhp\PackageGenerator\DomHandler\Wsdl\Tag\AbstractTag
+     * @return AbstractTag|null
      */
     protected function getStrictParent($name, $checkName = false)
     {
@@ -78,7 +76,7 @@ abstract class AbstractTag extends ElementHandler
         return $this->hasAttribute(Attribute::ATTRIBUTE_NAME);
     }
     /**
-     * @return null|string
+     * @return string
      */
     public function getAttributeName()
     {
@@ -92,14 +90,14 @@ abstract class AbstractTag extends ElementHandler
         return $this->hasAttribute(Attribute::ATTRIBUTE_VALUE);
     }
     /**
-     * @return null|string
+     * @return mixed
      */
     public function getAttributeValue($withNamespace = false, $withinItsType = true, $asType = null)
     {
         return $this->getAttribute(Attribute::ATTRIBUTE_VALUE) instanceof Attribute ? $this->getAttribute(Attribute::ATTRIBUTE_VALUE)->getValue($withNamespace, $withinItsType, $asType) : '';
     }
     /**
-     * @return AbstractDocument|Wsdl|Schema
+     * @return WsdlDocument|SchemaDocument
      */
     public function getDomDocumentHandler()
     {

@@ -4,7 +4,6 @@ namespace WsdlToPhp\PackageGenerator\Parser\Wsdl;
 
 use WsdlToPhp\PackageGenerator\Model\Method;
 use WsdlToPhp\PackageGenerator\Model\Wsdl;
-use WsdlToPhp\PackageGenerator\Model\Schema;
 use WsdlToPhp\PackageGenerator\DomHandler\Wsdl\Tag\TagPart;
 use WsdlToPhp\PackageGenerator\DomHandler\Wsdl\Tag\AbstractTagOperationElement;
 use WsdlToPhp\PackageGenerator\DomHandler\Wsdl\Tag\TagOperation;
@@ -28,15 +27,10 @@ abstract class AbstractTagInputOutputParser extends AbstractTagParser
     protected function parseWsdl(Wsdl $wsdl)
     {
         foreach ($this->getTags() as $tag) {
-            $this->parseInputOutput($tag);
+            if ($tag instanceof AbstractTagOperationElement) {
+                $this->parseInputOutput($tag);
+            }
         }
-    }
-    /**
-     * @see \WsdlToPhp\PackageGenerator\Parser\Wsdl\AbstractParser::parseSchema()
-     */
-    protected function parseSchema(Wsdl $wsdl, Schema $schema)
-    {
-        $this->parseWsdl($wsdl);
     }
     /**
      * @param AbstractTagOperationElement $tag
@@ -96,6 +90,6 @@ abstract class AbstractTagInputOutputParser extends AbstractTagParser
                 $isKnown &= !empty($knownType) && strtolower($knownValue) !== self::UNKNOWN;
             }
         }
-        return (bool) !$isKnown;
+        return (bool)!$isKnown;
     }
 }

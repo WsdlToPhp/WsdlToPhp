@@ -16,33 +16,19 @@ class ReservedKeywords extends AbstractYamlReader
     {
         $this->keywords = array();
         $this->parseReservedKeywords($filename);
-        $this->parseWSdlClass();
     }
     /**
      * @param string $filename
+     * @return ReservedKeywords
      */
     protected function parseReservedKeywords($filename)
     {
         $keywords = $this->loadYaml($filename);
         if (!isset($keywords['reserved_keywords'])) {
-            throw new \InvalidArgumentException(sprintf('Unable to find section reserved_keywords in "%s"', $filename));
+            throw new \InvalidArgumentException(sprintf('Unable to find section reserved_keywords in "%s"', $filename), __LINE__);
         }
         $this->keywords = array_merge($this->keywords, $keywords['reserved_keywords']);
-    }
-    /**
-     * Parses generated WsdlClass to avoid generating an overridden method
-     */
-    protected function parseWSdlClass()
-    {
-        if (is_file(dirname(__FILE__) . '/../Resources/templates/Default/Class.php')) {
-            require_once dirname(__FILE__) . '/../Resources/templates/Default/Class.php';
-            if (class_exists('PackageNameWsdlClass')) {
-                $methods = get_class_methods('PackageNameWsdlClass');
-                if (!empty($methods)) {
-                    $this->keywords = array_merge($this->keywords, $methods);
-                }
-            }
-        }
+        return $this;
     }
     /**
      * @param string options's file to parse

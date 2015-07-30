@@ -2,7 +2,6 @@
 
 namespace WsdlToPhp\PackageGenerator\Tests\Parser\Wsdl;
 
-use WsdlToPhp\PackageGenerator\Container\AbstractObjectContainer;
 use WsdlToPhp\PackageGenerator\Parser\Wsdl\TagList;
 use WsdlToPhp\PackageGenerator\Model\StructAttribute;
 
@@ -16,16 +15,22 @@ class TagListTest extends WsdlParser
         return new TagList(self::generatorInstance(self::wsdlOdigeoPath()));
     }
     /**
+     * @return \WsdlToPhp\PackageGenerator\Parser\Wsdl\TagList
+     */
+    public static function myBaordInstance()
+    {
+        return new TagList(self::generatorInstance(self::wsdlMyBoardPackPath()));
+    }
+    /**
      *
      */
     public function testParseOdigeo()
     {
         $tagListParser = self::odigeoInstance();
-        AbstractObjectContainer::purgeAllCache();
 
         $tagListParser->parse();
 
-        $ok = false;
+        $count = 0;
         $structs = $tagListParser->getGenerator()->getStructs();
         if ($structs->count() > 0) {
             foreach ($structs as $struct) {
@@ -36,20 +41,44 @@ class TagListTest extends WsdlParser
                                 case 'firstSegmentsIds':
                                 case 'secondSegmentsIds':
                                 case 'thirdSegmentsIds':
-                                    $this->assertSame('array[int]', $attribute->getInheritance());
-                                    $ok = true;
+                                    $this->assertSame('int[]', $attribute->getInheritance());
+                                    $count++;
                                     break;
                             }
                         }
                         break;
                     case 'segment':
                         if ($struct->getAttribute('sectionIds') instanceof StructAttribute) {
-                            $this->assertSame('array[int]', $struct->getAttribute('sectionIds')->getInheritance());
+                            $this->assertSame('int[]', $struct->getAttribute('sectionIds')->getInheritance());
+                            $count++;
                         }
                         break;
                 }
             }
         }
-        $this->assertTrue((bool)$ok);
+        $this->assertSame(4, $count);
+    }
+    /**
+     *
+     */
+    public function testParseMyBoard()
+    {
+        $tagListParser = self::myBaordInstance();
+
+        $tagListParser->parse();
+
+        $count = 0;
+        $structs = $tagListParser->getGenerator()->getStructs();
+        if ($structs->count() > 0) {
+            foreach ($structs as $struct) {
+                switch ($struct->getName()) {
+                    case 'Rights':
+                        $this->assertSame('string[]', $struct->getInheritance());
+                        $count++;
+                        break;
+                }
+            }
+        }
+        $this->assertSame(1, $count);
     }
 }

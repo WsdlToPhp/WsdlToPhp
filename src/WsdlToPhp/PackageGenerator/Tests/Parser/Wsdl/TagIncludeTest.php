@@ -2,10 +2,8 @@
 
 namespace WsdlToPhp\PackageGenerator\Tests\Parser\Wsdl;
 
-use WsdlToPhp\PackageGenerator\Container\AbstractObjectContainer;
 use WsdlToPhp\PackageGenerator\Container\Model\Schema as SchemaContainer;
 use WsdlToPhp\PackageGenerator\Parser\Wsdl\TagInclude;
-use WsdlToPhp\PackageGenerator\Generator\Generator;
 use WsdlToPhp\PackageGenerator\Model\Wsdl;
 use WsdlToPhp\PackageGenerator\Model\Schema;
 
@@ -16,7 +14,7 @@ class TagIncludeTest extends WsdlParser
      */
     public static function instance()
     {
-        return new TagInclude(new Generator(self::wsdlImageViewServicePath()));
+        return new TagInclude(self::getInstance(self::wsdlImageViewServicePath()));
     }
     /**
      *
@@ -24,11 +22,10 @@ class TagIncludeTest extends WsdlParser
     public function testIsWsdlParsed()
     {
         $tagIncludeParser = self::instance();
-        AbstractObjectContainer::purgeAllCache();
 
         $tagIncludeParser->parse();
 
-        $this->assertTrue($tagIncludeParser->isWsdlParsed(new Wsdl(self::wsdlImageViewServicePath(), file_get_contents(self::wsdlImageViewServicePath()))));
+        $this->assertTrue($tagIncludeParser->isWsdlParsed(new Wsdl($tagIncludeParser->getGenerator(), self::wsdlImageViewServicePath(), file_get_contents(self::wsdlImageViewServicePath()))));
     }
     /**
      *
@@ -36,7 +33,6 @@ class TagIncludeTest extends WsdlParser
     public function testGetExternalSchemas()
     {
         $tagIncludeParser = self::instance();
-        AbstractObjectContainer::purgeAllCache();
 
         $tagIncludeParser->parse();
 
@@ -49,25 +45,13 @@ class TagIncludeTest extends WsdlParser
         );
         $schemaContainer = new SchemaContainer();
         foreach ($schemas as $schemaPath) {
-            $schemaPath = sprintf(dirname(__FILE__) . '/../../resources/%s', $schemaPath);
-            $schema = new Schema($schemaPath, file_get_contents($schemaPath));
+            $schemaPath = realpath(sprintf(__DIR__ . '/../../resources/%s', $schemaPath));
+            $schema = new Schema($tagIncludeParser->getGenerator(), $schemaPath, file_get_contents($schemaPath));
             $schema->getContent()->setCurrentTag('include');
             $schemaContainer->add($schema);
         }
 
-        $tagIncludeParser->getGenerator()->getWsdl(0)->getContent()->getExternalSchemas()->rewind();
-        $this->assertEquals($schemaContainer, $tagIncludeParser->getGenerator()->getWsdl(0)->getContent()->getExternalSchemas());
-    }
-    /**
-     *
-     */
-    public function testCountWsdlsAfterParsing()
-    {
-        $tagIncludeParser = self::instance();
-        AbstractObjectContainer::purgeAllCache();
-
-        $tagIncludeParser->parse();
-
-        $this->assertCount(1, $tagIncludeParser->getGenerator()->getWsdls());
+        $tagIncludeParser->getGenerator()->getWsdl()->getContent()->getExternalSchemas()->rewind();
+        $this->assertEquals($schemaContainer, $tagIncludeParser->getGenerator()->getWsdl()->getContent()->getExternalSchemas());
     }
 }

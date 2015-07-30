@@ -7,7 +7,6 @@ use WsdlToPhp\PackageGenerator\DomHandler\AttributeHandler;
 use WsdlToPhp\PackageGenerator\DomHandler\Wsdl\Tag\AbstractTag as Tag;
 use WsdlToPhp\PackageGenerator\DomHandler\Wsdl\Tag\TagRestriction as Restriction;
 use WsdlToPhp\PackageGenerator\Model\Wsdl;
-use WsdlToPhp\PackageGenerator\Model\Schema;
 use WsdlToPhp\PackageGenerator\Model\Struct;
 
 class TagRestriction extends AbstractTagParser
@@ -24,13 +23,6 @@ class TagRestriction extends AbstractTagParser
         }
     }
     /**
-     * @see \WsdlToPhp\PackageGenerator\Parser\Wsdl\AbstractParser::parseSchema()
-     */
-    protected function parseSchema(Wsdl $wsdl, Schema $schema)
-    {
-        $this->parseWsdl($wsdl);
-    }
-    /**
      * @see \WsdlToPhp\PackageGenerator\Parser\Wsdl\AbstractParser::parsingTag()
      */
     protected function parsingTag()
@@ -38,7 +30,6 @@ class TagRestriction extends AbstractTagParser
         return WsdlDocument::TAG_RESTRICTION;
     }
     /**
-     * @param Tag $tag
      * @param Restriction $restriction
      */
     public function parseRestriction(Restriction $restriction)
@@ -47,7 +38,7 @@ class TagRestriction extends AbstractTagParser
         if ($parent instanceof Tag) {
             $model = $this->getModel($parent);
             if ($model instanceof Struct) {
-                $this->getGenerator()->getStructs()->addVirtualStruct($parent->getAttributeName());
+                $this->getGenerator()->getStructs()->addVirtualStruct($this->getGenerator(), $parent->getAttributeName());
                 $this->parseRestrictionAttributes($parent, $model, $restriction);
                 $this->parseRestrictionChildren($parent, $restriction);
             }
@@ -86,7 +77,7 @@ class TagRestriction extends AbstractTagParser
     private function parseRestrictionChildren(Tag $parent, Restriction $restriction)
     {
         foreach ($restriction->getElementChildren() as $child) {
-            if ($parent instanceof Tag) {
+            if ($child instanceof Tag) {
                 $this->parseRestrictionChild($parent, $child);
             }
         }
