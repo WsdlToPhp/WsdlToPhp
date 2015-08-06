@@ -14,33 +14,17 @@ class StructTest extends AbstractFile
     public function testSetModelGoodNameTooManyAttributesWithException()
     {
         $instance = self::bingGeneratorInstance();
-        $struct = new StructFile($instance, 'Foo', self::getTestDirectory());
+        $struct = new StructFile($instance, 'Foo');
         $struct->setModel(new EmptyModel($instance, 'Foo'));
-    }
-    /**
-     * @expectedException \InvalidArgumentException
-     */
-    public function testExceptionOnDestination()
-    {
-        $file = new StructFile(self::bingGeneratorInstance(), 'foo', __DIR__ . '/../rsources/');
     }
     /**
      * @expectedException \InvalidArgumentException
      */
     public function testExceptionOnWrite()
     {
-        $file = new StructFile(self::bingGeneratorInstance(), 'foo', __DIR__ . '/../rsources/');
+        $file = new StructFile(self::bingGeneratorInstance(), 'foo');
 
         $file->write();
-    }
-    /**
-     *
-     */
-    public function testDestination()
-    {
-        $file = new StructFile(self::bingGeneratorInstance(), 'foo', __DIR__ . '/../resources/');
-
-        $this->assertSame(realpath(__DIR__ . '/../resources'), $file->getDestination());
     }
     /**
      *
@@ -48,10 +32,10 @@ class StructTest extends AbstractFile
     public function testGetFileName()
     {
         $model = new StructModel(self::bingGeneratorInstance(), 'Foo');
-        $file = new StructFile(self::bingGeneratorInstance(), 'foo', __DIR__ . '/../resources/');
+        $file = new StructFile(self::bingGeneratorInstance(), 'foo');
         $file->setModel($model);
 
-        $this->assertSame(realpath(__DIR__ . '/../resources') . '/ApiFoo.php', $file->getFileName());
+        $this->assertSame(self::getTestDirectory() . 'StructType/ApiFoo.php', $file->getFileName());
     }
     /**
      *
@@ -60,7 +44,7 @@ class StructTest extends AbstractFile
     {
         $generator = self::bingGeneratorInstance();
         if (($model = $generator->getStruct('Query')) instanceof StructModel) {
-            $struct = new StructFile($generator, $model->getName(), self::getTestDirectory());
+            $struct = new StructFile($generator, $model->getName());
             $struct
                 ->setModel($model)
                 ->write();
@@ -76,7 +60,7 @@ class StructTest extends AbstractFile
     {
         $generator = self::bingGeneratorInstance();
         if (($model = $generator->getStruct('VideoRequest')) instanceof StructModel) {
-            $struct = new StructFile($generator, $model->getName(), self::getTestDirectory());
+            $struct = new StructFile($generator, $model->getName());
             $struct
                 ->setModel($model)
                 ->write();
@@ -92,7 +76,7 @@ class StructTest extends AbstractFile
     {
         $generator = self::bingGeneratorInstance();
         if (($model = $generator->getStruct('SearchRequest')) instanceof StructModel) {
-            $struct = new StructFile($generator, $model->getName(), self::getTestDirectory());
+            $struct = new StructFile($generator, $model->getName());
             $struct
                 ->setModel($model)
                 ->write();
@@ -108,7 +92,7 @@ class StructTest extends AbstractFile
     {
         $generator = self::actonGeneratorInstance();
         if (($model = $generator->getStruct('Item')) instanceof StructModel) {
-            $struct = new StructFile($generator, $model->getName(), self::getTestDirectory());
+            $struct = new StructFile($generator, $model->getName());
             $struct
                 ->setModel($model)
                 ->write();
@@ -124,7 +108,7 @@ class StructTest extends AbstractFile
     {
         $generator = self::odigeoGeneratorInstance();
         if (($model = $generator->getStruct('fareItinerary')) instanceof StructModel) {
-            $struct = new StructFile($generator, $model->getName(), self::getTestDirectory());
+            $struct = new StructFile($generator, $model->getName());
             $struct
                 ->setModel($model)
                 ->write();
@@ -141,7 +125,7 @@ class StructTest extends AbstractFile
         $generator = self::bingGeneratorInstance();
         if (($model = $generator->getStruct('NewsArticle')) instanceof StructModel) {
             $generator->setOptionStructClass('\Std\Opt\StructClass');
-            $struct = new StructFile($generator, $model->getName(), self::getTestDirectory());
+            $struct = new StructFile($generator, $model->getName());
             $struct
                 ->setModel($model)
                 ->write();

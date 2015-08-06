@@ -17,6 +17,7 @@ class GeneratorOptions extends AbstractYamlReader
      * Possible option keys
      * @var string
      */
+    const SUFFIX = 'suffix';
     const PREFIX = 'prefix';
     const ORIGIN = 'origin';
     const CATEGORY = 'category';
@@ -88,7 +89,7 @@ class GeneratorOptions extends AbstractYamlReader
     {
         if (!isset($this->options[$optionName])) {
             $this->options[$optionName] = array(
-                'value'  => $optionValue,
+                'value' => $optionValue,
                 'values' => $values,
             );
         } elseif (!empty($this->options[$optionName]['values']) && !in_array($optionValue, $this->options[$optionName]['values'], true)) {
@@ -353,6 +354,24 @@ class GeneratorOptions extends AbstractYamlReader
         return $this->setOptionValue(self::PREFIX, $prefix);
     }
     /**
+     * Get suffix option value
+     * @return string
+     */
+    public function getSuffix()
+    {
+        return $this->getOptionValue(self::SUFFIX);
+    }
+    /**
+     * Set current suffix option value
+     * @throws \InvalidArgumentException
+     * @param string $suffix
+     * @return GeneratorOptions
+     */
+    public function setSuffix($suffix)
+    {
+        return $this->setOptionValue(self::SUFFIX, $suffix);
+    }
+    /**
      * Get basic login option value
      * @return string
      */
@@ -477,5 +496,16 @@ class GeneratorOptions extends AbstractYamlReader
     public function setSoapOptions(array $soapOptions)
     {
         return $this->setOptionValue(self::SOAP_OPTIONS, $soapOptions);
+    }
+    /**
+     * @return string[]
+     */
+    public function toArray()
+    {
+        $options = array();
+        foreach ($this->options as $name => $value) {
+            $options[$name] = $this->getOptionValue($name);
+        }
+        return $options;
     }
 }

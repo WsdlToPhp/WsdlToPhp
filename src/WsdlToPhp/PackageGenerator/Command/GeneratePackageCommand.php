@@ -19,10 +19,6 @@ class GeneratePackageCommand extends AbstractCommand
      */
     protected $generatorOptions;
     /**
-     * @var array
-     */
-    protected $options;
-    /**
      * @return Generator
      */
     public function getGenerator()
@@ -39,7 +35,7 @@ class GeneratePackageCommand extends AbstractCommand
         return $this;
     }
     /**
-     * @return Generator
+     * @return GeneratePackageCommand
      */
     protected function initGenerator()
     {
@@ -63,6 +59,7 @@ class GeneratePackageCommand extends AbstractCommand
             ->addOption('wsdl-proxy-login', null, InputOption::VALUE_OPTIONAL, 'Use proxy login')
             ->addOption('wsdl-proxy-password', null, InputOption::VALUE_OPTIONAL, 'Use proxy password')
             ->addOption('wsdl-prefix', null, InputOption::VALUE_REQUIRED, 'Prepend generated classes')
+            ->addOption('wsdl-suffix', null, InputOption::VALUE_REQUIRED, 'Append generated classes')
             ->addOption('wsdl-namespace', null, InputOption::VALUE_OPTIONAL, 'Package classes\' namespace')
             ->addOption('wsdl-category', null, InputOption::VALUE_OPTIONAL, 'First level directory name generation mode (start, end, cat, none)')
             ->addOption('wsdl-gathermethods', null, InputOption::VALUE_OPTIONAL, 'Gather methods based on operation name mode (start, end)')
@@ -83,16 +80,17 @@ class GeneratePackageCommand extends AbstractCommand
         $start = new \DateTime();
         $this->writeLn(sprintf(" Start at %s", $start->format('Y-m-d H:i:s')));
 
-        $this
-            ->initGeneratorOptions()
-            ->initGenerator();
+        $this->initGeneratorOptions();
 
         if ($this->canExecute()) {
-            $this->getGenerator()->generateClasses();
+            $this
+                ->initGenerator()
+                ->getGenerator()
+                    ->generateClasses();
         } else {
             $this->writeLn("  Generation not launched, use \"--force\" option to force generation");
             $this->writeLn("  Used generator's options:");
-            $this->writeLn("    " . implode(PHP_EOL . '    ', $this->formatArrayForConsole($this->options)));
+            $this->writeLn("    " . implode(PHP_EOL . '    ', $this->formatArrayForConsole($this->generatorOptions->toArray())));
         }
 
         $end = new \DateTime();
@@ -105,6 +103,7 @@ class GeneratePackageCommand extends AbstractCommand
     {
         return array(
             'wsdl-prefix' => 'Prefix',
+            'wsdl-suffix' => 'Suffix',
             'wsdl-urlorpath' => 'Origin',
             'wsdl-login' => 'BasicLogin',
             'wsdl-category' => 'Category',
@@ -126,18 +125,16 @@ class GeneratePackageCommand extends AbstractCommand
         );
     }
     /**
-     * @return array
+     * @return GeneratePackageCommand
      */
     protected function initGeneratorOptions()
     {
         $generatorOptions = GeneratorOptions::instance();
-        $options = array();
         foreach ($this->getPackageGenerationCommandLineOptions() as $optionName=>$optionMethod) {
             $optionValue = $this->formatOptionValue($this->input->getOption($optionName));
             if ($optionValue !== null) {
                 $setOption = sprintf('set%s', $optionMethod);
                 if (method_exists($generatorOptions, $setOption)) {
-                    $options[$optionName] = $optionValue;
                     call_user_func_array(array(
                         $generatorOptions,
                         $setOption,
@@ -150,7 +147,6 @@ class GeneratePackageCommand extends AbstractCommand
             }
         }
         $this->generatorOptions = $generatorOptions;
-        $this->options = $options;
         return $this;
     }
     /**

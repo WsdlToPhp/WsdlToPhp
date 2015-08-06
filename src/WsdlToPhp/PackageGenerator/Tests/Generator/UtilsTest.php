@@ -3,8 +3,6 @@
 namespace WsdlToPhp\PackageGenerator\Tests\Generator;
 
 use WsdlToPhp\PackageGenerator\ConfigurationReader\GeneratorOptions;
-use WsdlToPhp\PackageGenerator\Model\EmptyModel;
-use WsdlToPhp\PackageGenerator\Tests\ConfigurationReader\GeneratorOptionsTest;
 use WsdlToPhp\PackageGenerator\Generator\Utils;
 use WsdlToPhp\PackageGenerator\Tests\TestCase;
 
@@ -44,10 +42,57 @@ class UtilsTest extends TestCase
      */
     public function testCleanString()
     {
-        $instance = GeneratorOptionsTest::optionsInstance();
-        $instance->setGatherMethods(GeneratorOptions::VALUE_START);
-
-        $this->assertSame('events', Utils::getPart($instance, new EmptyModel(self::getBingGeneratorInstance(), 'eventsGet'), GeneratorOptions::GATHER_METHODS));
-        $this->assertSame('events', Utils::getPart($instance, new EmptyModel(self::getBingGeneratorInstance(), '_events'), GeneratorOptions::GATHER_METHODS));
+        $this->assertSame('events', Utils::getPart(GeneratorOptions::VALUE_START, 'eventsGet'));
+        $this->assertSame('events', Utils::getPart(GeneratorOptions::VALUE_START, '_events'));
+    }
+    /**
+     *
+     */
+    public function testCleanComment()
+    {
+        $this->assertEmpty(Utils::cleanComment(null));
+        $this->assertEmpty(Utils::cleanComment(new \stdClass()));
+    }
+    /**
+     *
+     */
+    public function testGetContentFromUrlContextOptionsBasicAuth()
+    {
+        $this->assertSame(array(
+            'http' => array(
+                'header' => array(
+                    sprintf('Authorization: Basic %s', base64_encode('foo:bar')),
+                ),
+            ),
+        ), Utils::getContentFromUrlContextOptions('http://www.foo.com', 'foo', 'bar'));
+    }
+    /**
+     *
+     */
+    public function testGetContentFromUrlContextOptionsProxy()
+    {
+        $this->assertSame(array(
+            'http' => array(
+                'proxy' => 'tcp://dns.proxy.com:4545',
+                'header' => array(
+                    sprintf('Proxy-Authorization: Basic %s', base64_encode('foo:bar')),
+                ),
+            ),
+        ), Utils::getContentFromUrlContextOptions('http://www.foo.com', null, null, 'dns.proxy.com', 4545, 'foo', 'bar'));
+    }
+    /**
+     *
+     */
+    public function testGetContentFromUrlContextOptionsBasicAuthProxy()
+    {
+        $this->assertSame(array(
+            'http' => array(
+                'proxy' => 'tcp://dns.proxy.com:4545',
+                'header' => array(
+                    sprintf('Proxy-Authorization: Basic %s', base64_encode('foo:bar')),
+                    sprintf('Authorization: Basic %s', base64_encode('foo:bar')),
+                ),
+            ),
+        ), Utils::getContentFromUrlContextOptions('http://www.foo.com', 'foo', 'bar', 'dns.proxy.com', 4545, 'foo', 'bar'));
     }
 }

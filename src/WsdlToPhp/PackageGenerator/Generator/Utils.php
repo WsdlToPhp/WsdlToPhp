@@ -2,31 +2,20 @@
 
 namespace WsdlToPhp\PackageGenerator\Generator;
 
-use WsdlToPhp\PackageGenerator\Model\AbstractModel;
 use WsdlToPhp\PackageGenerator\ConfigurationReader\GeneratorOptions;
 
 class Utils
 {
     /**
-     * Gets category part
-     * @param GeneratorOptions $options
-     * @param AbstractModel $model the model for which we generate the folder
-     * @param string $optionName category type
+     * Gets upper case word admong a string from the end or from the beginning part
+     * @param string $optionValue
+     * @param string $string the string from which we can extract the part
      * @return string
      */
-    public static function getPart(GeneratorOptions $options, AbstractModel $model, $optionName)
+    public static function getPart($optionValue, $string)
     {
         $elementType = '';
-        $optionValue = null;
-        $string = str_replace('_', '', $model->getCleanName());
-        switch ($optionName) {
-            case GeneratorOptions::CATEGORY:
-                $optionValue = $options->getCategory();
-                break;
-            case GeneratorOptions::GATHER_METHODS:
-                $optionValue = $options->getGatherMethods();
-                break;
-        }
+        $string = str_replace('_', '', $string);
         if (!empty($string)) {
             switch ($optionValue) {
                 case GeneratorOptions::VALUE_END:
@@ -63,9 +52,6 @@ class Utils
                         $elementType = substr($string, 0, $i);
                     }
                     break;
-                case GeneratorOptions::VALUE_CAT:
-                    $elementType = $model->getContextualPart();
-                    break;
                 default:
                     break;
             }
@@ -75,31 +61,60 @@ class Utils
     /**
      * Get content from url using a proxy or not
      * @param string $url
+     * @param string $basicAuthLogin
+     * @param string $basicAuthPassword
      * @param string $proxyHost
      * @param string $proxyPort
      * @param string $proxyLogin
      * @param string $proxyPassword
      * @return string
      */
-    public static function getContentFromUrl($url, $proxyHost = null, $proxyPort = null, $proxyLogin = null, $proxyPassword = null)
+    public static function getContentFromUrl($url, $basicAuthLogin = null, $basicAuthPassword = null, $proxyHost = null, $proxyPort = null, $proxyLogin = null, $proxyPassword = null)
     {
         $context = null;
+        $options = self::getContentFromUrlContextOptions($url, $basicAuthLogin, $basicAuthPassword, $proxyHost, $proxyPort, $proxyLogin, $proxyPassword);
+        if (!empty($options)) {
+            $context = stream_context_create($options);
+        }
+        return file_get_contents($url, false, $context);
+    }
+    /**
+     * @param string $url
+     * @param string $basicAuthLogin
+     * @param string $basicAuthPassword
+     * @param string $proxyHost
+     * @param string $proxyPort
+     * @param string $proxyLogin
+     * @param string $proxyPassword
+     * @return string[]
+     */
+    public static function getContentFromUrlContextOptions($url, $basicAuthLogin = null, $basicAuthPassword = null, $proxyHost = null, $proxyPort = null, $proxyLogin = null, $proxyPassword = null)
+    {
+        $protocol = strpos($url, 'https://') !== false ? 'https' : 'http';
+        $proxyOptions = $basicAuthOptions = array();
+        if (!empty($basicAuthLogin) && !empty($basicAuthPassword)) {
+            $basicAuthOptions = array(
+                $protocol => array(
+                    'header' => array(
+                        sprintf('Authorization: Basic %s', base64_encode(sprintf('%s:%s', $basicAuthLogin, $basicAuthPassword))),
+                    ),
+                ),
+            );
+        }
         if (!empty($proxyHost)) {
-            $protocol = strpos($proxyHost, 'https://') !== false ? 'https' : 'http';
-            $options = array(
+            $proxyOptions = array(
                 $protocol => array(
                     'proxy' => sprintf('tcp://%s%s',
                         $proxyHost,
                         empty($proxyPort) ? '' : sprintf(':%s', $proxyPort)
                     ),
-                    'header'=>array(
-                        sprintf('Proxy-Authorization: Basic %s', base64_encode(sprintf(empty($proxyPassword) ? '%s@' : '%s:%s@', urlencode($proxyLogin), empty($proxyPassword) ? '' : urlencode($proxyPassword)))),
+                    'header' => array(
+                        sprintf('Proxy-Authorization: Basic %s', base64_encode(sprintf('%s:%s', $proxyLogin, $proxyPassword))),
                     ),
                 ),
             );
-            $context = stream_context_create($options);
         }
-        return file_get_contents($url, false, $context);
+        return array_merge_recursive($proxyOptions, $basicAuthOptions);
     }
     /**
      * Returns the value with good type
@@ -116,24 +131,6 @@ class Utils
             return ($value === 'true' || $value === true || $value === 1 || $value === '1');
         }
         return $value;
-    }
-    /**
-     * @param string $path
-     * @return string
-     */
-    public static function cleanPath($path)
-    {
-        $cleanDestination = array();
-        $destinationParts = explode('/', $path);
-        $pathParts = explode('/', $path);
-        foreach ($destinationParts as $locationPart) {
-            if ($locationPart == '..') {
-                $pathParts = count($pathParts) >= 2 ? array_slice($pathParts, 0, count($pathParts) - 2) : $pathParts;
-            } else {
-                array_push($cleanDestination, $locationPart);
-            }
-        }
-        return implode('/', $cleanDestination);
     }
     /**
      * @param string $origin
@@ -220,5 +217,17 @@ class Utils
     {
         $elements = explode('\\', $namespacedClassName);
         return (string)array_pop($elements);
+    }
+    /**
+     * @param string $directory
+     * @param int $permissions
+     * @return bool
+     */
+    public static function createDirectory($directory, $permissions = 0775)
+    {
+        if (!is_dir($directory)) {
+            mkdir($directory, $permissions, true);
+        }
+        return true;
     }
 }

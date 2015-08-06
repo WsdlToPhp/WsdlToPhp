@@ -14,10 +14,23 @@ class TutorialTest extends AbstractFile
     {
         $instance = self::bingGeneratorInstance();
 
-        $tutorial = new TutorialFile($instance, self::FILE_NAME, self::getTestDirectory());
+        $tutorial = new TutorialFile($instance, self::FILE_NAME);
         $tutorial->write();
 
         $this->assertSameFileContent('ValidBingTutorial', $tutorial);
+    }
+    /**
+     *
+     */
+    public function testBingNotStandalone()
+    {
+        $instance = self::bingGeneratorInstance();
+        $instance->setOptionStandalone(false);
+
+        $tutorial = new TutorialFile($instance, self::FILE_NAME);
+        $tutorial->write();
+
+        $this->assertSameFileContent('ValidBingTutorialNotStandalone', $tutorial);
     }
     /**
      *
@@ -26,7 +39,7 @@ class TutorialTest extends AbstractFile
     {
         $instance = self::reformaGeneratorInstance();
 
-        $tutorial = new TutorialFile($instance, self::FILE_NAME, self::getTestDirectory());
+        $tutorial = new TutorialFile($instance, self::FILE_NAME);
         $tutorial->write();
 
         $this->assertSameFileContent('ValidReformaTutorial', $tutorial);
@@ -38,7 +51,7 @@ class TutorialTest extends AbstractFile
     {
         $instance = self::actonGeneratorInstance();
 
-        $tutorial = new TutorialFile($instance, self::FILE_NAME, self::getTestDirectory());
+        $tutorial = new TutorialFile($instance, self::FILE_NAME);
         $tutorial->write();
 
         $this->assertSameFileContent('ValidActonTutorial', $tutorial);
@@ -50,7 +63,7 @@ class TutorialTest extends AbstractFile
     {
         $instance = self::omnitureGeneratorInstance();
 
-        $tutorial = new TutorialFile($instance, self::FILE_NAME, self::getTestDirectory());
+        $tutorial = new TutorialFile($instance, self::FILE_NAME);
         $tutorial->write();
 
         $this->assertSameFileContent('ValidOmnitureTutorial', $tutorial);

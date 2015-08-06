@@ -29,64 +29,64 @@ abstract class AbstractFile extends TestCase
     /**
      * @return Generator
      */
-    public static function bingGeneratorInstance()
+    public static function bingGeneratorInstance($reset = true)
     {
-        return self::getInstance(self::wsdlBingPath());
+        return self::getInstance(self::wsdlBingPath(), $reset);
     }
     /**
      * @return Generator
      */
-    public static function actonGeneratorInstance()
+    public static function actonGeneratorInstance($reset = true)
     {
-        return self::getInstance(self::wsdlActonPath(), true);
+        return self::getInstance(self::wsdlActonPath(), $reset);
     }
     /**
      * @return Generator
      */
-    public static function portalGeneratorInstance()
+    public static function portalGeneratorInstance($reset = true)
     {
-        return self::getInstance(self::wsdlPortalPath());
+        return self::getInstance(self::wsdlPortalPath(), $reset);
     }
     /**
      * @return Generator
      */
-    public static function reformaGeneratorInstance()
+    public static function reformaGeneratorInstance($reset = true)
     {
-        return self::getInstance(self::wsdlReformaPath(), true);
+        return self::getInstance(self::wsdlReformaPath(), $reset);
     }
     /**
      * @return Generator
      */
-    public static function queueGeneratorInstance()
+    public static function queueGeneratorInstance($reset = true)
     {
-        return self::getInstance(self::wsdlQueuePath());
+        return self::getInstance(self::wsdlQueuePath(), $reset);
     }
     /**
      * @return Generator
      */
-    public static function omnitureGeneratorInstance()
+    public static function omnitureGeneratorInstance($reset = true)
     {
-        return self::getInstance(self::wsdlOmniturePath());
+        return self::getInstance(self::wsdlOmniturePath(), $reset);
     }
     /**
      * @return Generator
      */
-    public static function odigeoGeneratorInstance()
+    public static function odigeoGeneratorInstance($reset = true)
     {
-        return self::getInstance(self::wsdlOdigeoPath());
+        return self::getInstance(self::wsdlOdigeoPath(), $reset);
     }
     /**
      * @return Generator
      */
-    public static function payPalGeneratorInstance()
+    public static function payPalGeneratorInstance($reset = true)
     {
-        return self::getInstance(self::wsdlPayPalPath());
+        return self::getInstance(self::wsdlPayPalPath(), $reset);
     }
     /**
      * @param string $wsdl
      * @return Generator
      */
-    public static function getInstance($wsdl, $reset = false)
+    public static function getInstance($wsdl, $reset = true)
     {
         AbstractModel::purgeUniqueNames();
         AbstractModel::purgeReservedKeywords();
@@ -102,7 +102,7 @@ abstract class AbstractFile extends TestCase
     }
     /**
      * @param Generator $generator
-     * @param unknown $wsdlPath
+     * @param string $wsdlPath
      */
     private static function applyParsers(Generator $generator, $wsdlPath)
     {
@@ -132,15 +132,16 @@ abstract class AbstractFile extends TestCase
      * @param string $valid
      * @param File $file
      */
-    protected function assertSameFileContent($valid, File $file)
+    protected function assertSameFileContent($valid, File $file, $fileExtension = 'php')
     {
         if (!is_file($file->getFileName())) {
-            return $this->assertFalse(true, sprintf('Generated file "%s" could not be find', $file->getFileName()));
+            return $this->assertFalse(true, sprintf('Generated file "%s" could not be found', $file->getFileName()));
         }
-        $validContent = file_get_contents(sprintf('%s%s.php', self::getTestDirectory(), $valid));
+        $validContent = file_get_contents(sprintf('%s%s.%s', self::getTestDirectory(), $valid, $fileExtension));
         $validContent = str_replace('__WSDL_URL__', $file->getGenerator()->getWsdl()->getName(), $validContent);
         $toBeValidatedContent = file_get_contents($file->getFileName());
         $this->assertSame($validContent, $toBeValidatedContent);
+        $dir = dirname($file->getFileName());
         unlink($file->getFileName());
     }
 }

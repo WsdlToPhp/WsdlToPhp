@@ -8,19 +8,9 @@ use WsdlToPhp\PackageGenerator\Model\Method as MethodModel;
 use WsdlToPhp\PackageGenerator\Model\Service as ServiceModel;
 use WsdlToPhp\PhpGenerator\Element\PhpAnnotation;
 use WsdlToPhp\PhpGenerator\Element\PhpAnnotationBlock;
-use WsdlToPhp\PackageGenerator\Generator\Generator;
 
 class Tutorial extends AbstractFile
 {
-    /**
-     * @param Generator $generator
-     * @param string $name
-     * @param string $destination
-     */
-    public function __construct(Generator $generator, $name, $destination)
-    {
-        parent::__construct($generator, $name, $destination);
-    }
     /**
      * @see \WsdlToPhp\PackageGenerator\File\AbstractFile::writeFile()
      * @return int|bool
@@ -128,7 +118,7 @@ class Tutorial extends AbstractFile
             ->getMainElement()
             ->addChild('$options = array(')
                 ->addChild($this->getFile()->getMainElement()->getIndentedString(sprintf('\WsdlToPhp\PackageBase\AbstractSoapClientBase::WSDL_URL => \'%s\',', $this->getGenerator()->getWsdl()->getName()), 1))
-                ->addChild($this->getFile()->getMainElement()->getIndentedString(sprintf('\WsdlToPhp\PackageBase\AbstractSoapClientBase::WSDL_CLASSMAP => %s::classMap(),', $this->getGenerator()->getClassmapFile()->getModel()->getPackagedName(true)), 1))
+                ->addChild($this->getFile()->getMainElement()->getIndentedString(sprintf('\WsdlToPhp\PackageBase\AbstractSoapClientBase::WSDL_CLASSMAP => %s::classMap(),', $this->getGenerator()->getFiles()->getClassmapFile()->getModel()->getPackagedName(true)), 1))
             ->addChild(');');
         return $this;
     }
@@ -254,7 +244,7 @@ class Tutorial extends AbstractFile
     protected function getMethodParameter($parameterType, $parameterName = null)
     {
         $parameter = sprintf('%1$s%2$s', (empty($parameterType) && empty($parameterName)) ? '' : '$', empty($parameterName) ? $parameterType : $parameterName);
-        $model = $this->getGenerator()->getStruct($parameterType);
+        $model = $parameterType !== null ? $this->getGenerator()->getStruct($parameterType) : null;
         if ($model instanceof StructModel && $model->getIsStruct() && !$model->getIsRestriction()) {
             $parameter = sprintf('new %s()', $model->getPackagedName(true));
         }

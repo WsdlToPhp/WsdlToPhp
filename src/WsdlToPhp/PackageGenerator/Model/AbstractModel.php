@@ -2,25 +2,22 @@
 
 namespace WsdlToPhp\PackageGenerator\Model;
 
+use WsdlToPhp\PackageGenerator\ConfigurationReader\GeneratorOptions;
 use WsdlToPhp\PackageGenerator\ConfigurationReader\ReservedKeywords;
 use WsdlToPhp\PackageGenerator\Generator\Generator;
-use WsdlToPhp\PackageGenerator\Generator\Utils;
+use WsdlToPhp\PackageGenerator\Generator\Utils as GeneratorUtils;
+use WsdlToPhp\PackageGenerator\Generator\AbstractGeneratorAware;
 
 /**
  * Class AbstractModel defines the basic properties and methods to operations and structs extracted from the WSDL
  */
-abstract class AbstractModel
+abstract class AbstractModel extends AbstractGeneratorAware
 {
     /**
      * Constant used to define the key to store documentation value in meta
      * @var string
      */
     const META_DOCUMENTATION = 'documentation';
-    /**
-     * Generator used
-     * @var Generator
-     */
-    private $generator = null;
     /**
      * Original name od the element
      * @var string
@@ -66,9 +63,8 @@ abstract class AbstractModel
      */
     public function __construct(Generator $generator, $name)
     {
-        $this
-            ->setName($name)
-            ->setGenerator($generator);
+        parent::__construct($generator);
+        $this->setName($name);
     }
     /**
      * @return string
@@ -76,7 +72,7 @@ abstract class AbstractModel
     public function getExtendsClassName()
     {
         $extends = '';
-        if ($this->getInheritance() != '' && ($model = $this->getGenerator()->getStruct($this->getInheritance())) instanceof Struct) {
+        if (($model = $this->getInheritedMoel()) instanceof Struct) {
             if ($model->getIsStruct()) {
                 $extends = $model->getPackagedName();
             }
@@ -104,6 +100,13 @@ abstract class AbstractModel
     {
         $this->inheritance = $inheritance;
         return $inheritance;
+    }
+    /**
+     * @return Struct
+     */
+    public function getInheritedMoel()
+    {
+        return $this->getGenerator()->getStruct($this->getInheritance());
     }
     /**
      * Returns the meta
@@ -207,24 +210,6 @@ abstract class AbstractModel
         return $this;
     }
     /**
-     * Returns the Generator
-     * @return Generator
-     */
-    public function getGenerator()
-    {
-        return $this->generator;
-    }
-    /**
-     * Sets the Generator
-     * @param Generator $generator
-     * @return AbstractModel
-     */
-    public function setGenerator($generator)
-    {
-        $this->generator = $generator;
-        return $this;
-    }
-    /**
      * Returns a valid clean name for PHP
      * @uses AbstractModel::getName()
      * @uses AbstractModel::cleanString()
@@ -289,7 +274,18 @@ abstract class AbstractModel
      */
     public function getPackagedName($namespaced = false)
     {
-        return ($namespaced ? sprintf('\%s\\', $this->getNamespace()) : '') . $this->getGenerator()->getOptionPrefix() . ucfirst(self::uniqueName($this->getCleanName(), $this->getContextualPart()));
+        $nameParts = array();
+        if ($namespaced) {
+            $nameParts[] = sprintf('\%s\\', $this->getNamespace());
+        }
+        if ($this->getGenerator()->getOptionPrefix() !== '') {
+            $nameParts[] = $this->getGenerator()->getOptionPrefix();
+        }
+        $nameParts[] = ucfirst(self::uniqueName($this->getCleanName(), $this->getContextualPart()));
+        if ($this->getGenerator()->getOptionSuffix() !== '') {
+            $nameParts[] = $this->getGenerator()->getOptionSuffix();
+        }
+        return implode('', $nameParts);
     }
     /**
      * Allows to define the contextual part of the class name for the package
@@ -313,11 +309,33 @@ abstract class AbstractModel
      */
     public function getNamespace()
     {
+        $namespaces = array();
         $namespace = $this->getGenerator()->getOptionNamespacePrefix();
-        $directory = $this->getGenerator()->getDirectory($this);
-        $packageName = $this->getGenerator()->getOptionPrefix();
-        $namespaceEnding = implode('\\', explode('/', substr($directory, 0, -1)));
-        return sprintf(empty($namespace) ? '%1$s%4$s%3$s' : '%2$s\\%1$s%4$s%3$s', $packageName, $namespace, $namespaceEnding, empty($namespaceEnding) ? '' : '\\');
+        if (empty($namespace)) {
+            if ($this->getGenerator()->getOptionPrefix() !== '') {
+                $namespaces[] = $this->getGenerator()->getOptionPrefix();
+            } elseif ($this->getGenerator()->getOptionSuffix() !== '') {
+                $namespaces[] = $this->getGenerator()->getOptionSuffix();
+            }
+        } else {
+            $namespaces[] = $namespace;
+        }
+        if ($this->getSubDirectory() !== '') {
+            $namespaces[] = $this->getSubDirectory();
+        }
+        return implode('\\', $namespaces);
+    }
+    /**
+     * Returns directory where to store class and create it if needed
+     * @return string
+     */
+    public function getSubDirectory()
+    {
+        $subDirectory = '';
+        if ($this->getGenerator()->getOptionCategory() === GeneratorOptions::VALUE_CAT) {
+            $subDirectory = $this->getContextualPart();
+        }
+        return $subDirectory;
     }
     /**
      * Returns the sub package name which the model belongs to
@@ -336,7 +354,7 @@ abstract class AbstractModel
      */
     public static function cleanString($string, $keepMultipleUnderscores = true)
     {
-        return Utils::cleanString($string, $keepMultipleUnderscores);
+        return GeneratorUtils::cleanString($string, $keepMultipleUnderscores);
     }
     /**
      * Returns a usable keyword for a original keyword
@@ -396,16 +414,5 @@ abstract class AbstractModel
     public static function purgeReservedKeywords()
     {
         self::$replacedReservedPhpKeywords = array();
-    }
-    /**
-     * Clean comment
-     * @param string $comment the comment to clean
-     * @param string $glueSeparator ths string to use when gathering values
-     * @param bool $uniqueValues indicates if comment values must be unique or not
-     * @return string
-     */
-    public static function cleanComment($comment, $glueSeparator = ',', $uniqueValues = true)
-    {
-        return Utils::cleanComment($comment, $glueSeparator, $uniqueValues);
     }
 }

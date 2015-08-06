@@ -16,6 +16,13 @@ class GeneratorOptionsTest extends TestCase
         return $options;
     }
     /**
+     * @expectedException \InvalidArgumentException
+     */
+    public static function testParseException()
+    {
+        GeneratorOptions::instance(__DIR__ . '/../resources/bad_generator_options.yml');
+    }
+    /**
      *
      */
     public function testGetPrefix()
@@ -31,6 +38,23 @@ class GeneratorOptionsTest extends TestCase
         $instance->setPrefix('MyPrefix');
 
         $this->assertSame('MyPrefix', $instance->getPrefix());
+    }
+    /**
+     *
+     */
+    public function testGetSuffix()
+    {
+        $this->assertEmpty(self::optionsInstance()->getSuffix());
+    }
+    /**
+     *
+     */
+    public function testSetSuffix()
+    {
+        $instance = self::optionsInstance();
+        $instance->setSuffix('MySuffix');
+
+        $this->assertSame('MySuffix', $instance->getSuffix());
     }
     /**
      *
@@ -171,6 +195,27 @@ class GeneratorOptionsTest extends TestCase
     /**
      *
      */
+    public function testGetSoapOptions()
+    {
+        $this->assertEmpty(self::optionsInstance()->getSoapOptions());
+    }
+    /**
+     *
+     */
+    public function testSetSoapOptions()
+    {
+        $soapOptions = array(
+            'trace' => true,
+            'soap_version' => SOAP_1_2,
+        );
+        $instance = self::optionsInstance();
+        $instance->setSoapOptions($soapOptions);
+
+        $this->assertSame($soapOptions, $instance->getSoapOptions());
+    }
+    /**
+     *
+     */
     public function testGetCategory()
     {
         $this->assertSame(GeneratorOptions::VALUE_CAT, self::optionsInstance()->getCategory());
@@ -240,6 +285,39 @@ class GeneratorOptionsTest extends TestCase
      *
      */
     public function testGetAddComments()
+    {
+        $comments = array(
+            'release' => '1.0.2',
+            'date' => '2015-09-08',
+        );
+
+        $instance = self::optionsInstance();
+        $instance->setAddComments($comments);
+
+        $this->assertSame($comments, $instance->getAddComments());
+    }
+    /**
+     *
+     */
+    public function testSetAddCommentsSimple()
+    {
+        $comments = array(
+            'release' => '1.0.2',
+            'date' => '2015-09-08',
+        );
+
+        $instance = self::optionsInstance();
+        $instance->setAddComments(array(
+            'release:1.0.2',
+            'date:2015-09-08',
+        ));
+
+        $this->assertSame($comments, $instance->getAddComments());
+    }
+    /**
+     *
+     */
+    public function testSetAddComments()
     {
         $comments = array(
             'release' => '1.0.2',
@@ -368,10 +446,46 @@ class GeneratorOptionsTest extends TestCase
         $this->assertEquals(1, $instance->getOptionValue($newOptionKey));
     }
     /**
-     * @expectedException InvalidArgumentException
+     * @expectedException \InvalidArgumentException
      */
     public function testSetUnexistingOptionValueWithInvalidValue()
     {
         self::optionsInstance()->setGenerateTutorialFile('null');
+    }
+    /**
+     * @expectedException \InvalidArgumentException
+     */
+    public function testGetUnexistingOptionValue()
+    {
+        self::optionsInstance()->getOptionValue('myOption');
+    }
+    /**
+     *
+     */
+    public function testToArray()
+    {
+        $this->assertSame(array(
+            'category' => 'cat',
+            'gather_methods' => 'start',
+            'generic_constants_names' => false,
+            'generate_tutorial_file' => true,
+            'add_comments' => array(),
+            'namespace_prefix' => '',
+            'standalone' => true,
+            'struct_class' => '\WsdlToPhp\PackageBase\AbstractStructBase',
+            'struct_array_class' => '\WsdlToPhp\PackageBase\AbstractStructArrayBase',
+            'soap_client_class' => '\WsdlToPhp\PackageBase\AbstractSoapClientBase',
+            'origin' => '',
+            'destination' => '',
+            'prefix' => '',
+            'suffix' => '',
+            'basic_login' => '',
+            'basic_password' => '',
+            'proxy_host' => '',
+            'proxy_port' => '',
+            'proxy_login' => '',
+            'proxy_password' => '',
+            'soap_options' => array(),
+        ), self::optionsInstance()->toArray());
     }
 }

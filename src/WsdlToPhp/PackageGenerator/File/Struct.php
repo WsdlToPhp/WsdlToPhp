@@ -26,11 +26,9 @@ class Struct extends AbstractModelFile
     }
     /**
      * @see \WsdlToPhp\PackageGenerator\File\AbstractModelFile::getConstantAnnotationBlock()
-     * @return null
      */
     protected function getConstantAnnotationBlock(PhpConstant $constant)
     {
-        return null;
     }
     /**
      * @param bool $includeInheritanceAttributes include the attributes of parent class, default parent attributes are not included. If true, then the array is an associative array containing and index "attribute" for the StructAttribute object and an index "model" for the Struct object.
@@ -137,7 +135,6 @@ class Struct extends AbstractModelFile
         try {
             return new PhpFunctionParameter($lowCaseFirstLetter ? lcfirst($attribute->getCleanName()) : $attribute->getCleanName(), isset($defaultValue) ? $defaultValue : $attribute->getDefaultValue(), $this->getStructMethodParameterType($attribute));
         } catch (\InvalidArgumentException $exception) {
-            print_r($attribute->getType());
             throw new \InvalidArgumentException(sprintf('Unable to create function parameter for struct "%s" with type "%s" for attribute "%s"', $this->getModel()->getName(), var_export($this->getStructMethodParameterType($attribute), true), $attribute->getName()), __LINE__, $exception);
         }
     }

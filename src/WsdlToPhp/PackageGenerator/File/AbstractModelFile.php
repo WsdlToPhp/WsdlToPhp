@@ -9,12 +9,14 @@ use WsdlToPhp\PackageGenerator\Model\Struct as StructModel;
 use WsdlToPhp\PackageGenerator\Model\StructAttribute as StructAttributeModel;
 use WsdlToPhp\PackageGenerator\Model\AbstractModel;
 use WsdlToPhp\PackageGenerator\File\Utils as FileUtils;
+use WsdlToPhp\PackageGenerator\Generator\Utils as GeneratorUtils;
 use WsdlToPhp\PhpGenerator\Element\PhpAnnotationBlock;
 use WsdlToPhp\PhpGenerator\Element\PhpAnnotation;
 use WsdlToPhp\PhpGenerator\Element\PhpMethod;
 use WsdlToPhp\PhpGenerator\Element\PhpProperty;
 use WsdlToPhp\PhpGenerator\Element\PhpConstant;
 use WsdlToPhp\PhpGenerator\Component\PhpClass;
+use WsdlToPhp\PackageGenerator\ConfigurationReader\XsdTypes;
 
 abstract class AbstractModelFile extends AbstractFile
 {
@@ -67,11 +69,22 @@ abstract class AbstractModelFile extends AbstractFile
      */
     protected $model;
     /**
+     * @return string
+     */
+    public function getFileDestination()
+    {
+        return sprintf('%s%s%s', $this->getGenerator()->getOptionDestination(), $this->getModel()->getSubDirectory(), $this->getModel()->getSubDirectory() !== '' ? '/' : '');
+    }
+    /**
      * @see \WsdlToPhp\PackageGenerator\File\AbstractFile::writeFile()
      * @return int|bool
      */
     public function writeFile()
     {
+        if (!$this->getModel() instanceof AbstractModel) {
+            throw new \InvalidArgumentException('You MUST define the model before begin able to generate the file', __LINE__);
+        }
+        GeneratorUtils::createDirectory($this->getFileDestination());
         $this
             ->defineNamespace()
             ->defineUseStatement()
@@ -120,11 +133,27 @@ abstract class AbstractModelFile extends AbstractFile
      */
     protected function definePackageAnnotations(PhpAnnotationBlock $block)
     {
-        $block->addChild(new PhpAnnotation(self::ANNOTATION_PACKAGE, $this->getGenerator()->getOptionPrefix()));
+        $packageName = $this->getPackageName();
+        if (!empty($packageName)) {
+            $block->addChild(new PhpAnnotation(self::ANNOTATION_PACKAGE, $packageName));
+        }
         if (count($this->getModel()->getDocSubPackages()) > 0) {
             $block->addChild(new PhpAnnotation(self::ANNOTATION_SUB_PACKAGE, implode(',', $this->getModel()->getDocSubPackages())));
         }
         return $this;
+    }
+    /**
+     * @return string
+     */
+    protected function getPackageName()
+    {
+        $packageName = '';
+        if ($this->getGenerator()->getOptionPrefix() !== '') {
+            $packageName = $this->getGenerator()->getOptionPrefix();
+        } elseif ($this->getGenerator()->getOptionSuffix() !== '') {
+            $packageName = $this->getGenerator()->getOptionSuffix();
+        }
+        return $packageName;
     }
     /**
      * @param PhpAnnotationBlock $block
@@ -132,10 +161,8 @@ abstract class AbstractModelFile extends AbstractFile
      */
     protected function defineGeneralAnnotations(PhpAnnotationBlock $block)
     {
-        if (count($this->getGenerator()->getOptionAddComments()) > 0) {
-            foreach ($this->getGenerator()->getOptionAddComments() as $tagName => $tagValue) {
-                $block->addChild(new PhpAnnotation($tagName, $tagValue));
-            }
+        foreach ($this->getGenerator()->getOptionAddComments() as $tagName => $tagValue) {
+            $block->addChild(new PhpAnnotation($tagName, $tagValue));
         }
         return $this;
     }
@@ -238,16 +265,14 @@ abstract class AbstractModelFile extends AbstractFile
      */
     protected function defineConstants(PhpClass $class)
     {
-        $constants = new Constant();
+        $constants = new Constant($this->getGenerator());
         $this->getClassConstants($constants);
-        if ($constants->count() > 0) {
-            foreach ($constants as $constant) {
-                $annotationBlock = $this->getConstantAnnotationBlock($constant);
-                if (!empty($annotationBlock)) {
-                    $class->addAnnotationBlockElement($annotationBlock);
-                }
-                $class->addConstantElement($constant);
+        foreach ($constants as $constant) {
+            $annotationBlock = $this->getConstantAnnotationBlock($constant);
+            if (!empty($annotationBlock)) {
+                $class->addAnnotationBlockElement($annotationBlock);
             }
+            $class->addConstantElement($constant);
         }
         return $this;
     }
@@ -257,16 +282,14 @@ abstract class AbstractModelFile extends AbstractFile
      */
     protected function defineProperties(PhpClass $class)
     {
-        $properties = new Property();
+        $properties = new Property($this->getGenerator());
         $this->getClassProperties($properties);
-        if ($properties->count() > 0) {
-            foreach ($properties as $property) {
-                $annotationBlock = $this->getPropertyAnnotationBlock($property);
-                if (!empty($annotationBlock)) {
-                    $class->addAnnotationBlockElement($annotationBlock);
-                }
-                $class->addPropertyElement($property);
+        foreach ($properties as $property) {
+            $annotationBlock = $this->getPropertyAnnotationBlock($property);
+            if (!empty($annotationBlock)) {
+                $class->addAnnotationBlockElement($annotationBlock);
             }
+            $class->addPropertyElement($property);
         }
         return $this;
     }
@@ -276,16 +299,14 @@ abstract class AbstractModelFile extends AbstractFile
      */
     protected function defineMethods(PhpClass $class)
     {
-        $methods = new Method();
+        $methods = new Method($this->getGenerator());
         $this->getClassMethods($methods);
-        if ($methods->count() > 0) {
-            foreach ($methods as $method) {
-                $annotationBlock = $this->getMethodAnnotationBlock($method);
-                if (!empty($annotationBlock)) {
-                    $class->addAnnotationBlockElement($annotationBlock);
-                }
-                $class->addMethodElement($method);
+        foreach ($methods as $method) {
+            $annotationBlock = $this->getMethodAnnotationBlock($method);
+            if (!empty($annotationBlock)) {
+                $class->addAnnotationBlockElement($annotationBlock);
             }
+            $class->addMethodElement($method);
         }
         return $this;
     }
@@ -405,31 +426,6 @@ abstract class AbstractModelFile extends AbstractFile
      */
     public static function getValidType($type, $fallback = null)
     {
-        return in_array(str_replace('[]', '', $type), array(
-            'int',
-            'byte',
-            'bool',
-            'date',
-            'long',
-            'float',
-            'short',
-            'string',
-            'double',
-            'boolean',
-            'decimal',
-            'integer',
-            'dateTime',
-            'timeStamp',
-            'timestamp',
-            'unsignedInt',
-            'unsignedLong',
-            'unsignedByte',
-            'unsignedShort',
-            'DayOfWeekType',
-            'negativeInteger',
-            'positiveInteger',
-            'nonNegativeInteger',
-            'nonPositiveInteger',
-        ), true) ? $fallback : $type;
+        return XsdTypes::instance()->isXsd(str_replace('[]', '', $type)) ? $fallback : $type;
     }
 }

@@ -14,7 +14,7 @@ class ServiceTest extends AbstractFile
     public function testSetModelGoodNameTooManyAttributesWithException()
     {
         $instance = self::bingGeneratorInstance();
-        $struct = new ServiceFile($instance, 'Foo', self::getTestDirectory());
+        $struct = new ServiceFile($instance, 'Foo');
         $struct->setModel(new EmptyModel($instance, 'Foo'));
     }
     /**
@@ -24,7 +24,7 @@ class ServiceTest extends AbstractFile
     {
         $generator = self::actonGeneratorInstance();
         if (($model = $generator->getService('Delete')) instanceof ServiceModel) {
-            $service = new ServiceFile($generator, $model->getName(), self::getTestDirectory());
+            $service = new ServiceFile($generator, $model->getName());
             $service
                 ->setModel($model)
                 ->write();
@@ -40,7 +40,7 @@ class ServiceTest extends AbstractFile
     {
         $generator = self::bingGeneratorInstance();
         if (($model = $generator->getService('Search')) instanceof ServiceModel) {
-            $service = new ServiceFile($generator, $model->getName(), self::getTestDirectory());
+            $service = new ServiceFile($generator, $model->getName());
             $service
                 ->setModel($model)
                 ->write();
@@ -52,11 +52,50 @@ class ServiceTest extends AbstractFile
     /**
      *
      */
+    public function testWriteBingSearchSearchServiceMyProjectApiProject()
+    {
+        $generator = self::bingGeneratorInstance();
+        if (($model = $generator->getService('Search')) instanceof ServiceModel) {
+            $generator
+                ->setOptionPrefix('Api')
+                ->setOptionSuffix('Project')
+                ->setOptionNamespacePrefix('My\Project');
+            $service = new ServiceFile($generator, $model->getName());
+            $service
+                ->setModel($model)
+                ->write();
+            $this->assertSameFileContent('ValidMyProjectApiSearchProject', $service);
+        } else {
+            $this->assertFalse(true, 'Unable to find Search service for file generation');
+        }
+    }
+    /**
+     *
+     */
+    public function testWriteBingSearchSearchServiceBingApi()
+    {
+        $generator = self::bingGeneratorInstance();
+        if (($model = $generator->getService('Search')) instanceof ServiceModel) {
+            $generator
+                ->setOptionPrefix('')
+                ->setOptionSuffix('BingApi');
+            $service = new ServiceFile($generator, $model->getName());
+            $service
+                ->setModel($model)
+                ->write();
+            $this->assertSameFileContent('ValidApiSearchBingApi', $service);
+        } else {
+            $this->assertFalse(true, 'Unable to find Search service for file generation');
+        }
+    }
+    /**
+     *
+     */
     public function testWritePortalServiceAuthenticate()
     {
         $generator = self::portalGeneratorInstance();
         if (($model = $generator->getService('Authenticate')) instanceof ServiceModel) {
-            $service = new ServiceFile($generator, $model->getName(), self::getTestDirectory());
+            $service = new ServiceFile($generator, $model->getName());
             $service
                 ->setModel($model)
                 ->write();
@@ -72,7 +111,7 @@ class ServiceTest extends AbstractFile
     {
         $generator = self::reformaGeneratorInstance();
         if (($model = $generator->getService('Login')) instanceof ServiceModel) {
-            $service = new ServiceFile($generator, $model->getName(), self::getTestDirectory());
+            $service = new ServiceFile($generator, $model->getName());
             $service
                 ->setModel($model)
                 ->write();
@@ -88,7 +127,7 @@ class ServiceTest extends AbstractFile
     {
         $generator = self::queueGeneratorInstance();
         if (($model = $generator->getService('Create')) instanceof ServiceModel) {
-            $service = new ServiceFile($generator, $model->getName(), self::getTestDirectory());
+            $service = new ServiceFile($generator, $model->getName());
             $service
                 ->setModel($model)
                 ->write();
@@ -104,7 +143,7 @@ class ServiceTest extends AbstractFile
     {
         $generator = self::omnitureGeneratorInstance();
         if (($model = $generator->getService('Saint')) instanceof ServiceModel) {
-            $service = new ServiceFile($generator, $model->getName(), self::getTestDirectory());
+            $service = new ServiceFile($generator, $model->getName());
             $service
                 ->setModel($model)
                 ->write();
@@ -120,7 +159,7 @@ class ServiceTest extends AbstractFile
     {
         $generator = self::payPalGeneratorInstance();
         if (($model = $generator->getService('Do')) instanceof ServiceModel) {
-            $service = new ServiceFile($generator, $model->getName(), self::getTestDirectory());
+            $service = new ServiceFile($generator, $model->getName());
             $service
                 ->setModel($model)
                 ->write();

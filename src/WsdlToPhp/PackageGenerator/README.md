@@ -1,4 +1,5 @@
 # WsdlToPhp Package Generator
+[![Latest Stable Version](https://poser.pugx.org/wsdltophp/packagegenerator/version.png)](https://packagist.org/packages/wsdltophp/packagegenerator)
 [![Build Status](https://api.travis-ci.org/WsdlToPhp/PackageGenerator.svg)](https://travis-ci.org/WsdlToPhp/PackageGenerator)
 [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/WsdlToPhp/PackageGenerator/badges/quality-score.png)](https://scrutinizer-ci.com/g/WsdlToPhp/PackageGenerator/)
 [![Code Coverage](https://scrutinizer-ci.com/g/WsdlToPhp/PackageGenerator/badges/coverage.png)](https://scrutinizer-ci.com/g/WsdlToPhp/PackageGenerator/)
@@ -34,6 +35,7 @@ The generator comes with several options:
 - **Required** package configuration:
     - **\-\-wsdl-urlorpath**: path or url to get the WSDL
     - **\-\-wsdl-prefix**: the classes prefix, used as the main namespace
+    - **\-\-wsdl-suffix**: the classes suffix, used as the main namespace if no prefix is defined
     - **\-\-wsdl-destination**: absolute path where the classes must be generated
     - **\-\-force**: must be present to generate the package, otherwise you'll get the debug informations
 - _**Optional**_ basic Authentication credentials, if the WSDL is protected by a Basic Authentication, then specify:
@@ -103,6 +105,7 @@ $ php console wsdltophp:generate:package \
     --wsdl-proxy-password="*******" \
     --wsdl-destination='/var/www/Api/' \
     --wsdl-prefix="Api" \
+    --wsdl-suffix="Project" \
     --wsdl-category="cat" \
     --wsdl-gathermethods="start" \
     --wsdl-genericconstants=false \
@@ -124,31 +127,31 @@ $ ls -la => enjoy!
 #### Debug options before actually generating the package
 Remove ```--force``` option from the previous command line to get this result:
 ```
- Start at YYYY-MM-DD HH:MM:SS
-  Generation not launched, use --force to force generation
-  Wsdl used:
-    url: http://developer.ebay.com/webservices/latest/ebaySvc.wsdl
-    login:
-    password:
-    Package name: Api
-    Package dest: /var/www/Api/
-  Wsdl options used:
+ Start at 2015-08-06 23:09:44
+  Generation not launched, use "--force" option to force generation
+  Used generator's options:
+    category: cat
+    gather_methods: start
+    generic_constants_names:
+    generate_tutorial_file: 1
+    add_comments: 2015-04-22, Me, 1.1.0, Dream
+    namespace_prefix: My\Project
+    standalone: 1
+    struct_class: \Std\Opt\StructClass
+    struct_array_class: \Std\Opt\StructArrayClass
+    soap_client_class: \Std\Opt\SoapClientClass
+    origin: http://developer.ebay.com/webservices/latest/ebaySvc.wsdl
+    destination: /var/www/Api/
+    prefix: Api
+    suffix: Project
+    basic_login:
+    basic_password:
     proxy_host: ****************************
-    proxy_port: 0
+    proxy_port: *******
     proxy_login: *******
     proxy_password: *******
-  Generator options used:
-    wsdl-namespace: My\Project
-    wsdl-category: cat
-    wsdl-gathermethods: start
-    wsdl-gentutorial: 1
-    wsdl-genericconstants:
-    wsdl-addcomments: date:2015-04-22, author:Me, release:1.1.0, team:Dream
-    wsdl-standalone: 1
-    wsdl-struct: \Std\Opt\StructClass
-    wsdl-structarray: \Std\Opt\StructArrayClass
-    wsdl-soapclient: \Std\Opt\SoapClientClass
- End at YYYY-MM-DD HH:MM:SS, duration: 00:00:00
+    soap_options:
+ End at 2015-08-06 23:09:44, duration: 00:00:00
 ```
 ### Programmatic usage
 ```
@@ -160,8 +163,17 @@ $ composer install
 <?php
 require_once __DIR__ . '/vendor/autoload.php'
 use \WsdlToPhp\PackageGenerator\Generator\Generator;
-$generator = new Generator('http://www.mydomain.com/wsdl.xml');
-$generator->generateClasses('MyPackage', '/path/to/where/the/package/must/be/generated/');
+use \WsdlToPhp\PackageGenerator\ConfigurationReader\GeneratorOptions
+
+// Options definition
+$options = GenerationOptions::instance();
+$options
+    ->setOrigin('http://www.mydomain.com/?wsdl')
+    ->setDestination('/path/to/where/the/package/must/be/generated/')
+    ->setPrefix('MyPackage');
+
+$generator = new Generator($options);
+$generator->generateClasses();
 ```
 Then:
 ```php
@@ -207,7 +219,8 @@ $options
     ->setSoapClientClass('\Std\Opt\SoapClientClass')
     ->setOrigin('http://www.mydomain.com/?wsdl')
     ->setDestination('/path/to/where/the/package/must/be/generated/')
-    ->setPrefix('MyPackage')
+    ->setPrefix('Api')
+    ->setSuffix('Project')
     ->setBasicLogin($login)
     ->setBasicPassword($password)
     ->setProxyHost($proxyHost)

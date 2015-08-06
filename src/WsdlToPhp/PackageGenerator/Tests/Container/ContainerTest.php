@@ -11,15 +11,23 @@ class ContainerTest extends TestCase
      */
     public function testAddWithException()
     {
-        $container = new ObjectContainerTest();
+        $container = new ObjectContainerTest(self::getBingGeneratorInstance());
         $container->add(new ObjectTest());
     }
     /**
      * @expectedException \InvalidArgumentException
      */
-    public function testoffsetSetWithException()
+    public function testOffsetSetWithException()
     {
-        $container = new ObjectContainerTest();
+        $container = new ObjectContainerTest(self::getBingGeneratorInstance());
         $container->offsetSet(1, new ObjectTest());
+    }
+    /**
+     * @expectedException \InvalidArgumentException
+     */
+    public function testInvalidPropertyName()
+    {
+        $container = new FalseObjectContainerTest(self::getBingGeneratorInstance());
+        $container->add(new FalseObjectTest());
     }
 }
