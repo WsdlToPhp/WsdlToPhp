@@ -10,7 +10,7 @@
         <ini name="error_reporting" value="-1" />
     </php>
     <testsuites>
-        <testsuite name="Symfony Test Suite">
+        <testsuite name="WsdlToPhp Test Suite">
             <directory>./src/WsdlToPhp/*/Tests/</directory>
         </testsuite>
     </testsuites>

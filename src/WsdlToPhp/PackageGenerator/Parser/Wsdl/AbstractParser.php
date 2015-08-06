@@ -6,6 +6,8 @@ use WsdlToPhp\PackageGenerator\Model\Wsdl;
 use WsdlToPhp\PackageGenerator\Model\Schema;
 use WsdlToPhp\PackageGenerator\Parser\AbstractParser as Parser;
 use WsdlToPhp\PackageGenerator\Generator\Generator;
+use WsdlToPhp\PackageGenerator\DomHandler\Wsdl\Wsdl as WsdlDocument;
+use WsdlToPhp\PackageGenerator\DomHandler\Wsdl\Schema as SchemaDocument;
 
 abstract class AbstractParser extends Parser
 {
@@ -14,7 +16,7 @@ abstract class AbstractParser extends Parser
      */
     protected $generator;
     /**
-     * @var array[\WsdlToPhp\PackageGenerator\DomHandler\Wsdl\Wsdl]
+     * @var AbstractTag[]
      */
     protected $tags;
     /**
@@ -34,7 +36,6 @@ abstract class AbstractParser extends Parser
     public function __construct(Generator $generator)
     {
         $this->generator     = $generator;
-        $this->continue      = false;
         $this->parsedWsdls   = array();
         $this->parsedSchemas = array();
     }
@@ -44,33 +45,30 @@ abstract class AbstractParser extends Parser
      */
     final public function parse()
     {
-        if ($this->generator->getWsdls()->count() > 0) {
-            do {
-                foreach ($this->generator->getWsdls() as $wsdl) {
-                    $content = $wsdl->getContent();
-                    if ($content !== null) {
-                        if ($this->isWsdlParsed($wsdl) === false) {
-                            $this->setTags($content->getElementsByName($this->parsingTag()));
-                            if (count($this->getTags()) > 0) {
-                                $this->parseWsdl($wsdl);
-                            }
-                        }
-                        foreach ($content->getExternalSchemas() as $schema) {
-                            if ($this->isSchemaParsed($wsdl, $schema) === false) {
-                                $schemaContent = $schema->getContent();
-                                if ($schemaContent !== null) {
-                                    $this->setTags($schemaContent->getElementsByName($this->parsingTag()));
-                                    if (count($this->getTags()) > 0) {
-                                        $this->parseSchema($wsdl, $schema);
-                                    }
-                                }
-                                $this->setSchemaAsParsed($wsdl, $schema);
-                            }
-                        }
+        $wsdl = $this->generator->getWsdl();
+        if ($wsdl instanceof Wsdl) {
+            $content = $wsdl->getContent();
+            if ($content instanceof WsdlDocument) {
+                if ($this->isWsdlParsed($wsdl) === false) {
+                    $this->setTags($content->getElementsByName($this->parsingTag()));
+                    if (count($this->getTags()) > 0) {
+                        $this->parseWsdl($wsdl);
                     }
-                    $this->setWsdlAsParsed($wsdl);
                 }
-            } while($this->shouldContinue());
+                foreach ($content->getExternalSchemas() as $schema) {
+                    if ($this->isSchemaParsed($wsdl, $schema) === false) {
+                        $schemaContent = $schema->getContent();
+                        if ($schemaContent instanceof SchemaDocument) {
+                            $this->setTags($schemaContent->getElementsByName($this->parsingTag()));
+                            if (count($this->getTags()) > 0) {
+                                $this->parseSchema($wsdl, $schema);
+                            }
+                        }
+                        $this->setSchemaAsParsed($wsdl, $schema);
+                    }
+                }
+            }
+            $this->setWsdlAsParsed($wsdl);
         }
     }
     /**
@@ -90,23 +88,6 @@ abstract class AbstractParser extends Parser
      */
     abstract protected function parsingTag();
     /**
-     * When looping, must return false to stop it
-     * @return bool
-     */
-    private function shouldContinue()
-    {
-        $shouldContinue = false;
-        foreach ($this->generator->getWsdls() as $wsdl) {
-            $shouldContinue |= $this->isWsdlParsed($wsdl) === false;
-            if ($wsdl->getContent() !== null) {
-                foreach ($wsdl->getContent()->getExternalSchemas() as $schema) {
-                    $shouldContinue |= $this->isSchemaParsed($wsdl, $schema) === false;
-                }
-            }
-        }
-        return (bool)$shouldContinue;
-    }
-    /**
      * @param array $tags
      * @return \WsdlToPhp\PackageGenerator\Parser\Wsdl\AbstractParser
      */
@@ -116,7 +97,7 @@ abstract class AbstractParser extends Parser
         return $this;
     }
     /**
-     * @return array[\WsdlToPhp\PackageGenerator\DomHandler\Wsdl\Wsdl]
+     * @return AbstractTag[]
      */
     public function getTags()
     {

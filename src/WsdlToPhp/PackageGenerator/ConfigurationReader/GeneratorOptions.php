@@ -7,30 +7,37 @@ class GeneratorOptions extends AbstractYamlReader
     /**
      * Common values used as option's value
      */
-    const
-        VALUE_START = 'start',
-        VALUE_END   = 'end',
-        VALUE_NONE  = 'none',
-        VALUE_CAT   = 'cat',
-        VALUE_TRUE  = true,
-        VALUE_FALSE = false;
+    const VALUE_START = 'start';
+    const VALUE_END = 'end';
+    const VALUE_NONE = 'none';
+    const VALUE_CAT = 'cat';
+    const VALUE_TRUE = true;
+    const VALUE_FALSE = false;
     /**
      * Possible option keys
      * @var string
      */
-    const
-        CATEGORY                    = 'category',
-        SUB_CATEGORY                = 'sub_category',
-        ADD_COMMENTS                = 'add_comments',
-        GATHER_METHODS              = 'gather_methods',
-        GENERATE_WSDL_CLASS         = 'generate_wsdl_class',
-        GENERATE_TUTORIAL_FILE      = 'generate_tutorial_file',
-        GENERATE_AUTOLOAD_FILE      = 'generate_autoload_file',
-        SEND_ARRAY_AS_PARAMETER     = 'send_array_as_parameter',
-        GENERIC_CONSTANTS_NAME      = 'generic_constants_names',
-        GET_RESPONSE_AS_WSDL_OBJECT = 'response_as_wsdl_object',
-        INHERITS_FROM_IDENTIFIER    = 'inherits_from_identifier',
-        SEND_PARAMETERS_AS_ARRAY    = 'send_parameters_as_array';
+    const SUFFIX = 'suffix';
+    const PREFIX = 'prefix';
+    const ORIGIN = 'origin';
+    const CATEGORY = 'category';
+    const STANDALONE = 'standalone';
+    const PROXY_HOST = 'proxy_host';
+    const PROXY_PORT = 'proxy_port';
+    const PROXY_LOGIN = 'proxy_login';
+    const BASIC_LOGIN = 'basic_login';
+    const DESTINATION = 'destination';
+    const ADD_COMMENTS = 'add_comments';
+    const STRUCT_CLASS = 'struct_class';
+    const SOAP_OPTIONS = 'soap_options';
+    const PROXY_PASSWORD = 'proxy_password';
+    const BASIC_PASSWORD = 'basic_password';
+    const GATHER_METHODS = 'gather_methods';
+    const NAMESPACE_PREFIX = 'namespace_prefix';
+    const SOAP_CLIENT_CLASS = 'soap_client_class';
+    const STRUCT_ARRAY_CLASS = 'struct_array_class';
+    const GENERATE_TUTORIAL_FILE = 'generate_tutorial_file';
+    const GENERIC_CONSTANTS_NAME = 'generic_constants_names';
     /**
      * Generator's options
      * @var array
@@ -46,22 +53,29 @@ class GeneratorOptions extends AbstractYamlReader
     }
     /**
      * Parse options for generator
-     * @param string options's file to parse
+     * @param string $filename options's file to parse
+     * @return GeneratorOptions
      */
     protected function parseOptions($filename)
     {
-        $this->options = $this->loadYaml($filename);
+        $options = $this->loadYaml($filename);
+        if (is_array($options)) {
+            $this->options = $options;
+        } else {
+            throw new \InvalidArgumentException(sprintf('Settings contained by "%s" are not valid as the settings are not contained by an array: "%s"', $filename, gettype($options)), __LINE__);
+        }
+        return $this;
     }
     /**
      * Returns the option value
      * @throws InvalidArgumentException
      * @param string $optionName
-     * @return string|bool
+     * @return mixed
      */
     public function getOptionValue($optionName)
     {
         if (!isset($this->options[$optionName])) {
-            throw new \InvalidArgumentException(sprintf('Invalid option name "%s", possible options: %s', $optionName, implode(', ', array_keys($this->options))));
+            throw new \InvalidArgumentException(sprintf('Invalid option name "%s", possible options: %s', $optionName, implode(', ', array_keys($this->options))), __LINE__);
         }
         return array_key_exists('value', $this->options[$optionName]) ? $this->options[$optionName]['value'] : $this->options[$optionName]['default'];
     }
@@ -69,17 +83,17 @@ class GeneratorOptions extends AbstractYamlReader
      * Allows to add an option and set its value
      * @throws InvalidArgumentException
      * @param string $optionName
-     * @return \WsdlToPhp\Generator\Options
+     * @return GeneratorOptions
      */
     public function setOptionValue($optionName, $optionValue, array $values = array())
     {
         if (!isset($this->options[$optionName])) {
             $this->options[$optionName] = array(
-                    'value'  => $optionValue,
-                    'values' => $values,
+                'value' => $optionValue,
+                'values' => $values,
             );
-        } elseif(!empty($this->options[$optionName]['values']) && !in_array($optionValue, $this->options[$optionName]['values'], true)) {
-            throw new \InvalidArgumentException(sprintf('Invalid value "%s" for option "%s", possible values: %s', $optionValue, $optionName, implode(', ', $this->options[$optionName]['values'])));
+        } elseif (!empty($this->options[$optionName]['values']) && !in_array($optionValue, $this->options[$optionName]['values'], true)) {
+            throw new \InvalidArgumentException(sprintf('Invalid value "%s" for option "%s", possible values: %s', $optionValue, $optionName, implode(', ', $this->options[$optionName]['values'])), __LINE__);
         } else {
             $this->options[$optionName]['value'] = $optionValue;
         }
@@ -112,26 +126,8 @@ class GeneratorOptions extends AbstractYamlReader
         return $this->setOptionValue(self::CATEGORY, $category);
     }
     /**
-     * Get subcategory option value
-     * @return string
-     */
-    public function getSubCategory()
-    {
-        return $this->getOptionValue(self::SUB_CATEGORY);
-    }
-    /**
-     * Set current subcategory option value
-     * @throws \InvalidArgumentException
-     * @param string $subCategory
-     * @return GeneratorOptions
-     */
-    public function setSubCategory($subCategory)
-    {
-        return $this->setOptionValue(self::SUB_CATEGORY, $subCategory);
-    }
-    /**
      * Get add comments option value
-     * @return string
+     * @return array
      */
     public function getAddComments()
     {
@@ -178,42 +174,6 @@ class GeneratorOptions extends AbstractYamlReader
         return $this->setOptionValue(self::GATHER_METHODS, $gatherMethods);
     }
     /**
-     * Get generate wsdl class option value
-     * @return bool
-     */
-    public function getGenerateWsdlClass()
-    {
-        return $this->getOptionValue(self::GENERATE_WSDL_CLASS);
-    }
-    /**
-     * Set current generate wsdl class option value
-     * @throws \InvalidArgumentException
-     * @param bool $generateWsdlClass
-     * @return GeneratorOptions
-     */
-    public function setGenerateWsdlClass($generateWsdlClass)
-    {
-        return $this->setOptionValue(self::GENERATE_WSDL_CLASS, $generateWsdlClass);
-    }
-    /**
-     * Get generate autoload file option value
-     * @return bool
-     */
-    public function getGenerateAutoloadFile()
-    {
-        return $this->getOptionValue(self::GENERATE_AUTOLOAD_FILE);
-    }
-    /**
-     * Set current generate autoload file option value
-     * @throws \InvalidArgumentException
-     * @param bool $generateAutoloadFile
-     * @return GeneratorOptions
-     */
-    public function setGenerateAutoloadFile($generateAutoloadFile)
-    {
-        return $this->setOptionValue(self::GENERATE_AUTOLOAD_FILE, $generateAutoloadFile);
-    }
-    /**
      * Get generate tutorial file option value
      * @return bool
      */
@@ -232,22 +192,22 @@ class GeneratorOptions extends AbstractYamlReader
         return $this->setOptionValue(self::GENERATE_TUTORIAL_FILE, $generateTutorialFile);
     }
     /**
-     * Get send array as parameter option value
-     * @return bool
+     * Get namespace option value
+     * @return string
      */
-    public function getSendArrayAsParameter()
+    public function getNamespace()
     {
-        return $this->getOptionValue(self::SEND_ARRAY_AS_PARAMETER);
+        return $this->getOptionValue(self::NAMESPACE_PREFIX);
     }
     /**
-     * Set current send array as parameter option value
+     * Set current namespace option value
      * @throws \InvalidArgumentException
-     * @param bool $sendParameterAsArray
+     * @param string $namespace
      * @return GeneratorOptions
      */
-    public function setSendArrayAsParameter($sendParameterAsArray)
+    public function setNamespace($namespace)
     {
-        return $this->setOptionValue(self::SEND_ARRAY_AS_PARAMETER, $sendParameterAsArray);
+        return $this->setOptionValue(self::NAMESPACE_PREFIX, $namespace);
     }
     /**
      * Get generic constants name option value
@@ -268,57 +228,284 @@ class GeneratorOptions extends AbstractYamlReader
         return $this->setOptionValue(self::GENERIC_CONSTANTS_NAME, $genericConstantsName);
     }
     /**
-     * Get get response as wsdl object option value
+     * Get standalone option value
      * @return bool
      */
-    public function getGetResponseAsWsdlObject()
+    public function getStandalone()
     {
-        return $this->getOptionValue(self::GET_RESPONSE_AS_WSDL_OBJECT);
+        return $this->getOptionValue(self::STANDALONE);
     }
     /**
-     * Set current get response as wsdl object option value
+     * Set current standalone option value
      * @throws \InvalidArgumentException
-     * @param bool $getResponseAsWsdlObject
+     * @param bool $standalone
      * @return GeneratorOptions
      */
-    public function setGetResponseAsWsdlObject($getResponseAsWsdlObject)
+    public function setStandalone($standalone)
     {
-        return $this->setOptionValue(self::GET_RESPONSE_AS_WSDL_OBJECT, $getResponseAsWsdlObject);
+        return $this->setOptionValue(self::STANDALONE, $standalone);
     }
     /**
-     * Get inherits from identifier option value
+     * Get struct class option value
      * @return string
      */
-    public function getInheritsFromIdentifier()
+    public function getStructClass()
     {
-        return $this->getOptionValue(self::INHERITS_FROM_IDENTIFIER);
+        return $this->getOptionValue(self::STRUCT_CLASS);
     }
     /**
-     * Set current inherits from identifier option value
+     * Set current struct class option value
      * @throws \InvalidArgumentException
-     * @param string $inheritsFromIdentifier
+     * @param string $structClass
      * @return GeneratorOptions
      */
-    public function setInheritsFromIdentifier($inheritsFromIdentifier)
+    public function setStructClass($structClass)
     {
-        return $this->setOptionValue(self::INHERITS_FROM_IDENTIFIER, $inheritsFromIdentifier);
+        return $this->setOptionValue(self::STRUCT_CLASS, $structClass);
     }
     /**
-     * Get send parameters as array option value
-     * @return bool
+     * Get struct array class option value
+     * @return string
      */
-    public function getSendParametersAsArray()
+    public function getStructArrayClass()
     {
-        return $this->getOptionValue(self::SEND_PARAMETERS_AS_ARRAY);
+        return $this->getOptionValue(self::STRUCT_ARRAY_CLASS);
     }
     /**
-     * Set current send parameters as array option value
+     * Set current struct array class option value
      * @throws \InvalidArgumentException
-     * @param bool $category
+     * @param string $structArrayClass
      * @return GeneratorOptions
      */
-    public function setSendParametersAsArray($sendParametersAsArray)
+    public function setStructArrayClass($structArrayClass)
     {
-        return $this->setOptionValue(self::SEND_PARAMETERS_AS_ARRAY, $sendParametersAsArray);
+        return $this->setOptionValue(self::STRUCT_ARRAY_CLASS, $structArrayClass);
+    }
+    /**
+     * Get struct array class option value
+     * @return string
+     */
+    public function getSoapClientClass()
+    {
+        return $this->getOptionValue(self::SOAP_CLIENT_CLASS);
+    }
+    /**
+     * Set current struct array class option value
+     * @throws \InvalidArgumentException
+     * @param string $soapClientClass
+     * @return GeneratorOptions
+     */
+    public function setSoapClientClass($soapClientClass)
+    {
+        return $this->setOptionValue(self::SOAP_CLIENT_CLASS, $soapClientClass);
+    }
+    /**
+     * Get origin option value
+     * @return string
+     */
+    public function getOrigin()
+    {
+        return $this->getOptionValue(self::ORIGIN);
+    }
+    /**
+     * Set current origin option value
+     * @throws \InvalidArgumentException
+     * @param string $origin
+     * @return GeneratorOptions
+     */
+    public function setOrigin($origin)
+    {
+        return $this->setOptionValue(self::ORIGIN, $origin);
+    }
+    /**
+     * Get destination option value
+     * @return string
+     */
+    public function getDestination()
+    {
+        return $this->getOptionValue(self::DESTINATION);
+    }
+    /**
+     * Set current destination option value
+     * @throws \InvalidArgumentException
+     * @param string $destination
+     * @return GeneratorOptions
+     */
+    public function setDestination($destination)
+    {
+        return $this->setOptionValue(self::DESTINATION, $destination);
+    }
+    /**
+     * Get prefix option value
+     * @return string
+     */
+    public function getPrefix()
+    {
+        return $this->getOptionValue(self::PREFIX);
+    }
+    /**
+     * Set current prefix option value
+     * @throws \InvalidArgumentException
+     * @param string $prefix
+     * @return GeneratorOptions
+     */
+    public function setPrefix($prefix)
+    {
+        return $this->setOptionValue(self::PREFIX, $prefix);
+    }
+    /**
+     * Get suffix option value
+     * @return string
+     */
+    public function getSuffix()
+    {
+        return $this->getOptionValue(self::SUFFIX);
+    }
+    /**
+     * Set current suffix option value
+     * @throws \InvalidArgumentException
+     * @param string $suffix
+     * @return GeneratorOptions
+     */
+    public function setSuffix($suffix)
+    {
+        return $this->setOptionValue(self::SUFFIX, $suffix);
+    }
+    /**
+     * Get basic login option value
+     * @return string
+     */
+    public function getBasicLogin()
+    {
+        return $this->getOptionValue(self::BASIC_LOGIN);
+    }
+    /**
+     * Set current basic login option value
+     * @throws \InvalidArgumentException
+     * @param string $basicLogin
+     * @return GeneratorOptions
+     */
+    public function setBasicLogin($basicLogin)
+    {
+        return $this->setOptionValue(self::BASIC_LOGIN, $basicLogin);
+    }
+    /**
+     * Get basic password option value
+     * @return string
+     */
+    public function getBasicPassword()
+    {
+        return $this->getOptionValue(self::BASIC_PASSWORD);
+    }
+    /**
+     * Set current basic password option value
+     * @throws \InvalidArgumentException
+     * @param string $basicPassword
+     * @return GeneratorOptions
+     */
+    public function setBasicPassword($basicPassword)
+    {
+        return $this->setOptionValue(self::BASIC_PASSWORD, $basicPassword);
+    }
+    /**
+     * Get basic proxy host option value
+     * @return string
+     */
+    public function getProxyHost()
+    {
+        return $this->getOptionValue(self::PROXY_HOST);
+    }
+    /**
+     * Set current proxy host option value
+     * @throws \InvalidArgumentException
+     * @param string $proxyHost
+     * @return GeneratorOptions
+     */
+    public function setProxyHost($proxyHost)
+    {
+        return $this->setOptionValue(self::PROXY_HOST, $proxyHost);
+    }
+    /**
+     * Get basic proxy port option value
+     * @return string
+     */
+    public function getProxyPort()
+    {
+        return $this->getOptionValue(self::PROXY_PORT);
+    }
+    /**
+     * Set current proxy port option value
+     * @throws \InvalidArgumentException
+     * @param string $proxyPort
+     * @return GeneratorOptions
+     */
+    public function setProxyPort($proxyPort)
+    {
+        return $this->setOptionValue(self::PROXY_PORT, $proxyPort);
+    }
+    /**
+     * Get basic proxy login option value
+     * @return string
+     */
+    public function getProxyLogin()
+    {
+        return $this->getOptionValue(self::PROXY_LOGIN);
+    }
+    /**
+     * Set current proxy login option value
+     * @throws \InvalidArgumentException
+     * @param string $proxyLogin
+     * @return GeneratorOptions
+     */
+    public function setProxyLogin($proxyLogin)
+    {
+        return $this->setOptionValue(self::PROXY_LOGIN, $proxyLogin);
+    }
+    /**
+     * Get basic proxy password option value
+     * @return string
+     */
+    public function getProxyPassword()
+    {
+        return $this->getOptionValue(self::PROXY_PASSWORD);
+    }
+    /**
+     * Set current proxy password option value
+     * @throws \InvalidArgumentException
+     * @param string $proxyPassword
+     * @return GeneratorOptions
+     */
+    public function setProxyPassword($proxyPassword)
+    {
+        return $this->setOptionValue(self::PROXY_PASSWORD, $proxyPassword);
+    }
+    /**
+     * Get basic proxy password option value
+     * @return array
+     */
+    public function getSoapOptions()
+    {
+        return $this->getOptionValue(self::SOAP_OPTIONS);
+    }
+    /**
+     * Set current proxy password option value
+     * @throws \InvalidArgumentException
+     * @param array $soapOptions
+     * @return GeneratorOptions
+     */
+    public function setSoapOptions(array $soapOptions)
+    {
+        return $this->setOptionValue(self::SOAP_OPTIONS, $soapOptions);
+    }
+    /**
+     * @return string[]
+     */
+    public function toArray()
+    {
+        $options = array();
+        foreach ($this->options as $name => $value) {
+            $options[$name] = $this->getOptionValue($name);
+        }
+        return $options;
     }
 }

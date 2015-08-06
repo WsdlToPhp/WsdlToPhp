@@ -6,8 +6,7 @@ use WsdlToPhp\PackageGenerator\DomHandler\Wsdl\Wsdl as WsdlDocument;
 
 abstract class AbstractTagOperationElement extends AbstractTag
 {
-    const
-        ATTRIBUTE_MESSAGE  = 'message';
+    const ATTRIBUTE_MESSAGE = 'message';
     /**
      * @return TagOperation|null
      */
@@ -27,48 +26,52 @@ abstract class AbstractTagOperationElement extends AbstractTag
      */
     public function getAttributeMessage()
     {
-        return $this->hasAttributeMessage() === true ? $this->getAttribute(self::ATTRIBUTE_MESSAGE)->getValue() : '';
+        return $this->hasAttributeMessage() ? $this->getAttribute(self::ATTRIBUTE_MESSAGE)->getValue() : '';
     }
     /**
      * @return string
      */
     public function getAttributeMessageNamespace()
     {
-        return $this->hasAttribute(self::ATTRIBUTE_MESSAGE) === true ? $this->getAttribute(self::ATTRIBUTE_MESSAGE)->getValueNamespace() : '';
+        return $this->hasAttribute(self::ATTRIBUTE_MESSAGE) ? $this->getAttribute(self::ATTRIBUTE_MESSAGE)->getValueNamespace() : '';
     }
     /**
-     * @return \WsdlToPhp\PackageGenerator\DomHandler\Wsdl\Tag\TagMessage
+     * @return TagMessage
      */
     public function getMessage()
     {
+        $message = null;
         $messageName = $this->getAttributeMessage();
         if (!empty($messageName)) {
-            return $this->getDomDocumentHandler()->getElementByNameAndAttributes('message', array(
+            $message = $this->getDomDocumentHandler()->getElementByNameAndAttributes('message', array(
                 'name' => $messageName,
             ));
         }
-        return null;
+        return $message;
     }
     /**
-     * @return null|array[\WsdlToPhp\PackageGenerator\DomHandler\Wsdl\Tag\TagPart]
+     * @return TagPart[]|null
      */
     public function getParts()
     {
+        $parts = null;
         $message = $this->getMessage();
-        if ($message !== null) {
-            return $message->getChildrenByName(WsdlDocument::TAG_PART);
+        if ($message instanceof TagMessage) {
+            $parts = $message->getChildrenByName(WsdlDocument::TAG_PART);
         }
-        return null;
+        return $parts;
     }
     /**
-     * @return null|\WsdlToPhp\PackageGenerator\DomHandler\Wsdl\Tag\TagPart
+     * @param string $partName
+     * @return TagPart|null
      */
     public function getPart($partName)
     {
+        $part = null;
         $message = $this->getMessage();
-        if ($message !== null && !empty($partName)) {
-            return $message->getPart($partName);
+        if ($message instanceof TagMessage && !empty($partName)) {
+            $part = $message->getPart($partName);
         }
-        return null;
+        return $part;
     }
 }
