@@ -1,0 +1,24 @@
+
+php console wsdltophp:generate:package \
+    --wsdl-urlorpath="http://developer.ebay.com/webservices/latest/ebaySvc.wsdl" \
+    --wsdl-proxy-host="****************************" \
+    --wsdl-proxy-port=*******  \
+    --wsdl-proxy-login="*******" \
+    --wsdl-proxy-password="*******" \
+    --wsdl-destination='/var/www/Api/' \
+    --wsdl-prefix="Api" \
+    --wsdl-suffix="Project" \
+    --wsdl-category="cat" \
+    --wsdl-gathermethods="start" \
+    --wsdl-genericconstants=false \
+    --wsdl-gentutorial=true \
+    --wsdl-namespace="My\Project" \
+    --wsdl-standalone=true \
+    --wsdl-addcomments="date:2015-04-22" \
+    --wsdl-addcomments="author:Me" \
+    --wsdl-addcomments="release:1.1.0" \
+    --wsdl-addcomments="team:Dream" \
+    --wsdl-namespace="My\Project" \
+    --wsdl-struct="\Std\Opt\StructClass" \
+    --wsdl-structarray="\Std\Opt\StructArrayClass" \
+    --wsdl-soapclient="\Std\Opt\SoapClientClass" \
