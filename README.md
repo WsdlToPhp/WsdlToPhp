@@ -1,4 +1,10 @@
 # WsdlToPhp
+[![Latest Stable Version](https://poser.pugx.org/wsdltophp/wsdltophp/version.png)](https://packagist.org/packages/wsdltophp/wsdltophp)
+[![Build Status](https://api.travis-ci.org/WsdlToPhp/WsdlToPhp.svg)](https://travis-ci.org/WsdlToPhp/WsdlToPhp)
+[![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/WsdlToPhp/WsdlToPhp/badges/quality-score.png)](https://scrutinizer-ci.com/g/WsdlToPhp/WsdlToPhp/)
+[![Code Coverage](https://scrutinizer-ci.com/g/WsdlToPhp/WsdlToPhp/badges/coverage.png)](https://scrutinizer-ci.com/g/WsdlToPhp/WsdlToPhp/)
+
+# WsdlToPhp
 This project aims to provide multiple components that eases the use of SOAP oriented Web Services.
 
 To do this, the first component if the Package Generator.
