@@ -1,0 +1,9 @@
+[submodule "PhpGenerator"]
+	path = src/PhpGenerator
+	url = https://github.com/WsdlToPhp/PhpGenerator
+[submodule "PackageBase"]
+	path = src/PackageBase
+	url = https://github.com/WsdlToPhp/PackageBase
+[submodule "PackageGenerator"]
+	path = src/PackageGenerator
+	url = https://github.com/WsdlToPhp/PackageGenerator
