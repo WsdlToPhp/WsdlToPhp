@@ -11,9 +11,9 @@
     </php>
     <testsuites>
         <testsuite name="WsdlToPhp Test Suite">
-            <directory>./src/WsdlToPhp/PackageBase/tests/</directory>
-            <directory>./src/WsdlToPhp/PhpGenerator/tests/</directory>
-            <directory>./src/WsdlToPhp/PackageGenerator/Tests/</directory>
+            <directory>./src/PackageBase/tests/</directory>
+            <directory>./src/PhpGenerator/tests/</directory>
+            <directory>./src/PackageGenerator/Tests/</directory>
         </testsuite>
     </testsuites>
 
@@ -21,9 +21,9 @@
         <whitelist>
             <directory>./</directory>
             <exclude>
-                <directory>./src/WsdlToPhp/PackageBase/tests/</directory>
-                <directory>./src/WsdlToPhp/PhpGenerator/tests/</directory>
-                <directory>./src/WsdlToPhp/PackageGenerator/Tests/</directory>
+                <directory>./src/PackageBase/tests/</directory>
+                <directory>./src/PhpGenerator/tests/</directory>
+                <directory>./src/PackageGenerator/Tests/</directory>
             </exclude>
         </whitelist>
     </filter>

@@ -1,10 +1,10 @@
 {
-    "name": "wsdltophp/generators",
+    "name": "generators",
     "description": "Wsdl to php components",
     "version": "1.0.0",
     "type": "library",
     "keywords" : ["soap","wsdl","php","generator"],
-    "homepage" : "https://github.com/WsdlToPhp/WsdlToPhp",
+    "homepage" : "https://github.com/WsdlToPhp",
     "license" : "MIT",
     "authors" : [
         {
@@ -26,11 +26,11 @@
     },
     "autoload": {
         "psr-4": {
-            "WsdlToPhp\\PackageGenerator\\": "src/WsdlToPhp/PackageGenerator/",
-            "WsdlToPhp\\PhpGenerator\\": "src/WsdlToPhp/PhpGenerator/src/",
-            "WsdlToPhp\\PhpGenerator\\Tests\\": "src/WsdlToPhp/PhpGenerator/tests/",
-            "WsdlToPhp\\PackageBase\\": "src/WsdlToPhp/PackageBase/src/",
-            "WsdlToPhp\\PackageBase\\Tests\\": "src/WsdlToPhp/PackageBase/tests/"
+            "WsdlToPhp\\PackageGenerator\\": "src/PackageGenerator/",
+            "WsdlToPhp\\PhpGenerator\\": "src/PhpGenerator/src/",
+            "WsdlToPhp\\PhpGenerator\\Tests\\": "src/PhpGenerator/tests/",
+            "WsdlToPhp\\PackageBase\\": "src/PackageBase/src/",
+            "WsdlToPhp\\PackageBase\\Tests\\": "src/PackageBase/tests/"
         }
     }
 }
