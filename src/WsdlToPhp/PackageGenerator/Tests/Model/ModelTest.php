@@ -13,7 +13,7 @@ class ModelTest extends TestCase
      */
     public static function instance($name)
     {
-        return new EmptyModel($name);
+        return new EmptyModel(self::getBingGeneratorInstance(), $name);
     }
     /**
      *
@@ -36,5 +36,12 @@ class ModelTest extends TestCase
         $this->assertFalse(self::instance('%foo_')->nameIsClean());
         $this->assertFalse(self::instance('-foo_')->nameIsClean());
         $this->assertFalse(self::instance('éfoo_')->nameIsClean());
+    }
+    /**
+     *
+     */
+    public function testGetDocSubPackages()
+    {
+        $this->assertEmpty(self::instance('Foo')->getDocSubPackages());
     }
 }

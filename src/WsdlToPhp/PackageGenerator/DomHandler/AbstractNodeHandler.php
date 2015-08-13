@@ -21,8 +21,8 @@ abstract class AbstractNodeHandler
      */
     public function __construct(\DOMNode $node, AbstractDomDocumentHandler $domDocumentHandler, $index = 0)
     {
-        $this->node               = $node;
-        $this->index              = $index;
+        $this->node = $node;
+        $this->index = $index;
         $this->domDocumentHandler = $domDocumentHandler;
     }
     /**
@@ -31,6 +31,13 @@ abstract class AbstractNodeHandler
     public function getNode()
     {
         return $this->node;
+    }
+    /**
+     * @return \DOMNodeList
+     */
+    public function getChildNodes()
+    {
+        return $this->getNode()->childNodes;
     }
     /**
      * @return AbstractNodeHandler

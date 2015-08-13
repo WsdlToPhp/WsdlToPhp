@@ -25,13 +25,14 @@ class StructValue extends AbstractModel
      * @see AbstractModel::__construct()
      * @uses AbstractModel::setOwner()
      * @uses StructValue::setIndex()
+     * @param Generator $generator
      * @param string $name the original name
      * @param string $index the index of the value in the enumeration struct
      * @param Struct $struct defines the struct which owns this value
      */
-    public function __construct($name, $index, Struct $struct)
+    public function __construct(Generator $generator, $name, $index, Struct $struct)
     {
-        parent::__construct($name);
+        parent::__construct($generator, $name);
         $this->setIndex($index);
         $this->setOwner($struct);
     }
@@ -44,13 +45,13 @@ class StructValue extends AbstractModel
      * @uses StructValue::constantSuffix()
      * @uses StructValue::getIndex()
      * @uses StructValue::getOwner()
-     * @uses Generator::instance()->getOptionGenericConstantsNames()
+     * @uses Generator::getOptionGenericConstantsNames()
      * @param bool $keepMultipleUnderscores optional, allows to keep the multiple consecutive underscores
      * @return string
      */
     public function getCleanName($keepMultipleUnderscores = false)
     {
-        if (Generator::instance()->getOptionGenericConstantsNames() && is_numeric($this->getIndex()) && $this->getIndex() >= 0) {
+        if ($this->getGenerator()->getOptionGenericConstantsNames()) {
             return 'ENUM_VALUE_' . $this->getIndex();
         } else {
             $key = self::constantSuffix($this->getOwner()->getName(), parent::getCleanName($keepMultipleUnderscores), $this->getIndex());
@@ -77,44 +78,17 @@ class StructValue extends AbstractModel
     }
     /**
      * Sets the index attribute value
+     * @throws \InvalidArgumentException
      * @param int $index
      * @return StructValue
      */
     public function setIndex($index)
     {
+        if (!is_int($index) || $index < 0) {
+            throw new \InvalidArgumentException(sprintf('The value\'s index must be aa positive integer, "%s" given', var_export($index, true)));
+        }
         $this->index = $index;
         return $this;
-    }
-    public function getClassBody(&$class)
-    {
-    }
-    /**
-     * Returns the comment lines for this value
-     * @see AbstractModel::getComment()
-     * @uses StructValue::getValue()
-     * @uses AbstractModel::addMetaComment()
-     * @return array
-     */
-    public function getComment()
-    {
-        $value = $this->getValue();
-        $comments = array();
-        array_push($comments, 'Constant for value ' . var_export($value, true));
-        $this->addMetaComment($comments);
-        array_push($comments, '@return ' . gettype($value) . ' ' . var_export($value, true));
-        return $comments;
-    }
-    /**
-     * Returns the declaration of the value
-     * @see StructValue::getCleanName()
-     * @see StructValue::getValue()
-     * @param string $structName the name of the struct which the value belongs to
-     * @param int $index the index of the constant contained by the struct class
-     * @return string
-     */
-    public function getDeclaration($structName, $index = -1)
-    {
-        return 'const ' . $this->getCleanName() . ' = ' . var_export($this->getValue(), true) . ';';
     }
     /**
      * Returns the index which has to be added at the end of natural constant name defined with the value cleaned
@@ -147,13 +121,5 @@ class StructValue extends AbstractModel
     public function getOwner()
     {
         return parent::getOwner();
-    }
-    /**
-     * Returns class name
-     * @return string __CLASS__
-     */
-    public function __toString()
-    {
-        return 'StructValue';
     }
 }

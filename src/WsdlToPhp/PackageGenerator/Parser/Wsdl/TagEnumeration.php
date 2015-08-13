@@ -6,8 +6,8 @@ use WsdlToPhp\PackageGenerator\DomHandler\Wsdl\Wsdl as WsdlDocument;
 use WsdlToPhp\PackageGenerator\DomHandler\Wsdl\Tag\AbstractTag as Tag;
 use WsdlToPhp\PackageGenerator\DomHandler\Wsdl\Tag\TagEnumeration as Enumeration;
 use WsdlToPhp\PackageGenerator\Model\Wsdl;
-use WsdlToPhp\PackageGenerator\Model\Schema;
 use WsdlToPhp\PackageGenerator\Model\Struct;
+use WsdlToPhp\PackageGenerator\Model\StructValue;
 
 class TagEnumeration extends AbstractTagParser
 {
@@ -21,13 +21,6 @@ class TagEnumeration extends AbstractTagParser
                 $this->parseEnumeration($tag);
             }
         }
-    }
-    /**
-     * @see \WsdlToPhp\PackageGenerator\Parser\Wsdl\AbstractParser::parseSchema()
-     */
-    protected function parseSchema(Wsdl $wsdl, Schema $schema)
-    {
-        $this->parseWsdl($wsdl);
     }
     /**
      * @see \WsdlToPhp\PackageGenerator\Parser\Wsdl\AbstractParser::parsingTag()
@@ -55,6 +48,9 @@ class TagEnumeration extends AbstractTagParser
         $struct = $this->getModel($tag);
         if ($struct instanceof Struct) {
             $struct->addValue($enumeration->getValue());
+            if (($value = $struct->getValue($enumeration->getValue())) instanceof StructValue) {
+                $this->parseTagAttributes($enumeration, $value);
+            }
         }
     }
 }

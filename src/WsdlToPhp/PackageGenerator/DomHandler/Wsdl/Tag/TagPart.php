@@ -33,14 +33,11 @@ class TagPart extends AbstractTag
      */
     private function getAttributeMixedValue($attributeName, $returnValue = true)
     {
-        if ($this->hasAttribute($attributeName)) {
-            if ($returnValue === true) {
-                return $this->getAttribute($attributeName)->getValue();
-            } else {
-                return $this->getAttribute($attributeName);
-            }
+        $value = $this->getAttribute($attributeName);
+        if ($returnValue === true && $value instanceof AttributeHandler) {
+            $value = $value->getValue();
         }
-        return $returnValue === true ? '' : null;
+        return $value;
     }
     /**
      * @return string
@@ -83,7 +80,7 @@ class TagPart extends AbstractTag
         if (empty($attribute)) {
             $attribute = $this->getAttributeElement(false);
             if (empty($attribute)) {
-                return $attribute;
+                return null;
             }
         }
         return $attribute->getValueNamespace();

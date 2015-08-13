@@ -4,7 +4,6 @@ namespace WsdlToPhp\PackageGenerator\Parser\Wsdl;
 
 use WsdlToPhp\PackageGenerator\Model\Method;
 use WsdlToPhp\PackageGenerator\Model\Wsdl;
-use WsdlToPhp\PackageGenerator\Model\Schema;
 use WsdlToPhp\PackageGenerator\DomHandler\Wsdl\Tag\TagPart;
 use WsdlToPhp\PackageGenerator\DomHandler\Wsdl\Tag\AbstractTagOperationElement;
 use WsdlToPhp\PackageGenerator\DomHandler\Wsdl\Tag\TagOperation;
@@ -34,13 +33,6 @@ abstract class AbstractTagInputOutputParser extends AbstractTagParser
         }
     }
     /**
-     * @see \WsdlToPhp\PackageGenerator\Parser\Wsdl\AbstractParser::parseSchema()
-     */
-    protected function parseSchema(Wsdl $wsdl, Schema $schema)
-    {
-        $this->parseWsdl($wsdl);
-    }
-    /**
      * @param AbstractTagOperationElement $tag
      */
     public function parseInputOutput(AbstractTagOperationElement $tag)
@@ -57,7 +49,7 @@ abstract class AbstractTagInputOutputParser extends AbstractTagParser
             return null;
         }
         if ($this->isKnownTypeUnknown($method)) {
-            $parts         = $tag->getParts();
+            $parts = $tag->getParts();
             $multipleParts = count($parts);
             if (is_array($parts) && $multipleParts > 1) {
                 $types = array();

@@ -6,92 +6,72 @@ use WsdlToPhp\PackageGenerator\Model\Struct;
 use WsdlToPhp\PackageGenerator\Model\EmptyModel;
 use WsdlToPhp\PackageGenerator\Container\Model\EmptyModel as ModelContainer;
 use WsdlToPhp\PackageGenerator\Tests\TestCase;
-use WsdlToPhp\PackageGenerator\Model\Method;
-use WsdlToPhp\PackageGenerator\Model\Service;
-use WsdlToPhp\PackageGenerator\Container\Model\Method as MethodContainer;
 
 class ModelContainerTest extends TestCase
 {
+    /**
+     * @return ModelContainer
+     */
+    public static function instance()
+    {
+        return new ModelContainer(self::getBingGeneratorInstance());
+    }
     /**
      *
      */
     public function testAdd()
     {
-        $modelContainer = new ModelContainer();
-        $modelContainer->add(new EmptyModel('Foo'));
+        $modelContainer = self::instance();
+        $modelContainer->add(new EmptyModel(self::getBingGeneratorInstance(), 'Foo'));
     }
     /**
      * @expectedException InvalidArgumentException
      */
     public function testExceptionOnObject()
     {
-        $modelContainer = new ModelContainer();
+        $modelContainer = self::instance();
         $modelContainer->add(array());
+    }
+    /**
+     * @expectedException InvalidArgumentException
+     */
+    public function testGetExceptionOnValue()
+    {
+        $modelContainer = self::instance();
+        $modelContainer->add(new EmptyModel(self::getBingGeneratorInstance(), 'Foo'));
+
+        $modelContainer->get(array());
+        $modelContainer->get(null);
     }
     /**
      * @expectedException InvalidArgumentException
      */
     public function testExceptionOnModelClass()
     {
-        $modelContainer = new ModelContainer();
-        $modelContainer->add(new Struct('Foo'));
+        $modelContainer = self::instance();
+        $modelContainer->add(new Struct(self::getBingGeneratorInstance(), 'Foo'));
     }
     /**
      *
      */
     public function testGet()
     {
-        $modelContainer = new ModelContainer();
-        $modelContainer->add(new EmptyModel('Foo'));
-        $modelContainer->add(new EmptyModel('Bar'));
+        $modelContainer = self::instance();
+        $modelContainer->add(new EmptyModel(self::getBingGeneratorInstance(), 'Foo'));
+        $modelContainer->add(new EmptyModel(self::getBingGeneratorInstance(), 'Bar'));
 
         $this->assertInstanceOf('\\WsdlToPhp\\PackageGenerator\\Model\\EmptyModel', $modelContainer->get('Foo'));
-    }
-    /**
-     * @expectedException InvalidArgumentException
-     */
-    public function testGetWithException()
-    {
-        $modelContainer = new ModelContainer();
-        $modelContainer->add(new EmptyModel('Foo'));
-        $modelContainer->add(new EmptyModel('Bar'));
-
-        $modelContainer->get('Foo', 'bar');
-    }
-    /**
-     *
-     */
-    public function testGetAs()
-    {
-        $methodContainer = new MethodContainer();
-
-        $service = new Service('Bar');
-        $foo = new Method('Foo', 'string', 'int', $service);
-        $bar = new Method('Bar', 'string', 'int', $service);
-        $methodContainer->add($foo);
-        $methodContainer->add($bar);
-
-        $this->assertSame($foo, $methodContainer->getAs(array(
-            'name'          => 'Foo',
-            'parameterType' => 'string',
-            'returnType'    => 'int',
-        )));
-
-        $this->assertSame($bar, $methodContainer->getAs(array(
-            'name'          => 'Bar',
-            'parameterType' => 'string',
-        )));
     }
     /**
      *
      */
     public function testForeach()
     {
-        $models = new ModelContainer();
-        $models->add(new EmptyModel('Foo'));
-        $models->add(new EmptyModel('Bar'));
-        $models->add(new EmptyModel('FooBar'));
-        $models->add(new EmptyModel('BarFoo'));
+        $models = self::instance();
+        $models->add(new EmptyModel(self::getBingGeneratorInstance(), 'Foo'));
+        $models->add(new EmptyModel(self::getBingGeneratorInstance(), 'Bar'));
+        $models->add(new EmptyModel(self::getBingGeneratorInstance(), 'FooBar'));
+        $models->add(new EmptyModel(self::getBingGeneratorInstance(), 'BarFoo'));
 
         $index = 0;
         foreach ($models as $model) {
@@ -115,11 +95,11 @@ class ModelContainerTest extends TestCase
      */
     public function testCount()
     {
-        $models = new ModelContainer();
-        $models->add(new EmptyModel('Foo'));
-        $models->add(new EmptyModel('Bar'));
-        $models->add(new EmptyModel('FooBar'));
-        $models->add(new EmptyModel('BarFoo'));
+        $models = self::instance();
+        $models->add(new EmptyModel(self::getBingGeneratorInstance(), 'Foo'));
+        $models->add(new EmptyModel(self::getBingGeneratorInstance(), 'Bar'));
+        $models->add(new EmptyModel(self::getBingGeneratorInstance(), 'FooBar'));
+        $models->add(new EmptyModel(self::getBingGeneratorInstance(), 'BarFoo'));
 
         $this->assertSame(4, $models->count());
         $this->assertSame(4, count($models));

@@ -1,0 +1,249 @@
+<definitions xmlns="http://schemas.xmlsoap.org/wsdl/" xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:mime="http://schemas.xmlsoap.org/wsdl/mime/" xmlns:tns="http://gestionepianodistudi.gestionesidi.eds.miur.it/" name="GestionePianoDiStudiSidiWSTrs" targetNamespace="http://gestionepianodistudi.gestionesidi.eds.miur.it/">
+<types>
+<schema xmlns="http://www.w3.org/2001/XMLSchema" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:soap11-enc="http://schemas.xmlsoap.org/soap/encoding/" targetNamespace="http://gestionepianodistudi.gestionesidi.eds.miur.it/" elementFormDefault="qualified">
+<complexType name="HeaderOperation">
+<sequence>
+<element name="annoScolastico" type="string"/>
+<element name="codFlusso" type="string"/>
+<element name="codicedDeboleScuola" type="string"/>
+<element name="fornitore" type="string"/>
+<element name="versioneSw" type="string"/>
+</sequence>
+</complexType>
+<complexType name="InputCancellaPianoDiStudi">
+<sequence>
+<element name="annoScolastico" type="string"/>
+<element name="codiceDeboleScuola" type="string"/>
+<element name="codicePianoDiStudiSidi" type="string"/>
+</sequence>
+</complexType>
+<complexType name="OutputCancellaPianoDiStudi">
+<complexContent>
+<extension base="tns:EsitoGestioneSidiPianoDiStudi">
+<sequence/>
+</extension>
+</complexContent>
+</complexType>
+<complexType name="EsitoGestioneSidiPianoDiStudi">
+<sequence>
+<element name="esito" type="int"/>
+<element name="listaErrori" type="tns:ArrayOfMessaggioGestioneSidiPianoDiStudi"/>
+<element name="listaMessaggi" type="tns:ArrayOfMessaggioGestioneSidiPianoDiStudi"/>
+</sequence>
+</complexType>
+<complexType name="ArrayOfMessaggioGestioneSidiPianoDiStudi">
+<complexContent>
+<restriction base="soap11-enc:Array">
+<sequence>
+<element name="item" type="tns:MessaggioGestioneSidiPianoDiStudi"/>
+</sequence>
+<attribute ref="soap11-enc:arrayType" wsdl:arrayType="tns:MessaggioGestioneSidiPianoDiStudi[]"/>
+</restriction>
+</complexContent>
+</complexType>
+<complexType name="MessaggioGestioneSidiPianoDiStudi">
+<sequence>
+<element name="area" type="string"/>
+<element name="codice" type="string"/>
+<element name="descr" type="string"/>
+</sequence>
+</complexType>
+<complexType name="OutputModificaPianoDiStudi">
+<complexContent>
+<extension base="tns:EsitoGestioneSidiPianoDiStudi">
+<sequence>
+<element name="pianoDiStudiSidi" type="tns:PianoDiStudiSidi"/>
+</sequence>
+</extension>
+</complexContent>
+</complexType>
+<complexType name="PianoDiStudiSidi">
+<complexContent>
+<extension base="tns:PianoDiStudi">
+<sequence>
+<element name="codiceForteScuola" type="string"/>
+<element name="codicePianoDiStudiSidi" type="string"/>
+</sequence>
+</extension>
+</complexContent>
+</complexType>
+<complexType name="PianoDiStudi">
+<sequence>
+<element name="annoScolastico" type="string"/>
+<element name="classificazioneMinisteriale" type="string"/>
+<element name="codiceDeboleScuola" type="string"/>
+<element name="codiceIndirizzoMinisteriale" type="string"/>
+<element name="descrPianoDiStudi" type="string"/>
+<element name="disciplinePianoDiStudi" type="tns:ArrayOfDisciplinaComponente"/>
+</sequence>
+</complexType>
+<complexType name="ArrayOfDisciplinaComponente">
+<complexContent>
+<restriction base="soap11-enc:Array">
+<sequence>
+<element name="item" type="tns:DisciplinaComponente"/>
+</sequence>
+<attribute ref="soap11-enc:arrayType" wsdl:arrayType="tns:DisciplinaComponente[]"/>
+</restriction>
+</complexContent>
+</complexType>
+<complexType name="DisciplinaComponente">
+<sequence>
+<element name="applicabilitaIAnnoCorso" type="string"/>
+<element name="applicabilitaIIAnnoCorso" type="string"/>
+<element name="applicabilitaIIIAnnoCorso" type="string"/>
+<element name="applicabilitaIVAnnoCorso" type="string"/>
+<element name="applicabilitaVAnnoCorso" type="string"/>
+<element name="applicabilitaVIAnnoCorso" type="string"/>
+<element name="codiceDisciplinaMinisteriale" type="string"/>
+<element name="descrDisciplina" type="string"/>
+</sequence>
+</complexType>
+<complexType name="OutputInserisciPianoDiStudi">
+<complexContent>
+<extension base="tns:EsitoGestioneSidiPianoDiStudi">
+<sequence>
+<element name="pianoDiStudiSidi" type="tns:PianoDiStudiSidi"/>
+</sequence>
+</extension>
+</complexContent>
+</complexType>
+<complexType name="OutputRicercaPianoDiStudi">
+<complexContent>
+<extension base="tns:EsitoGestioneSidiPianoDiStudi">
+<sequence>
+<element name="listaPianoDiStudiSidi" type="tns:ArrayOfPianoDiStudiSidi"/>
+</sequence>
+</extension>
+</complexContent>
+</complexType>
+<complexType name="ArrayOfPianoDiStudiSidi">
+<complexContent>
+<restriction base="soap11-enc:Array">
+<sequence>
+<element name="item" type="tns:PianoDiStudiSidi"/>
+</sequence>
+<attribute ref="soap11-enc:arrayType" wsdl:arrayType="tns:PianoDiStudiSidi[]"/>
+</restriction>
+</complexContent>
+</complexType>
+<complexType name="InputInserisciPianoDiStudi">
+<sequence>
+<element name="pianoDiStudi" type="tns:PianoDiStudi"/>
+</sequence>
+</complexType>
+<complexType name="InputModificaPianoDiStudi">
+<sequence>
+<element name="pianoDiStudiMod" type="tns:PianoDiStudiMod"/>
+</sequence>
+</complexType>
+<complexType name="PianoDiStudiMod">
+<sequence>
+<element name="annoScolastico" type="string"/>
+<element name="codiceDeboleScuola" type="string"/>
+<element name="codicePianoDiStudiSidi" type="string"/>
+<element name="descrPianoDiStudi" type="string"/>
+<element name="disciplinePianoDiStudi" type="tns:ArrayOfDisciplinaComponente"/>
+</sequence>
+</complexType>
+<complexType name="InputRicercaPianoDiStudi">
+<sequence>
+<element name="annoScolastico" type="string"/>
+<element name="codiceDeboleScuola" type="string"/>
+<element name="codicePianoDiStudiSidi" type="string"/>
+<element name="descrPianoDiStudi" type="string"/>
+</sequence>
+</complexType>
+</schema>
+</types>
+<message name="GestionePianoDiStudiSidiWSTrs_cancellaPianoDiStudi">
+<part name="headerOperazione" type="tns:HeaderOperation"/>
+<part name="theInput" type="tns:InputCancellaPianoDiStudi"/>
+</message>
+<message name="GestionePianoDiStudiSidiWSTrs_cancellaPianoDiStudiResponse">
+<part name="result" type="tns:OutputCancellaPianoDiStudi"/>
+</message>
+<message name="GestionePianoDiStudiSidiWSTrs_inserisciPianoDiStudi">
+<part name="headerOperazione" type="tns:HeaderOperation"/>
+<part name="theInput" type="tns:InputInserisciPianoDiStudi"/>
+</message>
+<message name="GestionePianoDiStudiSidiWSTrs_inserisciPianoDiStudiResponse">
+<part name="result" type="tns:OutputInserisciPianoDiStudi"/>
+</message>
+<message name="GestionePianoDiStudiSidiWSTrs_modificaPianoDiStudi">
+<part name="headerOperazione" type="tns:HeaderOperation"/>
+<part name="theInput" type="tns:InputModificaPianoDiStudi"/>
+</message>
+<message name="GestionePianoDiStudiSidiWSTrs_modificaPianoDiStudiResponse">
+<part name="result" type="tns:OutputModificaPianoDiStudi"/>
+</message>
+<message name="GestionePianoDiStudiSidiWSTrs_ricercaPianoDiStudi">
+<part name="headerOperazione" type="tns:HeaderOperation"/>
+<part name="theInput" type="tns:InputRicercaPianoDiStudi"/>
+</message>
+<message name="GestionePianoDiStudiSidiWSTrs_ricercaPianoDiStudiResponse">
+<part name="result" type="tns:OutputRicercaPianoDiStudi"/>
+</message>
+<portType name="GestionePianoDiStudiSidiWSTrs">
+<operation name="cancellaPianoDiStudi" parameterOrder="headerOperazione theInput">
+<input message="tns:GestionePianoDiStudiSidiWSTrs_cancellaPianoDiStudi"/>
+<output message="tns:GestionePianoDiStudiSidiWSTrs_cancellaPianoDiStudiResponse"/>
+</operation>
+<operation name="inserisciPianoDiStudi" parameterOrder="headerOperazione theInput">
+<input message="tns:GestionePianoDiStudiSidiWSTrs_inserisciPianoDiStudi"/>
+<output message="tns:GestionePianoDiStudiSidiWSTrs_inserisciPianoDiStudiResponse"/>
+</operation>
+<operation name="modificaPianoDiStudi" parameterOrder="headerOperazione theInput">
+<input message="tns:GestionePianoDiStudiSidiWSTrs_modificaPianoDiStudi"/>
+<output message="tns:GestionePianoDiStudiSidiWSTrs_modificaPianoDiStudiResponse"/>
+</operation>
+<operation name="ricercaPianoDiStudi" parameterOrder="headerOperazione theInput">
+<input message="tns:GestionePianoDiStudiSidiWSTrs_ricercaPianoDiStudi"/>
+<output message="tns:GestionePianoDiStudiSidiWSTrs_ricercaPianoDiStudiResponse"/>
+</operation>
+</portType>
+<binding name="GestionePianoDiStudiSidiWSTrsSoapHttp" type="tns:GestionePianoDiStudiSidiWSTrs">
+<soap:binding style="rpc" transport="http://schemas.xmlsoap.org/soap/http"/>
+<operation name="cancellaPianoDiStudi">
+<soap:operation soapAction="http://gestionepianodistudi.gestionesidi.eds.miur.it//cancellaPianoDiStudi"/>
+<input>
+<soap:body use="encoded" namespace="http://gestionepianodistudi.gestionesidi.eds.miur.it/" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" parts="headerOperazione theInput"/>
+</input>
+<output>
+<soap:body use="encoded" namespace="http://gestionepianodistudi.gestionesidi.eds.miur.it/" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" parts="result"/>
+</output>
+</operation>
+<operation name="inserisciPianoDiStudi">
+<soap:operation soapAction="http://gestionepianodistudi.gestionesidi.eds.miur.it//inserisciPianoDiStudi"/>
+<input>
+<soap:body use="encoded" namespace="http://gestionepianodistudi.gestionesidi.eds.miur.it/" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" parts="headerOperazione theInput"/>
+</input>
+<output>
+<soap:body use="encoded" namespace="http://gestionepianodistudi.gestionesidi.eds.miur.it/" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" parts="result"/>
+</output>
+</operation>
+<operation name="modificaPianoDiStudi">
+<soap:operation soapAction="http://gestionepianodistudi.gestionesidi.eds.miur.it//modificaPianoDiStudi"/>
+<input>
+<soap:body use="encoded" namespace="http://gestionepianodistudi.gestionesidi.eds.miur.it/" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" parts="headerOperazione theInput"/>
+</input>
+<output>
+<soap:body use="encoded" namespace="http://gestionepianodistudi.gestionesidi.eds.miur.it/" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" parts="result"/>
+</output>
+</operation>
+<operation name="ricercaPianoDiStudi">
+<soap:operation soapAction="http://gestionepianodistudi.gestionesidi.eds.miur.it//ricercaPianoDiStudi"/>
+<input>
+<soap:body use="encoded" namespace="http://gestionepianodistudi.gestionesidi.eds.miur.it/" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" parts="headerOperazione theInput"/>
+</input>
+<output>
+<soap:body use="encoded" namespace="http://gestionepianodistudi.gestionesidi.eds.miur.it/" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" parts="result"/>
+</output>
+</operation>
+</binding>
+<service name="GestionePianoDiStudiSidiWSTrs">
+<port name="GestionePianoDiStudiSidiWSTrsSoapHttpPort" binding="tns:GestionePianoDiStudiSidiWSTrsSoapHttp">
+<soap:address location="http://wssidi1coll.pubblica.istruzione.it/SSANWSTRS/GestionePianoDiStudiSidiWSTrsSoapHttpPort"/>
+</port>
+</service>
+</definitions>

@@ -31,10 +31,10 @@ class AttributeHandlerTest extends TestCase
         // first element tag
         $element = $domDocument->getElementByName('element');
 
-        $this->assertSame(0, $element->getAttribute('minOccurs')->getValue());
-        $this->assertSame(1, $element->getAttribute('maxOccurs')->getValue());
+        $this->assertSame('0', $element->getAttribute('minOccurs')->getValue());
+        $this->assertSame('1', $element->getAttribute('maxOccurs')->getValue());
         $this->assertSame('Version', $element->getAttribute('name')->getValue());
-        $this->assertSame(2.2, $element->getAttribute('default')->getValue());
+        $this->assertSame('2.2', $element->getAttribute('default')->getValue());
     }
     /**
      *
@@ -70,5 +70,17 @@ class AttributeHandlerTest extends TestCase
         foreach ($elements as $index=>$element) {
             $this->assertSame($namespaces[$index], $element->getAttribute('type')->getValueNamespace());
         }
+    }
+    /**
+     *
+     */
+    public function testGetNamespaceNull()
+    {
+        $domDocument = DomDocumentHandlerTest::bingInstance();
+
+        // first element tag
+        $element = $domDocument->getElementByName('element');
+
+        $this->assertNull($element->getAttribute('minOccurs')->getNamespace());
     }
 }

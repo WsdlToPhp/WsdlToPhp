@@ -1,0 +1,703 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<SOAP-ENV:Envelope xmlns:SOAP-ENV="http://schemas.xmlsoap.org/soap/envelope/" xmlns:ns1="http://schemas.microsoft.com/LiveSearch/2008/03/Search" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <SOAP-ENV:Body>
+    <ns1:SearchRequest xsi:type="ns1:SearchRequest">
+      <ns1:Version>2.2</ns1:Version>
+      <ns1:Query>bing</ns1:Query>
+      <ns1:AppId>C74**********************************6B1</ns1:AppId>
+      <ns1:Options/>
+      <ns1:Sources>
+        <ns1:SourceType>Web</ns1:SourceType>
+        <ns1:SourceType>Image</ns1:SourceType>
+        <ns1:SourceType>News</ns1:SourceType>
+        <ns1:SourceType>MobileWeb</ns1:SourceType>
+        <ns1:SourceType>Phonebook</ns1:SourceType>
+        <ns1:SourceType>RelatedSearch</ns1:SourceType>
+        <ns1:SourceType>Showtimes</ns1:SourceType>
+        <ns1:SourceType>Spell</ns1:SourceType>
+        <ns1:SourceType>Web</ns1:SourceType>
+      </ns1:Sources>
+    </ns1:SearchRequest>
+  </SOAP-ENV:Body>
+</SOAP-ENV:Envelope>
+SoapClient Object
+(
+    [_proxy_host] => nrs-proxy02.ad-subs.w2k.francetelecom.fr
+    [_proxy_port] => 3128
+    [_proxy_login] => fzcd1760
+    [_proxy_password] => losled@IT2015
+    [trace] => 1
+    [_classmap] => Array
+        (
+            [AdultOption] => ApiEnumAdultOption
+            [ArrayOfDeepLink] => ApiStructArrayOfDeepLink
+            [ArrayOfError] => ApiStructArrayOfError
+            [ArrayOfImageResult] => ApiStructArrayOfImageResult
+            [ArrayOfInstantAnswerResult] => ApiStructArrayOfInstantAnswerResult
+            [ArrayOfMobileWebResult] => ApiStructArrayOfMobileWebResult
+            [ArrayOfMobileWebSearchOption] => ApiStructArrayOfMobileWebSearchOption
+            [ArrayOfNewsArticle] => ApiStructArrayOfNewsArticle
+            [ArrayOfNewsCollection] => ApiStructArrayOfNewsCollection
+            [ArrayOfNewsRelatedSearch] => ApiStructArrayOfNewsRelatedSearch
+            [ArrayOfNewsResult] => ApiStructArrayOfNewsResult
+            [ArrayOfRelatedSearchResult] => ApiStructArrayOfRelatedSearchResult
+            [ArrayOfSearchOption] => ApiStructArrayOfSearchOption
+            [ArrayOfSourceType] => ApiStructArrayOfSourceType
+            [ArrayOfSpellResult] => ApiStructArrayOfSpellResult
+            [ArrayOfString] => ApiStructArrayOfString
+            [ArrayOfVideoResult] => ApiStructArrayOfVideoResult
+            [ArrayOfWebResult] => ApiStructArrayOfWebResult
+            [ArrayOfWebSearchOption] => ApiStructArrayOfWebSearchOption
+            [ArrayOfWebSearchTag] => ApiStructArrayOfWebSearchTag
+            [DeepLink] => ApiStructDeepLink
+            [Error] => ApiStructError
+            [ImageRequest] => ApiStructImageRequest
+            [ImageResponse] => ApiStructImageResponse
+            [ImageResult] => ApiStructImageResult
+            [InstantAnswerResponse] => ApiStructInstantAnswerResponse
+            [InstantAnswerResult] => ApiStructInstantAnswerResult
+            [MobileWebRequest] => ApiStructMobileWebRequest
+            [MobileWebResponse] => ApiStructMobileWebResponse
+            [MobileWebResult] => ApiStructMobileWebResult
+            [MobileWebSearchOption] => ApiEnumMobileWebSearchOption
+            [NewsArticle] => ApiStructNewsArticle
+            [NewsCollection] => ApiStructNewsCollection
+            [NewsRelatedSearch] => ApiStructNewsRelatedSearch
+            [NewsRequest] => ApiStructNewsRequest
+            [NewsResponse] => ApiStructNewsResponse
+            [NewsResult] => ApiStructNewsResult
+            [NewsSortOption] => ApiEnumNewsSortOption
+            [PhonebookRequest] => ApiStructPhonebookRequest
+            [PhonebookSortOption] => ApiEnumPhonebookSortOption
+            [Query] => ApiStructQuery
+            [RelatedSearchResponse] => ApiStructRelatedSearchResponse
+            [RelatedSearchResult] => ApiStructRelatedSearchResult
+            [SearchOption] => ApiEnumSearchOption
+            [SearchRequest] => ApiStructSearchRequest
+            [SearchResponse] => ApiStructSearchResponse
+            [SourceType] => ApiEnumSourceType
+            [SpellResponse] => ApiStructSpellResponse
+            [SpellResult] => ApiStructSpellResult
+            [Thumbnail] => ApiStructThumbnail
+            [TranslationRequest] => ApiStructTranslationRequest
+            [VideoRequest] => ApiStructVideoRequest
+            [VideoResponse] => ApiStructVideoResponse
+            [VideoResult] => ApiStructVideoResult
+            [VideoSortOption] => ApiEnumVideoSortOption
+            [WebRequest] => ApiStructWebRequest
+            [WebResponse] => ApiStructWebResponse
+            [WebResult] => ApiStructWebResult
+            [WebSearchOption] => ApiEnumWebSearchOption
+            [WebSearchTag] => ApiStructWebSearchTag
+        )
+
+    [_features] => 5
+    [_soap_version] => 1
+    [sdl] => Resource id #68
+    [__last_request] => <?xml version="1.0" encoding="UTF-8"?>
+<SOAP-ENV:Envelope xmlns:SOAP-ENV="http://schemas.xmlsoap.org/soap/envelope/" xmlns:ns1="http://schemas.microsoft.com/LiveSearch/2008/03/Search" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"><SOAP-ENV:Body><ns1:SearchRequest xsi:type="ns1:SearchRequest"><ns1:Version>2.2</ns1:Version><ns1:Query>bing</ns1:Query><ns1:AppId>C74**********************************6B1</ns1:AppId><ns1:Options/><ns1:Sources><ns1:SourceType>Web</ns1:SourceType><ns1:SourceType>Image</ns1:SourceType><ns1:SourceType>News</ns1:SourceType><ns1:SourceType>MobileWeb</ns1:SourceType><ns1:SourceType>Phonebook</ns1:SourceType><ns1:SourceType>RelatedSearch</ns1:SourceType><ns1:SourceType>Showtimes</ns1:SourceType><ns1:SourceType>Spell</ns1:SourceType><ns1:SourceType>Web</ns1:SourceType></ns1:Sources></ns1:SearchRequest></SOAP-ENV:Body></SOAP-ENV:Envelope>
+
+    [httpsocket] => Resource id #69
+    [_use_proxy] => 1
+    [httpurl] => Resource id #70
+    [__last_request_headers] => POST http://api.bing.net:80/soap.asmx HTTP/1.1
+Host: api.bing.net
+Connection: Keep-Alive
+User-Agent: PHP-SOAP/5.5.9-1ubuntu4.9
+Content-Type: text/xml; charset=utf-8
+SOAPAction: "http://schemas.microsoft.com/LiveSearch/2008/03/Search/Search"
+Content-Length: 876
+Proxy-Authorization: Basic ZnpjZDE3NjA6bG9zbGVkQElUMjAxNQ==
+
+
+    [__last_response_headers] => HTTP/1.1 505 HTTP Version Not Supported
+Server: Microsoft-IIS/8.5
+Date: Thu, 28 May 2015 08:05:37 GMT
+Content-Length: 0
+Via: 1.1 nrsvdrasproxy02.ad-subs.w2k.francetelecom.fr:3128 (Cisco-IronPort-WSA/7.7.0-760)
+Connection: keep-alive
+Proxy-Connection: keep-alive
+
+    [__soap_fault] => SoapFault Object
+        (
+            [message:protected] => HTTP Version Not Supported
+            [string:Exception:private] => 
+            [code:protected] => 0
+            [file:protected] => /var/www/workspace/Api/Service/ApiServiceSearch.php
+            [line:protected] => 34
+            [trace:Exception:private] => Array
+                (
+                    [0] => Array
+                        (
+                            [function] => __doRequest
+                            [class] => SoapClient
+                            [type] => ->
+                            [args] => Array
+                                (
+                                    [0] => <?xml version="1.0" encoding="UTF-8"?>
+<SOAP-ENV:Envelope xmlns:SOAP-ENV="http://schemas.xmlsoap.org/soap/envelope/" xmlns:ns1="http://schemas.microsoft.com/LiveSearch/2008/03/Search" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"><SOAP-ENV:Body><ns1:SearchRequest xsi:type="ns1:SearchRequest"><ns1:Version>2.2</ns1:Version><ns1:Query>bing</ns1:Query><ns1:AppId>C74**********************************6B1</ns1:AppId><ns1:Options/><ns1:Sources><ns1:SourceType>Web</ns1:SourceType><ns1:SourceType>Image</ns1:SourceType><ns1:SourceType>News</ns1:SourceType><ns1:SourceType>MobileWeb</ns1:SourceType><ns1:SourceType>Phonebook</ns1:SourceType><ns1:SourceType>RelatedSearch</ns1:SourceType><ns1:SourceType>Showtimes</ns1:SourceType><ns1:SourceType>Spell</ns1:SourceType><ns1:SourceType>Web</ns1:SourceType></ns1:Sources></ns1:SearchRequest></SOAP-ENV:Body></SOAP-ENV:Envelope>
+
+                                    [1] => http://api.bing.net:80/soap.asmx
+                                    [2] => http://schemas.microsoft.com/LiveSearch/2008/03/Search/Search
+                                    [3] => 1
+                                    [4] => 0
+                                )
+
+                        )
+
+                    [1] => Array
+                        (
+                            [file] => /var/www/workspace/Api/Service/ApiServiceSearch.php
+                            [line] => 34
+                            [function] => __call
+                            [class] => SoapClient
+                            [type] => ->
+                            [args] => Array
+                                (
+                                    [0] => Search
+                                    [1] => Array
+                                        (
+                                            [0] => ApiStructSearchRequest Object
+                                                (
+                                                    [Query] => bing
+                                                    [AppId] => C74**********************************6B1
+                                                    [Sources] => ApiStructArrayOfSourceType Object
+                                                        (
+                                                            [SourceType] => Array
+                                                                (
+                                                                    [0] => Web
+                                                                    [1] => Image
+                                                                    [2] => News
+                                                                    [3] => MobileWeb
+                                                                    [4] => Phonebook
+                                                                    [5] => RelatedSearch
+                                                                    [6] => Showtimes
+                                                                    [7] => Spell
+                                                                    [8] => Web
+                                                                )
+
+                                                            [result:ApiWsdlClass:private] => 
+                                                            [lastError:ApiWsdlClass:private] => Array
+                                                                (
+                                                                )
+
+                                                            [internArrayToIterate:ApiWsdlClass:private] => Array
+                                                                (
+                                                                    [0] => Web
+                                                                    [1] => Image
+                                                                    [2] => News
+                                                                    [3] => MobileWeb
+                                                                    [4] => Phonebook
+                                                                    [5] => RelatedSearch
+                                                                    [6] => Showtimes
+                                                                    [7] => Spell
+                                                                    [8] => Web
+                                                                )
+
+                                                            [internArrayToIterateIsArray:ApiWsdlClass:private] => 1
+                                                            [internArrayToIterateOffset:ApiWsdlClass:private] => 0
+                                                        )
+
+                                                    [parameters] => ApiStructSearchRequest Object
+                                                        (
+                                                            [Query] => bing
+                                                            [AppId] => C74**********************************6B1
+                                                            [Sources] => ApiStructArrayOfSourceType Object
+                                                                (
+                                                                    [SourceType] => Array
+                                                                        (
+                                                                            [0] => Web
+                                                                            [1] => Image
+                                                                            [2] => News
+                                                                            [3] => MobileWeb
+                                                                            [4] => Phonebook
+                                                                            [5] => RelatedSearch
+                                                                            [6] => Showtimes
+                                                                            [7] => Spell
+                                                                            [8] => Web
+                                                                        )
+
+                                                                    [result:ApiWsdlClass:private] => 
+                                                                    [lastError:ApiWsdlClass:private] => Array
+                                                                        (
+                                                                        )
+
+                                                                    [internArrayToIterate:ApiWsdlClass:private] => Array
+                                                                        (
+                                                                            [0] => Web
+                                                                            [1] => Image
+                                                                            [2] => News
+                                                                            [3] => MobileWeb
+                                                                            [4] => Phonebook
+                                                                            [5] => RelatedSearch
+                                                                            [6] => Showtimes
+                                                                            [7] => Spell
+                                                                            [8] => Web
+                                                                        )
+
+                                                                    [internArrayToIterateIsArray:ApiWsdlClass:private] => 1
+                                                                    [internArrayToIterateOffset:ApiWsdlClass:private] => 0
+                                                                )
+
+                                                            [parameters] => 
+                                                            [Version] => 2.2
+                                                            [Market] => 
+                                                            [UILanguage] => 
+                                                            [Adult] => 
+                                                            [Latitude] => 
+                                                            [Longitude] => 
+                                                            [Radius] => 
+                                                            [Options] => ApiStructArrayOfSearchOption Object
+                                                                (
+                                                                    [SearchOption] => 
+                                                                    [result:ApiWsdlClass:private] => 
+                                                                    [lastError:ApiWsdlClass:private] => Array
+                                                                        (
+                                                                        )
+
+                                                                    [internArrayToIterate:ApiWsdlClass:private] => Array
+                                                                        (
+                                                                            [SearchOption] => 
+                                                                        )
+
+                                                                    [internArrayToIterateIsArray:ApiWsdlClass:private] => 1
+                                                                    [internArrayToIterateOffset:ApiWsdlClass:private] => 0
+                                                                )
+
+                                                            [Web] => 
+                                                            [Image] => 
+                                                            [Phonebook] => 
+                                                            [Video] => 
+                                                            [News] => 
+                                                            [MobileWeb] => 
+                                                            [Translation] => 
+                                                            [result:ApiWsdlClass:private] => 
+                                                            [lastError:ApiWsdlClass:private] => Array
+                                                                (
+                                                                )
+
+                                                            [internArrayToIterate:ApiWsdlClass:private] => 
+                                                            [internArrayToIterateIsArray:ApiWsdlClass:private] => 
+                                                            [internArrayToIterateOffset:ApiWsdlClass:private] => 
+                                                        )
+
+                                                    [Version] => 2.2
+                                                    [Market] => 
+                                                    [UILanguage] => 
+                                                    [Adult] => 
+                                                    [Latitude] => 
+                                                    [Longitude] => 
+                                                    [Radius] => 
+                                                    [Options] => ApiStructArrayOfSearchOption Object
+                                                        (
+                                                            [SearchOption] => 
+                                                            [result:ApiWsdlClass:private] => 
+                                                            [lastError:ApiWsdlClass:private] => Array
+                                                                (
+                                                                )
+
+                                                            [internArrayToIterate:ApiWsdlClass:private] => Array
+                                                                (
+                                                                    [SearchOption] => 
+                                                                )
+
+                                                            [internArrayToIterateIsArray:ApiWsdlClass:private] => 1
+                                                            [internArrayToIterateOffset:ApiWsdlClass:private] => 0
+                                                        )
+
+                                                    [Web] => 
+                                                    [Image] => 
+                                                    [Phonebook] => 
+                                                    [Video] => 
+                                                    [News] => 
+                                                    [MobileWeb] => 
+                                                    [Translation] => 
+                                                    [result:ApiWsdlClass:private] => 
+                                                    [lastError:ApiWsdlClass:private] => Array
+                                                        (
+                                                        )
+
+                                                    [internArrayToIterate:ApiWsdlClass:private] => 
+                                                    [internArrayToIterateIsArray:ApiWsdlClass:private] => 
+                                                    [internArrayToIterateOffset:ApiWsdlClass:private] => 
+                                                )
+
+                                        )
+
+                                )
+
+                        )
+
+                    [2] => Array
+                        (
+                            [file] => /var/www/workspace/Api/Service/ApiServiceSearch.php
+                            [line] => 34
+                            [function] => Search
+                            [class] => SoapClient
+                            [type] => ->
+                            [args] => Array
+                                (
+                                    [0] => ApiStructSearchRequest Object
+                                        (
+                                            [Query] => bing
+                                            [AppId] => C74**********************************6B1
+                                            [Sources] => ApiStructArrayOfSourceType Object
+                                                (
+                                                    [SourceType] => Array
+                                                        (
+                                                            [0] => Web
+                                                            [1] => Image
+                                                            [2] => News
+                                                            [3] => MobileWeb
+                                                            [4] => Phonebook
+                                                            [5] => RelatedSearch
+                                                            [6] => Showtimes
+                                                            [7] => Spell
+                                                            [8] => Web
+                                                        )
+
+                                                    [result:ApiWsdlClass:private] => 
+                                                    [lastError:ApiWsdlClass:private] => Array
+                                                        (
+                                                        )
+
+                                                    [internArrayToIterate:ApiWsdlClass:private] => Array
+                                                        (
+                                                            [0] => Web
+                                                            [1] => Image
+                                                            [2] => News
+                                                            [3] => MobileWeb
+                                                            [4] => Phonebook
+                                                            [5] => RelatedSearch
+                                                            [6] => Showtimes
+                                                            [7] => Spell
+                                                            [8] => Web
+                                                        )
+
+                                                    [internArrayToIterateIsArray:ApiWsdlClass:private] => 1
+                                                    [internArrayToIterateOffset:ApiWsdlClass:private] => 0
+                                                )
+
+                                            [parameters] => ApiStructSearchRequest Object
+                                                (
+                                                    [Query] => bing
+                                                    [AppId] => C74**********************************6B1
+                                                    [Sources] => ApiStructArrayOfSourceType Object
+                                                        (
+                                                            [SourceType] => Array
+                                                                (
+                                                                    [0] => Web
+                                                                    [1] => Image
+                                                                    [2] => News
+                                                                    [3] => MobileWeb
+                                                                    [4] => Phonebook
+                                                                    [5] => RelatedSearch
+                                                                    [6] => Showtimes
+                                                                    [7] => Spell
+                                                                    [8] => Web
+                                                                )
+
+                                                            [result:ApiWsdlClass:private] => 
+                                                            [lastError:ApiWsdlClass:private] => Array
+                                                                (
+                                                                )
+
+                                                            [internArrayToIterate:ApiWsdlClass:private] => Array
+                                                                (
+                                                                    [0] => Web
+                                                                    [1] => Image
+                                                                    [2] => News
+                                                                    [3] => MobileWeb
+                                                                    [4] => Phonebook
+                                                                    [5] => RelatedSearch
+                                                                    [6] => Showtimes
+                                                                    [7] => Spell
+                                                                    [8] => Web
+                                                                )
+
+                                                            [internArrayToIterateIsArray:ApiWsdlClass:private] => 1
+                                                            [internArrayToIterateOffset:ApiWsdlClass:private] => 0
+                                                        )
+
+                                                    [parameters] => 
+                                                    [Version] => 2.2
+                                                    [Market] => 
+                                                    [UILanguage] => 
+                                                    [Adult] => 
+                                                    [Latitude] => 
+                                                    [Longitude] => 
+                                                    [Radius] => 
+                                                    [Options] => ApiStructArrayOfSearchOption Object
+                                                        (
+                                                            [SearchOption] => 
+                                                            [result:ApiWsdlClass:private] => 
+                                                            [lastError:ApiWsdlClass:private] => Array
+                                                                (
+                                                                )
+
+                                                            [internArrayToIterate:ApiWsdlClass:private] => Array
+                                                                (
+                                                                    [SearchOption] => 
+                                                                )
+
+                                                            [internArrayToIterateIsArray:ApiWsdlClass:private] => 1
+                                                            [internArrayToIterateOffset:ApiWsdlClass:private] => 0
+                                                        )
+
+                                                    [Web] => 
+                                                    [Image] => 
+                                                    [Phonebook] => 
+                                                    [Video] => 
+                                                    [News] => 
+                                                    [MobileWeb] => 
+                                                    [Translation] => 
+                                                    [result:ApiWsdlClass:private] => 
+                                                    [lastError:ApiWsdlClass:private] => Array
+                                                        (
+                                                        )
+
+                                                    [internArrayToIterate:ApiWsdlClass:private] => 
+                                                    [internArrayToIterateIsArray:ApiWsdlClass:private] => 
+                                                    [internArrayToIterateOffset:ApiWsdlClass:private] => 
+                                                )
+
+                                            [Version] => 2.2
+                                            [Market] => 
+                                            [UILanguage] => 
+                                            [Adult] => 
+                                            [Latitude] => 
+                                            [Longitude] => 
+                                            [Radius] => 
+                                            [Options] => ApiStructArrayOfSearchOption Object
+                                                (
+                                                    [SearchOption] => 
+                                                    [result:ApiWsdlClass:private] => 
+                                                    [lastError:ApiWsdlClass:private] => Array
+                                                        (
+                                                        )
+
+                                                    [internArrayToIterate:ApiWsdlClass:private] => Array
+                                                        (
+                                                            [SearchOption] => 
+                                                        )
+
+                                                    [internArrayToIterateIsArray:ApiWsdlClass:private] => 1
+                                                    [internArrayToIterateOffset:ApiWsdlClass:private] => 0
+                                                )
+
+                                            [Web] => 
+                                            [Image] => 
+                                            [Phonebook] => 
+                                            [Video] => 
+                                            [News] => 
+                                            [MobileWeb] => 
+                                            [Translation] => 
+                                            [result:ApiWsdlClass:private] => 
+                                            [lastError:ApiWsdlClass:private] => Array
+                                                (
+                                                )
+
+                                            [internArrayToIterate:ApiWsdlClass:private] => 
+                                            [internArrayToIterateIsArray:ApiWsdlClass:private] => 
+                                            [internArrayToIterateOffset:ApiWsdlClass:private] => 
+                                        )
+
+                                )
+
+                        )
+
+                    [3] => Array
+                        (
+                            [file] => /var/www/workspace/Api/sample.php
+                            [line] => 60
+                            [function] => Search
+                            [class] => ApiServiceSearch
+                            [type] => ->
+                            [args] => Array
+                                (
+                                    [0] => ApiStructSearchRequest Object
+                                        (
+                                            [Query] => bing
+                                            [AppId] => C74**********************************6B1
+                                            [Sources] => ApiStructArrayOfSourceType Object
+                                                (
+                                                    [SourceType] => Array
+                                                        (
+                                                            [0] => Web
+                                                            [1] => Image
+                                                            [2] => News
+                                                            [3] => MobileWeb
+                                                            [4] => Phonebook
+                                                            [5] => RelatedSearch
+                                                            [6] => Showtimes
+                                                            [7] => Spell
+                                                            [8] => Web
+                                                        )
+
+                                                    [result:ApiWsdlClass:private] => 
+                                                    [lastError:ApiWsdlClass:private] => Array
+                                                        (
+                                                        )
+
+                                                    [internArrayToIterate:ApiWsdlClass:private] => Array
+                                                        (
+                                                            [0] => Web
+                                                            [1] => Image
+                                                            [2] => News
+                                                            [3] => MobileWeb
+                                                            [4] => Phonebook
+                                                            [5] => RelatedSearch
+                                                            [6] => Showtimes
+                                                            [7] => Spell
+                                                            [8] => Web
+                                                        )
+
+                                                    [internArrayToIterateIsArray:ApiWsdlClass:private] => 1
+                                                    [internArrayToIterateOffset:ApiWsdlClass:private] => 0
+                                                )
+
+                                            [parameters] => ApiStructSearchRequest Object
+                                                (
+                                                    [Query] => bing
+                                                    [AppId] => C74**********************************6B1
+                                                    [Sources] => ApiStructArrayOfSourceType Object
+                                                        (
+                                                            [SourceType] => Array
+                                                                (
+                                                                    [0] => Web
+                                                                    [1] => Image
+                                                                    [2] => News
+                                                                    [3] => MobileWeb
+                                                                    [4] => Phonebook
+                                                                    [5] => RelatedSearch
+                                                                    [6] => Showtimes
+                                                                    [7] => Spell
+                                                                    [8] => Web
+                                                                )
+
+                                                            [result:ApiWsdlClass:private] => 
+                                                            [lastError:ApiWsdlClass:private] => Array
+                                                                (
+                                                                )
+
+                                                            [internArrayToIterate:ApiWsdlClass:private] => Array
+                                                                (
+                                                                    [0] => Web
+                                                                    [1] => Image
+                                                                    [2] => News
+                                                                    [3] => MobileWeb
+                                                                    [4] => Phonebook
+                                                                    [5] => RelatedSearch
+                                                                    [6] => Showtimes
+                                                                    [7] => Spell
+                                                                    [8] => Web
+                                                                )
+
+                                                            [internArrayToIterateIsArray:ApiWsdlClass:private] => 1
+                                                            [internArrayToIterateOffset:ApiWsdlClass:private] => 0
+                                                        )
+
+                                                    [parameters] => 
+                                                    [Version] => 2.2
+                                                    [Market] => 
+                                                    [UILanguage] => 
+                                                    [Adult] => 
+                                                    [Latitude] => 
+                                                    [Longitude] => 
+                                                    [Radius] => 
+                                                    [Options] => ApiStructArrayOfSearchOption Object
+                                                        (
+                                                            [SearchOption] => 
+                                                            [result:ApiWsdlClass:private] => 
+                                                            [lastError:ApiWsdlClass:private] => Array
+                                                                (
+                                                                )
+
+                                                            [internArrayToIterate:ApiWsdlClass:private] => Array
+                                                                (
+                                                                    [SearchOption] => 
+                                                                )
+
+                                                            [internArrayToIterateIsArray:ApiWsdlClass:private] => 1
+                                                            [internArrayToIterateOffset:ApiWsdlClass:private] => 0
+                                                        )
+
+                                                    [Web] => 
+                                                    [Image] => 
+                                                    [Phonebook] => 
+                                                    [Video] => 
+                                                    [News] => 
+                                                    [MobileWeb] => 
+                                                    [Translation] => 
+                                                    [result:ApiWsdlClass:private] => 
+                                                    [lastError:ApiWsdlClass:private] => Array
+                                                        (
+                                                        )
+
+                                                    [internArrayToIterate:ApiWsdlClass:private] => 
+                                                    [internArrayToIterateIsArray:ApiWsdlClass:private] => 
+                                                    [internArrayToIterateOffset:ApiWsdlClass:private] => 
+                                                )
+
+                                            [Version] => 2.2
+                                            [Market] => 
+                                            [UILanguage] => 
+                                            [Adult] => 
+                                            [Latitude] => 
+                                            [Longitude] => 
+                                            [Radius] => 
+                                            [Options] => ApiStructArrayOfSearchOption Object
+                                                (
+                                                    [SearchOption] => 
+                                                    [result:ApiWsdlClass:private] => 
+                                                    [lastError:ApiWsdlClass:private] => Array
+                                                        (
+                                                        )
+
+                                                    [internArrayToIterate:ApiWsdlClass:private] => Array
+                                                        (
+                                                            [SearchOption] => 
+                                                        )
+
+                                                    [internArrayToIterateIsArray:ApiWsdlClass:private] => 1
+                                                    [internArrayToIterateOffset:ApiWsdlClass:private] => 0
+                                                )
+
+                                            [Web] => 
+                                            [Image] => 
+                                            [Phonebook] => 
+                                            [Video] => 
+                                            [News] => 
+                                            [MobileWeb] => 
+                                            [Translation] => 
+                                            [result:ApiWsdlClass:private] => 
+                                            [lastError:ApiWsdlClass:private] => Array
+                                                (
+                                                )
+
+                                            [internArrayToIterate:ApiWsdlClass:private] => 
+                                            [internArrayToIterateIsArray:ApiWsdlClass:private] => 
+                                            [internArrayToIterateOffset:ApiWsdlClass:private] => 
+                                        )
+
+                                )
+
+                        )
+
+                )
+
+            [previous:Exception:private] => 
+            [faultstring] => HTTP Version Not Supported
+            [faultcode] => HTTP
+            [xdebug_message] => 
+SoapFault: HTTP Version Not Supported in /var/www/workspace/Api/Service/ApiServiceSearch.php on line 34
+
+Call Stack:
+    0.0006     236144   1. {main}() /var/www/workspace/Api/sample.php:0
+    0.0247    2779360   2. ApiServiceSearch->Search() /var/www/workspace/Api/sample.php:60
+    0.0248    2779608   3. SoapClient->Search() /var/www/workspace/Api/Service/ApiServiceSearch.php:34
+    0.0248    2780008   4. SoapClient->__call() /var/www/workspace/Api/Service/ApiServiceSearch.php:34
+
+        )
+
+)

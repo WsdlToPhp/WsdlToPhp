@@ -1,0 +1,1775 @@
+<definitions name='CommonBettingWS' targetNamespace='http://cz/tipsport/api/to' xmlns='http://schemas.xmlsoap.org/wsdl/' xmlns:soap='http://schemas.xmlsoap.org/wsdl/soap/' xmlns:tns='http://cz/tipsport/api/to' xmlns:xsd='http://www.w3.org/2001/XMLSchema'>
+ <types>
+  <xs:schema targetNamespace='http://cz/tipsport/api/to' version='1.0' xmlns:tns='http://cz/tipsport/api/to' xmlns:xs='http://www.w3.org/2001/XMLSchema'>
+   <xs:element name='baseApiTO' type='tns:baseApiTO'/>
+   <xs:complexType final='extension restriction' name='languageApiRequest'>
+    <xs:complexContent>
+     <xs:extension base='tns:baseApiRequest'>
+      <xs:sequence>
+       <xs:element name='language' type='xs:string'/>
+      </xs:sequence>
+     </xs:extension>
+    </xs:complexContent>
+   </xs:complexType>
+   <xs:complexType abstract='true' name='baseApiRequest'>
+    <xs:sequence>
+     <xs:element name='token' type='xs:string'/>
+    </xs:sequence>
+   </xs:complexType>
+   <xs:complexType final='extension restriction' name='languageApiResponse'>
+    <xs:complexContent>
+     <xs:extension base='tns:baseApiResponse'>
+      <xs:sequence/>
+     </xs:extension>
+    </xs:complexContent>
+   </xs:complexType>
+   <xs:complexType abstract='true' name='baseApiResponse'>
+    <xs:sequence>
+     <xs:element name='returnCode' type='tns:returnCodeApiTO'/>
+    </xs:sequence>
+   </xs:complexType>
+   <xs:complexType final='extension restriction' name='returnCodeApiTO'>
+    <xs:sequence>
+     <xs:element maxOccurs='unbounded' minOccurs='0' name='messages' nillable='true' type='xs:string'/>
+     <xs:element minOccurs='0' name='name' type='xs:string'/>
+     <xs:element maxOccurs='unbounded' minOccurs='0' name='objects' nillable='true' type='xs:anyType'/>
+     <xs:element name='returnCode' type='xs:int'/>
+    </xs:sequence>
+   </xs:complexType>
+   <xs:complexType final='extension restriction' name='ticketsApiRequest'>
+    <xs:complexContent>
+     <xs:extension base='tns:baseApiRequest'>
+      <xs:sequence>
+       <xs:element name='dateFrom' type='xs:dateTime'/>
+       <xs:element name='dateTo' type='xs:dateTime'/>
+       <xs:element default='1' name='page' type='xs:int'/>
+       <xs:element minOccurs='0' name='contestType' nillable='true' type='tns:contestTypeEnum'/>
+       <xs:element minOccurs='0' name='clientId' nillable='true' type='xs:int'/>
+       <xs:element minOccurs='0' name='contestRoundId' nillable='true' type='xs:int'/>
+       <xs:element minOccurs='0' name='groupId' nillable='true' type='xs:int'/>
+       <xs:element minOccurs='0' name='clientCountryId' nillable='true' type='xs:int'/>
+      </xs:sequence>
+     </xs:extension>
+    </xs:complexContent>
+   </xs:complexType>
+   <xs:complexType final='extension restriction' name='ticketsApiResponse'>
+    <xs:complexContent>
+     <xs:extension base='tns:baseApiResponse'>
+      <xs:sequence>
+       <xs:element maxOccurs='unbounded' name='tickets' type='tns:ticketInfoApiTO'/>
+      </xs:sequence>
+     </xs:extension>
+    </xs:complexContent>
+   </xs:complexType>
+   <xs:complexType final='extension restriction' name='ticketInfoApiTO'>
+    <xs:sequence>
+     <xs:element minOccurs='0' name='amount' type='xs:decimal'/>
+     <xs:element minOccurs='0' name='amountWin' type='xs:decimal'/>
+     <xs:element minOccurs='0' name='amountWithFee' type='xs:decimal'/>
+     <xs:element minOccurs='0' name='bonification' type='xs:decimal'/>
+     <xs:element maxOccurs='unbounded' minOccurs='0' name='bonifications' nillable='true' type='tns:bonificationRowApiTO'/>
+     <xs:element minOccurs='0' name='bonusAmountPaid' type='xs:decimal'/>
+     <xs:element minOccurs='0' name='cashoutAmount' type='xs:decimal'/>
+     <xs:element maxOccurs='unbounded' minOccurs='0' name='clientAnalysesIds' nillable='true' type='xs:int'/>
+     <xs:element minOccurs='0' name='clientId' type='xs:int'/>
+     <xs:element minOccurs='0' name='clientUserName' type='xs:string'/>
+     <xs:element minOccurs='0' name='contestType' type='tns:contestTypeEnum'/>
+     <xs:element minOccurs='0' name='countryId' type='xs:int'/>
+     <xs:element minOccurs='0' name='currency' type='xs:string'/>
+     <xs:element minOccurs='0' name='date' type='xs:dateTime'/>
+     <xs:element minOccurs='0' name='linkTicket' type='tns:linkTicketApiTO'/>
+     <xs:element minOccurs='0' name='potencialNetBonus' type='xs:decimal'/>
+     <xs:element minOccurs='0' name='potentionalNetBonus' type='xs:decimal'/>
+     <xs:element minOccurs='0' name='potentionalPrize' type='xs:decimal'/>
+     <xs:element minOccurs='0' name='potentionalPrizeWithoutExtratip' type='xs:decimal'/>
+     <xs:element name='sendToBranch' type='xs:boolean'/>
+     <xs:element minOccurs='0' name='state' type='xs:string'/>
+     <xs:element name='storno' type='xs:boolean'/>
+     <xs:element name='ticketArena' type='xs:boolean'/>
+     <xs:element maxOccurs='unbounded' minOccurs='0' name='ticketRows' nillable='true' type='tns:ticketRowInfoApiTO'/>
+     <xs:element minOccurs='0' name='ticketType' type='xs:string'/>
+     <xs:element minOccurs='0' name='ticketsInspired' type='xs:int'/>
+     <xs:element minOccurs='0' name='totalRate' type='xs:decimal'/>
+     <xs:element minOccurs='0' name='totalRateReal' type='xs:decimal'/>
+     <xs:element minOccurs='0' name='totalRateWithoutExtratip' type='xs:decimal'/>
+    </xs:sequence>
+   </xs:complexType>
+   <xs:complexType name='bonificationRowApiTO'>
+    <xs:sequence>
+     <xs:element minOccurs='0' name='amount' type='xs:decimal'/>
+     <xs:element minOccurs='0' name='price' type='xs:decimal'/>
+    </xs:sequence>
+   </xs:complexType>
+   <xs:complexType final='extension restriction' name='linkTicketApiTO'>
+    <xs:sequence>
+     <xs:element minOccurs='0' name='facebookLink' type='xs:string'/>
+     <xs:element minOccurs='0' name='hash' type='xs:string'/>
+     <xs:element name='idb' type='xs:int'/>
+     <xs:element name='idu' type='xs:long'/>
+     <xs:element minOccurs='0' name='linkAddress' type='xs:string'/>
+     <xs:element name='live' type='xs:boolean'/>
+     <xs:element minOccurs='0' name='twitterLink' type='xs:string'/>
+    </xs:sequence>
+   </xs:complexType>
+   <xs:complexType final='extension restriction' name='ticketRowInfoApiTO'>
+    <xs:sequence>
+     <xs:element name='cashout' type='xs:boolean'/>
+     <xs:element minOccurs='0' name='dateClosed' type='xs:dateTime'/>
+     <xs:element minOccurs='0' name='eventName' type='xs:string'/>
+     <xs:element name='extratip' type='xs:boolean'/>
+     <xs:element name='faultCode' type='xs:int'/>
+     <xs:element minOccurs='0' name='groupName' type='xs:string'/>
+     <xs:element minOccurs='0' name='matchName' type='xs:string'/>
+     <xs:element minOccurs='0' name='opportunityName' type='xs:string'/>
+     <xs:element minOccurs='0' name='rate' type='xs:string'/>
+     <xs:element minOccurs='0' name='rateIfFault' type='xs:string'/>
+     <xs:element minOccurs='0' name='result' type='xs:string'/>
+     <xs:element minOccurs='0' name='sportId' type='xs:int'/>
+     <xs:element minOccurs='0' name='state' type='tns:betStateEnum'/>
+    </xs:sequence>
+   </xs:complexType>
+   <xs:complexType name='getCitiesApiRequest'>
+    <xs:complexContent>
+     <xs:extension base='tns:baseApiRequest'>
+      <xs:sequence>
+       <xs:element name='cityNamePart' type='xs:string'/>
+      </xs:sequence>
+     </xs:extension>
+    </xs:complexContent>
+   </xs:complexType>
+   <xs:complexType name='getCitiesApiResponse'>
+    <xs:complexContent>
+     <xs:extension base='tns:baseApiResponse'>
+      <xs:sequence>
+       <xs:element maxOccurs='unbounded' name='cities' type='tns:cityApiTO'/>
+      </xs:sequence>
+     </xs:extension>
+    </xs:complexContent>
+   </xs:complexType>
+   <xs:complexType name='cityApiTO'>
+    <xs:sequence>
+     <xs:element minOccurs='0' name='cityName' type='xs:string'/>
+     <xs:element minOccurs='0' name='zipCode' type='xs:string'/>
+    </xs:sequence>
+   </xs:complexType>
+   <xs:complexType name='branchesApiRequest'>
+    <xs:complexContent>
+     <xs:extension base='tns:baseApiRequest'>
+      <xs:sequence>
+       <xs:element minOccurs='0' name='firstCharacterOfCity' nillable='true' type='xs:string'/>
+       <xs:element minOccurs='0' name='modifiedAfterDate' nillable='true' type='xs:dateTime'/>
+      </xs:sequence>
+     </xs:extension>
+    </xs:complexContent>
+   </xs:complexType>
+   <xs:complexType name='branchesApiResponse'>
+    <xs:complexContent>
+     <xs:extension base='tns:baseApiResponse'>
+      <xs:sequence>
+       <xs:element maxOccurs='unbounded' minOccurs='0' name='branches' type='tns:branchApiTO'/>
+      </xs:sequence>
+     </xs:extension>
+    </xs:complexContent>
+   </xs:complexType>
+   <xs:complexType name='branchApiTO'>
+    <xs:complexContent>
+     <xs:extension base='tns:baseApiTO'>
+      <xs:sequence>
+       <xs:element minOccurs='0' name='city' type='xs:string'/>
+       <xs:element minOccurs='0' name='dateBreakFrom' type='tns:advancedCalendar'/>
+       <xs:element minOccurs='0' name='dateBreakTo' type='tns:advancedCalendar'/>
+       <xs:element name='latitude' type='xs:double'/>
+       <xs:element name='longitude' type='xs:double'/>
+       <xs:element minOccurs='0' name='officeHoursType' type='xs:string'/>
+       <xs:element minOccurs='0' name='phone' type='xs:string'/>
+       <xs:element name='sportbar' type='xs:boolean'/>
+       <xs:element minOccurs='0' name='street' type='xs:string'/>
+       <xs:element name='ticketpro' type='xs:boolean'/>
+       <xs:element name='tipgames' type='xs:boolean'/>
+       <xs:element name='underReconstruction' type='xs:boolean'/>
+       <xs:element minOccurs='0' name='zipCode' type='xs:string'/>
+      </xs:sequence>
+     </xs:extension>
+    </xs:complexContent>
+   </xs:complexType>
+   <xs:complexType abstract='true' name='baseApiTO'>
+    <xs:sequence>
+     <xs:element name='id' type='xs:int'/>
+    </xs:sequence>
+   </xs:complexType>
+   <xs:complexType name='advancedCalendar'>
+    <xs:sequence>
+     <xs:element name='day' type='xs:int'/>
+     <xs:element name='hour' type='xs:int'/>
+     <xs:element name='millisecond' type='xs:int'/>
+     <xs:element name='minute' type='xs:int'/>
+     <xs:element name='month' type='xs:int'/>
+     <xs:element name='second' type='xs:int'/>
+     <xs:element name='timeInMillis' type='xs:long'/>
+     <xs:element name='year' type='xs:int'/>
+    </xs:sequence>
+   </xs:complexType>
+   <xs:complexType final='extension restriction' name='loginPartnerApiRequest'>
+    <xs:complexContent>
+     <xs:extension base='tns:baseApiRequest'>
+      <xs:sequence>
+       <xs:element name='username' type='xs:string'/>
+       <xs:element name='password' type='xs:string'/>
+       <xs:element name='productId' type='xs:int'/>
+       <xs:element minOccurs='0' name='ipAddress' type='xs:string'/>
+       <xs:element name='language' type='xs:string'/>
+       <xs:element minOccurs='0' name='platform' nillable='true' type='xs:string'/>
+       <xs:element minOccurs='0' name='appVersion' nillable='true' type='xs:string'/>
+      </xs:sequence>
+     </xs:extension>
+    </xs:complexContent>
+   </xs:complexType>
+   <xs:complexType final='extension restriction' name='loginPartnerApiResponse'>
+    <xs:complexContent>
+     <xs:extension base='tns:baseApiResponse'>
+      <xs:sequence>
+       <xs:element name='sessionToken' type='xs:string'/>
+       <xs:element name='serverName' type='xs:string'/>
+       <xs:element minOccurs='0' name='currentVersionNumber' nillable='true' type='xs:string'/>
+       <xs:element minOccurs='0' name='newFeaturesInNewAppVersion' nillable='true' type='xs:string'/>
+       <xs:element minOccurs='0' name='messageToClient' nillable='true' type='xs:string'/>
+       <xs:element minOccurs='0' name='globalMessage' type='xs:string'/>
+      </xs:sequence>
+     </xs:extension>
+    </xs:complexContent>
+   </xs:complexType>
+   <xs:complexType final='extension restriction' name='logoutPartnerApiRequest'>
+    <xs:complexContent>
+     <xs:extension base='tns:baseApiRequest'>
+      <xs:sequence/>
+     </xs:extension>
+    </xs:complexContent>
+   </xs:complexType>
+   <xs:complexType final='extension restriction' name='logoutPartnerApiResponse'>
+    <xs:complexContent>
+     <xs:extension base='tns:baseApiResponse'>
+      <xs:sequence/>
+     </xs:extension>
+    </xs:complexContent>
+   </xs:complexType>
+   <xs:complexType final='extension restriction' name='loginUserApiRequest'>
+    <xs:complexContent>
+     <xs:extension base='tns:baseApiRequest'>
+      <xs:sequence>
+       <xs:element name='username' type='xs:string'/>
+       <xs:element name='password' type='xs:string'/>
+       <xs:element minOccurs='0' name='note' nillable='true' type='xs:string'/>
+      </xs:sequence>
+     </xs:extension>
+    </xs:complexContent>
+   </xs:complexType>
+   <xs:complexType final='extension restriction' name='loginUserApiResponse'>
+    <xs:complexContent>
+     <xs:extension base='tns:baseApiResponse'>
+      <xs:sequence>
+       <xs:element name='sessionToken' type='xs:string'/>
+       <xs:element name='client' type='tns:clientApiTO'/>
+      </xs:sequence>
+     </xs:extension>
+    </xs:complexContent>
+   </xs:complexType>
+   <xs:complexType name='clientApiTO'>
+    <xs:complexContent>
+     <xs:extension base='tns:baseApiTO'>
+      <xs:sequence>
+       <xs:element minOccurs='0' name='accountBalance' type='tns:accountBalanceApiTO'/>
+       <xs:element minOccurs='0' name='bankAccountCode' type='xs:string'/>
+       <xs:element minOccurs='0' name='bankAccountNumber' type='xs:string'/>
+       <xs:element minOccurs='0' name='birthDay' type='xs:dateTime'/>
+       <xs:element minOccurs='0' name='city' type='xs:string'/>
+       <xs:element minOccurs='0' name='country' type='xs:string'/>
+       <xs:element minOccurs='0' name='email' type='xs:string'/>
+       <xs:element minOccurs='0' name='firstName' type='xs:string'/>
+       <xs:element minOccurs='0' name='googleAnalyticsHash' type='xs:string'/>
+       <xs:element maxOccurs='unbounded' minOccurs='0' name='kycStates' nillable='true' type='tns:kycStateApiTO'/>
+       <xs:element minOccurs='0' name='lastLoginDate' type='xs:dateTime'/>
+       <xs:element minOccurs='0' name='lastName' type='xs:string'/>
+       <xs:element minOccurs='0' name='phone' type='xs:string'/>
+       <xs:element minOccurs='0' name='postalCity' type='xs:string'/>
+       <xs:element minOccurs='0' name='postalFirstName' type='xs:string'/>
+       <xs:element minOccurs='0' name='postalLastName' type='xs:string'/>
+       <xs:element minOccurs='0' name='postalStreet' type='xs:string'/>
+       <xs:element minOccurs='0' name='postalZipCode' type='xs:string'/>
+       <xs:element minOccurs='0' name='segmentStatus' type='xs:int'/>
+       <xs:element minOccurs='0' name='segmentValue' type='xs:int'/>
+       <xs:element minOccurs='0' name='sex' type='xs:string'/>
+       <xs:element minOccurs='0' name='street' type='xs:string'/>
+       <xs:element minOccurs='0' name='title' type='xs:string'/>
+       <xs:element minOccurs='0' name='urlAvatarImage' type='xs:string'/>
+       <xs:element minOccurs='0' name='username' type='xs:string'/>
+       <xs:element minOccurs='0' name='zipCode' type='xs:string'/>
+      </xs:sequence>
+     </xs:extension>
+    </xs:complexContent>
+   </xs:complexType>
+   <xs:complexType final='extension restriction' name='accountBalanceApiTO'>
+    <xs:sequence>
+     <xs:element minOccurs='0' name='accountBalanceBonus' type='xs:decimal'/>
+     <xs:element minOccurs='0' name='accountBalanceMoney' type='xs:decimal'/>
+     <xs:element minOccurs='0' name='accountBalanceNet' type='xs:decimal'/>
+     <xs:element minOccurs='0' name='currency' type='xs:string'/>
+    </xs:sequence>
+   </xs:complexType>
+   <xs:complexType final='extension restriction' name='kycStateApiTO'>
+    <xs:sequence>
+     <xs:element name='state' type='xs:boolean'/>
+     <xs:element minOccurs='0' name='type' type='xs:string'/>
+    </xs:sequence>
+   </xs:complexType>
+   <xs:complexType final='extension restriction' name='logoutUserApiRequest'>
+    <xs:complexContent>
+     <xs:extension base='tns:baseApiRequest'>
+      <xs:sequence/>
+     </xs:extension>
+    </xs:complexContent>
+   </xs:complexType>
+   <xs:complexType final='extension restriction' name='logoutUserApiResponse'>
+    <xs:complexContent>
+     <xs:extension base='tns:baseApiResponse'>
+      <xs:sequence>
+       <xs:element name='sessionToken' type='xs:string'/>
+      </xs:sequence>
+     </xs:extension>
+    </xs:complexContent>
+   </xs:complexType>
+   <xs:complexType final='extension restriction' name='forgottenPasswordApiRequest'>
+    <xs:complexContent>
+     <xs:extension base='tns:baseApiRequest'>
+      <xs:sequence>
+       <xs:element name='userName' type='xs:string'/>
+       <xs:element name='email' type='xs:string'/>
+       <xs:element name='dateOfBirth' type='xs:dateTime'/>
+      </xs:sequence>
+     </xs:extension>
+    </xs:complexContent>
+   </xs:complexType>
+   <xs:complexType name='forgottenPasswordApiResponse'>
+    <xs:complexContent>
+     <xs:extension base='tns:baseApiResponse'>
+      <xs:sequence/>
+     </xs:extension>
+    </xs:complexContent>
+   </xs:complexType>
+   <xs:complexType final='extension restriction' name='accountStateApiRequest'>
+    <xs:complexContent>
+     <xs:extension base='tns:baseApiRequest'>
+      <xs:sequence/>
+     </xs:extension>
+    </xs:complexContent>
+   </xs:complexType>
+   <xs:complexType final='extension restriction' name='accountStateApiResponse'>
+    <xs:complexContent>
+     <xs:extension base='tns:baseApiResponse'>
+      <xs:sequence>
+       <xs:element name='accountBalance' type='tns:accountBalanceApiTO'/>
+      </xs:sequence>
+     </xs:extension>
+    </xs:complexContent>
+   </xs:complexType>
+   <xs:complexType final='extension restriction' name='tipsportLeagueApiRequest'>
+    <xs:complexContent>
+     <xs:extension base='tns:baseApiRequest'>
+      <xs:sequence>
+       <xs:element name='userName' type='xs:string'/>
+       <xs:element name='rankingsType' type='tns:tlRankingsTypes'/>
+      </xs:sequence>
+     </xs:extension>
+    </xs:complexContent>
+   </xs:complexType>
+   <xs:complexType final='extension restriction' name='tipsportLeagueApiResponse'>
+    <xs:complexContent>
+     <xs:extension base='tns:baseApiResponse'>
+      <xs:sequence>
+       <xs:element maxOccurs='unbounded' name='ranks' type='tns:tipsportLeagueGroupApiTO'/>
+      </xs:sequence>
+     </xs:extension>
+    </xs:complexContent>
+   </xs:complexType>
+   <xs:complexType name='tipsportLeagueGroupApiTO'>
+    <xs:complexContent>
+     <xs:extension base='tns:baseApiTO'>
+      <xs:sequence>
+       <xs:element minOccurs='0' name='name' type='xs:string'/>
+      </xs:sequence>
+     </xs:extension>
+    </xs:complexContent>
+   </xs:complexType>
+   <xs:complexType name='tipsportLeagueDetailApiRequest'>
+    <xs:complexContent>
+     <xs:extension base='tns:baseApiRequest'>
+      <xs:sequence>
+       <xs:element name='groupId' type='xs:int'/>
+       <xs:element name='userName' type='xs:string'/>
+      </xs:sequence>
+     </xs:extension>
+    </xs:complexContent>
+   </xs:complexType>
+   <xs:complexType name='tipsportLeagueDetailApiResponse'>
+    <xs:complexContent>
+     <xs:extension base='tns:baseApiResponse'>
+      <xs:sequence>
+       <xs:element maxOccurs='unbounded' name='leagueRanks' type='tns:tipsportLeagueRanksApiTO'/>
+      </xs:sequence>
+     </xs:extension>
+    </xs:complexContent>
+   </xs:complexType>
+   <xs:complexType name='tipsportLeagueRanksApiTO'>
+    <xs:sequence>
+     <xs:element name='groupId' type='xs:int'/>
+     <xs:element minOccurs='0' name='nameLeague' type='xs:string'/>
+     <xs:element maxOccurs='unbounded' minOccurs='0' name='ranks' nillable='true' type='tns:tipsportLeagueApiTO'/>
+     <xs:element name='roundId' type='xs:int'/>
+    </xs:sequence>
+   </xs:complexType>
+   <xs:complexType final='extension restriction' name='tipsportLeagueApiTO'>
+    <xs:sequence>
+     <xs:element minOccurs='0' name='clientId' type='xs:int'/>
+     <xs:element minOccurs='0' name='country' type='tns:countryEnum'/>
+     <xs:element name='moveAfterEvalutation' type='xs:int'/>
+     <xs:element name='rank' type='xs:int'/>
+     <xs:element minOccurs='0' name='score' type='xs:decimal'/>
+     <xs:element minOccurs='0' name='site' type='tns:firmTypeEnum'/>
+     <xs:element name='unevaluatedTickets' type='xs:int'/>
+     <xs:element minOccurs='0' name='username' type='xs:string'/>
+    </xs:sequence>
+   </xs:complexType>
+   <xs:complexType name='tipsportLeagueLimitsRequest'>
+    <xs:complexContent>
+     <xs:extension base='tns:baseApiRequest'>
+      <xs:sequence/>
+     </xs:extension>
+    </xs:complexContent>
+   </xs:complexType>
+   <xs:complexType final='extension restriction' name='tipsportLeagueLimitsResponse'>
+    <xs:complexContent>
+     <xs:extension base='tns:baseApiResponse'>
+      <xs:sequence>
+       <xs:element maxOccurs='unbounded' name='limits' type='tns:tipsportLeagueLimitTO'/>
+      </xs:sequence>
+     </xs:extension>
+    </xs:complexContent>
+   </xs:complexType>
+   <xs:complexType final='extension restriction' name='tipsportLeagueLimitTO'>
+    <xs:sequence>
+     <xs:element minOccurs='0' name='date' type='xs:dateTime'/>
+     <xs:element minOccurs='0' name='limitBet' type='xs:decimal'/>
+    </xs:sequence>
+   </xs:complexType>
+   <xs:complexType name='tipsportCupLimitsRequest'>
+    <xs:complexContent>
+     <xs:extension base='tns:baseApiRequest'>
+      <xs:sequence/>
+     </xs:extension>
+    </xs:complexContent>
+   </xs:complexType>
+   <xs:complexType name='tipsportCupLimitsApiResponse'>
+    <xs:complexContent>
+     <xs:extension base='tns:baseApiResponse'>
+      <xs:sequence>
+       <xs:element name='TipsportCupLimitTO' type='tns:hashMap'/>
+      </xs:sequence>
+     </xs:extension>
+    </xs:complexContent>
+   </xs:complexType>
+   <xs:complexType name='hashMap'>
+    <xs:complexContent>
+     <xs:extension base='tns:abstractMap'>
+      <xs:sequence/>
+     </xs:extension>
+    </xs:complexContent>
+   </xs:complexType>
+   <xs:complexType abstract='true' name='abstractMap'>
+    <xs:sequence/>
+   </xs:complexType>
+   <xs:complexType final='extension restriction' name='transactionsApiRequest'>
+    <xs:complexContent>
+     <xs:extension base='tns:baseApiRequest'>
+      <xs:sequence>
+       <xs:element name='dateFrom' type='xs:dateTime'/>
+       <xs:element name='dateTo' type='xs:dateTime'/>
+       <xs:element minOccurs='0' name='transactionTypeId' type='xs:int'/>
+       <xs:element minOccurs='0' name='currencyCode' type='xs:string'/>
+       <xs:element default='1' name='page' type='xs:int'/>
+      </xs:sequence>
+     </xs:extension>
+    </xs:complexContent>
+   </xs:complexType>
+   <xs:complexType final='extension restriction' name='transactionsApiResponse'>
+    <xs:complexContent>
+     <xs:extension base='tns:baseApiResponse'>
+      <xs:sequence>
+       <xs:element maxOccurs='unbounded' name='transactions' type='tns:transactionApiTO'/>
+      </xs:sequence>
+     </xs:extension>
+    </xs:complexContent>
+   </xs:complexType>
+   <xs:complexType final='extension restriction' name='transactionApiTO'>
+    <xs:sequence>
+     <xs:element minOccurs='0' name='accountBalance' type='xs:decimal'/>
+     <xs:element minOccurs='0' name='amount' type='xs:decimal'/>
+     <xs:element minOccurs='0' name='currency' type='xs:string'/>
+     <xs:element minOccurs='0' name='date' type='xs:dateTime'/>
+     <xs:element minOccurs='0' name='linkTicket' type='tns:linkTicketApiTO'/>
+     <xs:element minOccurs='0' name='name' type='xs:string'/>
+     <xs:element name='type' type='xs:int'/>
+    </xs:sequence>
+   </xs:complexType>
+   <xs:complexType name='liveAndPrematchTicketsApiRequest'>
+    <xs:complexContent>
+     <xs:extension base='tns:baseApiRequest'>
+      <xs:sequence>
+       <xs:element name='dateFrom' type='xs:dateTime'/>
+       <xs:element name='dateTo' type='xs:dateTime'/>
+       <xs:element maxOccurs='unbounded' minOccurs='0' name='ticketTypes' type='xs:string'/>
+       <xs:element maxOccurs='unbounded' minOccurs='0' name='ticketStatuses' type='xs:string'/>
+       <xs:element minOccurs='0' name='contestType' nillable='true' type='tns:contestTypeEnum'/>
+       <xs:element default='1' name='page' type='xs:int'/>
+      </xs:sequence>
+     </xs:extension>
+    </xs:complexContent>
+   </xs:complexType>
+   <xs:complexType final='extension restriction' name='liveAndPrematchTicketsApiResponse'>
+    <xs:complexContent>
+     <xs:extension base='tns:baseApiResponse'>
+      <xs:sequence>
+       <xs:element maxOccurs='unbounded' name='tickets' type='tns:ticketInfoApiTO'/>
+      </xs:sequence>
+     </xs:extension>
+    </xs:complexContent>
+   </xs:complexType>
+   <xs:complexType final='extension restriction' name='ticketDetailApiRequest'>
+    <xs:complexContent>
+     <xs:extension base='tns:baseApiRequest'>
+      <xs:sequence>
+       <xs:element name='linkTicket' type='tns:linkTicketApiTO'/>
+      </xs:sequence>
+     </xs:extension>
+    </xs:complexContent>
+   </xs:complexType>
+   <xs:complexType final='extension restriction' name='ticketDetailApiResponse'>
+    <xs:complexContent>
+     <xs:extension base='tns:baseApiResponse'>
+      <xs:sequence>
+       <xs:element name='ticket' type='tns:ticketInfoApiTO'/>
+      </xs:sequence>
+     </xs:extension>
+    </xs:complexContent>
+   </xs:complexType>
+   <xs:complexType final='extension restriction' name='tipsportCupInfoRequest'>
+    <xs:complexContent>
+     <xs:extension base='tns:baseApiRequest'>
+      <xs:sequence/>
+     </xs:extension>
+    </xs:complexContent>
+   </xs:complexType>
+   <xs:complexType final='extension restriction' name='tipsportCupInfoResponse'>
+    <xs:complexContent>
+     <xs:extension base='tns:baseApiResponse'>
+      <xs:sequence>
+       <xs:element maxOccurs='unbounded' name='activeRounds' type='tns:tipsportCupInfoApiTO'/>
+      </xs:sequence>
+     </xs:extension>
+    </xs:complexContent>
+   </xs:complexType>
+   <xs:complexType name='tipsportCupInfoApiTO'>
+    <xs:complexContent>
+     <xs:extension base='tns:baseApiTO'>
+      <xs:sequence>
+       <xs:element minOccurs='0' name='contestType' type='tns:contestType'/>
+       <xs:element minOccurs='0' name='dateEnd' type='xs:dateTime'/>
+       <xs:element minOccurs='0' name='dateStart' type='xs:dateTime'/>
+       <xs:element maxOccurs='unbounded' minOccurs='0' name='limits' nillable='true' type='tns:tipsportLeagueLimitTO'/>
+       <xs:element minOccurs='0' name='name' type='xs:string'/>
+       <xs:element minOccurs='0' name='remainLimitForRound' type='xs:decimal'/>
+       <xs:element minOccurs='0' name='remainLimitForToday' type='xs:decimal'/>
+       <xs:element minOccurs='0' name='roundNumber' type='xs:int'/>
+       <xs:element minOccurs='0' name='totalDotations' type='xs:string'/>
+      </xs:sequence>
+     </xs:extension>
+    </xs:complexContent>
+   </xs:complexType>
+   <xs:complexType name='tipsportCupsRequest'>
+    <xs:complexContent>
+     <xs:extension base='tns:baseApiRequest'>
+      <xs:sequence>
+       <xs:element name='onlyActiveRounds' type='xs:boolean'/>
+      </xs:sequence>
+     </xs:extension>
+    </xs:complexContent>
+   </xs:complexType>
+   <xs:complexType name='tipsportCupsResponse'>
+    <xs:complexContent>
+     <xs:extension base='tns:baseApiResponse'>
+      <xs:sequence>
+       <xs:element maxOccurs='unbounded' name='rounds' type='tns:tipsportCupApiTO'/>
+      </xs:sequence>
+     </xs:extension>
+    </xs:complexContent>
+   </xs:complexType>
+   <xs:complexType name='tipsportCupApiTO'>
+    <xs:complexContent>
+     <xs:extension base='tns:baseApiTO'>
+      <xs:sequence>
+       <xs:element minOccurs='0' name='name' type='xs:string'/>
+      </xs:sequence>
+     </xs:extension>
+    </xs:complexContent>
+   </xs:complexType>
+   <xs:complexType name='preRegistrationApiRequest'>
+    <xs:complexContent>
+     <xs:extension base='tns:baseApiRequest'>
+      <xs:sequence>
+       <xs:element minOccurs='0' name='firstName' nillable='true' type='xs:string'/>
+       <xs:element minOccurs='0' name='lastName' nillable='true' type='xs:string'/>
+       <xs:element minOccurs='0' name='userName' nillable='true' type='xs:string'/>
+       <xs:element minOccurs='0' name='email' nillable='true' type='xs:string'/>
+       <xs:element minOccurs='0' name='mobilePhone' nillable='true' type='xs:string'/>
+       <xs:element minOccurs='0' name='dateOfBirth' nillable='true' type='xs:dateTime'/>
+       <xs:element minOccurs='0' name='codePreNumber' nillable='true' type='xs:string'/>
+       <xs:element minOccurs='0' name='bonusCode' nillable='true' type='xs:string'/>
+       <xs:element minOccurs='0' name='vop' nillable='true' type='xs:boolean'/>
+       <xs:element minOccurs='0' name='sex' nillable='true' type='xs:string'/>
+       <xs:element minOccurs='0' name='streetAddress' nillable='true' type='xs:string'/>
+       <xs:element minOccurs='0' name='city' nillable='true' type='xs:string'/>
+       <xs:element minOccurs='0' name='postalCode' nillable='true' type='xs:string'/>
+       <xs:element name='clientPlatform' type='tns:apiClientPlatformEnum'/>
+       <xs:element minOccurs='0' name='identityCardNumber' nillable='true' type='xs:string'/>
+       <xs:element minOccurs='0' name='identityCardNumberType' nillable='true' type='tns:identityCardEnum'/>
+      </xs:sequence>
+     </xs:extension>
+    </xs:complexContent>
+   </xs:complexType>
+   <xs:complexType name='preRegistrationApiResponse'>
+    <xs:complexContent>
+     <xs:extension base='tns:baseApiResponse'>
+      <xs:sequence/>
+     </xs:extension>
+    </xs:complexContent>
+   </xs:complexType>
+   <xs:complexType name='clientProfilePreferencesApiRequest'>
+    <xs:complexContent>
+     <xs:extension base='tns:baseApiRequest'>
+      <xs:sequence>
+       <xs:element name='sendEmailAfterEvaluation' nillable='true' type='xs:boolean'/>
+       <xs:element name='autoRefreshForum' type='xs:boolean'/>
+       <xs:element name='realityCheck' nillable='true' type='xs:boolean'/>
+       <xs:element name='hideTLAlert' nillable='true' type='xs:boolean'/>
+       <xs:element minOccurs='0' name='forumIgnoredUsers' nillable='true' type='xs:string'/>
+       <xs:element name='forumIgnoreTickets' nillable='true' type='xs:boolean'/>
+       <xs:element name='forumIgnoreLiveTickets' nillable='true' type='xs:boolean'/>
+       <xs:element name='forumIgnoreAnalyses' nillable='true' type='xs:boolean'/>
+       <xs:element name='timeZone' type='xs:string'/>
+       <xs:element name='language' type='xs:string'/>
+      </xs:sequence>
+     </xs:extension>
+    </xs:complexContent>
+   </xs:complexType>
+   <xs:complexType name='clientProfilePreferencesApiResponse'>
+    <xs:complexContent>
+     <xs:extension base='tns:baseApiResponse'>
+      <xs:sequence/>
+     </xs:extension>
+    </xs:complexContent>
+   </xs:complexType>
+   <xs:complexType name='clientProfilePreferencesInfoApiRequest'>
+    <xs:complexContent>
+     <xs:extension base='tns:baseApiRequest'>
+      <xs:sequence/>
+     </xs:extension>
+    </xs:complexContent>
+   </xs:complexType>
+   <xs:complexType name='clientProfilePreferencesInfoApiResponse'>
+    <xs:complexContent>
+     <xs:extension base='tns:baseApiResponse'>
+      <xs:sequence>
+       <xs:element name='sendEmailAfterEvaluation' type='xs:boolean'/>
+       <xs:element name='autoRefreshForum' type='xs:boolean'/>
+       <xs:element name='realityCheck' type='xs:boolean'/>
+       <xs:element name='hideTLAlert' type='xs:boolean'/>
+       <xs:element name='forumIgnoredUsers' nillable='true' type='xs:string'/>
+       <xs:element name='forumIgnoreTickets' type='xs:boolean'/>
+       <xs:element name='forumIgnoreLiveTickets' type='xs:boolean'/>
+       <xs:element name='forumIgnoreAnalyses' type='xs:boolean'/>
+       <xs:element name='timeZone' type='xs:string'/>
+       <xs:element name='language' type='xs:string'/>
+      </xs:sequence>
+     </xs:extension>
+    </xs:complexContent>
+   </xs:complexType>
+   <xs:complexType name='clientAvatarApiRequest'>
+    <xs:complexContent>
+     <xs:extension base='tns:baseApiRequest'>
+      <xs:sequence>
+       <xs:element name='clientId' type='xs:int'/>
+      </xs:sequence>
+     </xs:extension>
+    </xs:complexContent>
+   </xs:complexType>
+   <xs:complexType name='clientAvatarApiResponse'>
+    <xs:complexContent>
+     <xs:extension base='tns:baseApiResponse'>
+      <xs:sequence>
+       <xs:element name='urlAvatarImage' type='xs:string'/>
+      </xs:sequence>
+     </xs:extension>
+    </xs:complexContent>
+   </xs:complexType>
+   <xs:complexType name='setNewPasswordApiRequest'>
+    <xs:complexContent>
+     <xs:extension base='tns:baseApiRequest'>
+      <xs:sequence>
+       <xs:element name='oldPassword' type='xs:string'/>
+       <xs:element name='newPassword' type='xs:string'/>
+       <xs:element name='newPasswordConfirm' type='xs:string'/>
+      </xs:sequence>
+     </xs:extension>
+    </xs:complexContent>
+   </xs:complexType>
+   <xs:complexType name='setNewPasswordApiResponse'>
+    <xs:complexContent>
+     <xs:extension base='tns:baseApiResponse'>
+      <xs:sequence/>
+     </xs:extension>
+    </xs:complexContent>
+   </xs:complexType>
+   <xs:complexType name='clientProfileApiRequest'>
+    <xs:complexContent>
+     <xs:extension base='tns:baseApiRequest'>
+      <xs:sequence>
+       <xs:element minOccurs='0' name='clientId' nillable='true' type='xs:int'/>
+       <xs:element minOccurs='0' name='countryId' nillable='true' type='xs:int'/>
+      </xs:sequence>
+     </xs:extension>
+    </xs:complexContent>
+   </xs:complexType>
+   <xs:complexType name='clientProfileApiResponse'>
+    <xs:complexContent>
+     <xs:extension base='tns:baseApiResponse'>
+      <xs:sequence>
+       <xs:element name='clientProfile' type='tns:clientProfileApiTO'/>
+      </xs:sequence>
+     </xs:extension>
+    </xs:complexContent>
+   </xs:complexType>
+   <xs:complexType name='clientProfileApiTO'>
+    <xs:sequence>
+     <xs:element minOccurs='0' name='analysis' type='tns:clientAnalysisAuthorApiTO'/>
+     <xs:element minOccurs='0' name='badLuckTicket' type='tns:linkTicketApiTO'/>
+     <xs:element minOccurs='0' name='badLuckTicketAmount' type='xs:decimal'/>
+     <xs:element minOccurs='0' name='badLuckTicketDateInserted' type='xs:dateTime'/>
+     <xs:element minOccurs='0' name='bestLeagueRank' type='xs:string'/>
+     <xs:element minOccurs='0' name='bestLiveTicketAmount' type='xs:decimal'/>
+     <xs:element minOccurs='0' name='bestLiveTicketDateInserted' type='xs:dateTime'/>
+     <xs:element minOccurs='0' name='bestLiveTicketId' type='xs:int'/>
+     <xs:element minOccurs='0' name='bestTicket' type='tns:linkTicketApiTO'/>
+     <xs:element minOccurs='0' name='bestTicketAmount' type='xs:decimal'/>
+     <xs:element minOccurs='0' name='bestTicketDateInserted' type='xs:dateTime'/>
+     <xs:element minOccurs='0' name='countryId' type='tns:countryEnum'/>
+     <xs:element minOccurs='0' name='favouritePlayer' type='xs:string'/>
+     <xs:element minOccurs='0' name='favouriteSport' type='xs:string'/>
+     <xs:element minOccurs='0' name='favouriteTeam' type='xs:string'/>
+     <xs:element minOccurs='0' name='favouriteTicket' type='tns:linkTicketApiTO'/>
+     <xs:element minOccurs='0' name='favouriteTicketDateInserted' type='xs:dateTime'/>
+     <xs:element minOccurs='0' name='leagueRank' type='xs:string'/>
+     <xs:element minOccurs='0' name='motto' type='xs:string'/>
+     <xs:element minOccurs='0' name='site' type='tns:firmTypeEnum'/>
+    </xs:sequence>
+   </xs:complexType>
+   <xs:complexType name='clientAnalysisAuthorApiTO'>
+    <xs:complexContent>
+     <xs:extension base='tns:baseApiTO'>
+      <xs:sequence>
+       <xs:element name='aliveAnalyzesCount' type='xs:int'/>
+       <xs:element name='avgRate' type='xs:double'/>
+       <xs:element name='avgReadCount' type='xs:double'/>
+       <xs:element name='avgStake' type='xs:double'/>
+       <xs:element minOccurs='0' name='client' type='xs:int'/>
+       <xs:element minOccurs='0' name='dateInserted' type='xs:dateTime'/>
+       <xs:element name='evaluatedCount' type='xs:int'/>
+       <xs:element name='numberAnalyze' type='xs:int'/>
+       <xs:element name='numberRead' type='xs:int'/>
+       <xs:element name='ratingAnalyze' type='xs:int'/>
+       <xs:element name='sumKO' type='xs:int'/>
+       <xs:element name='sumOK' type='xs:int'/>
+       <xs:element minOccurs='0' name='sumRate' type='xs:decimal'/>
+       <xs:element name='sumStake' type='xs:int'/>
+       <xs:element minOccurs='0' name='totalIncome' type='xs:double'/>
+       <xs:element minOccurs='0' name='totalIncome90' type='xs:double'/>
+       <xs:element minOccurs='0' name='totalIncomeOrderIndex' type='xs:int'/>
+       <xs:element minOccurs='0' name='totalIncomeOrderIndex90' type='xs:int'/>
+       <xs:element minOccurs='0' name='totalOKKO' type='xs:double'/>
+       <xs:element minOccurs='0' name='totalYield' type='xs:double'/>
+       <xs:element name='winAnalyzePercent' type='xs:double'/>
+       <xs:element name='winningCount' type='xs:int'/>
+      </xs:sequence>
+     </xs:extension>
+    </xs:complexContent>
+   </xs:complexType>
+   <xs:complexType final='extension restriction' name='branchOfficeHoursApiRequest'>
+    <xs:complexContent>
+     <xs:extension base='tns:baseApiRequest'>
+      <xs:sequence>
+       <xs:element name='branchId' type='xs:int'/>
+      </xs:sequence>
+     </xs:extension>
+    </xs:complexContent>
+   </xs:complexType>
+   <xs:complexType name='branchOfficeHoursApiResponse'>
+    <xs:complexContent>
+     <xs:extension base='tns:baseApiResponse'>
+      <xs:sequence>
+       <xs:element maxOccurs='unbounded' name='officeHours' type='tns:officeHoursApiTO'/>
+      </xs:sequence>
+     </xs:extension>
+    </xs:complexContent>
+   </xs:complexType>
+   <xs:complexType name='officeHoursApiTO'>
+    <xs:sequence>
+     <xs:element minOccurs='0' name='day' type='tns:weekDay'/>
+     <xs:element minOccurs='0' name='lunchFrom' type='xs:dateTime'/>
+     <xs:element minOccurs='0' name='lunchTo' type='xs:dateTime'/>
+     <xs:element minOccurs='0' name='openFrom' type='xs:dateTime'/>
+     <xs:element minOccurs='0' name='openTo' type='xs:dateTime'/>
+    </xs:sequence>
+   </xs:complexType>
+   <xs:complexType name='affiliateParticipateApiRequest'>
+    <xs:complexContent>
+     <xs:extension base='tns:baseApiRequest'>
+      <xs:sequence>
+       <xs:element name='clientId' type='xs:int'/>
+      </xs:sequence>
+     </xs:extension>
+    </xs:complexContent>
+   </xs:complexType>
+   <xs:complexType name='affiliateParticipateApiResponse'>
+    <xs:complexContent>
+     <xs:extension base='tns:baseApiResponse'>
+      <xs:sequence/>
+     </xs:extension>
+    </xs:complexContent>
+   </xs:complexType>
+   <xs:complexType name='affiliateInfoApiRequest'>
+    <xs:complexContent>
+     <xs:extension base='tns:baseApiRequest'>
+      <xs:sequence>
+       <xs:element name='clientId' type='xs:int'/>
+      </xs:sequence>
+     </xs:extension>
+    </xs:complexContent>
+   </xs:complexType>
+   <xs:complexType name='affiliateInfoApiResponse'>
+    <xs:complexContent>
+     <xs:extension base='tns:baseApiResponse'>
+      <xs:sequence>
+       <xs:element minOccurs='0' name='clientAffiliate' type='tns:clientAffiliateInfoApiTO'/>
+      </xs:sequence>
+     </xs:extension>
+    </xs:complexContent>
+   </xs:complexType>
+   <xs:complexType name='clientAffiliateInfoApiTO'>
+    <xs:sequence>
+     <xs:element name='dotationsGainedCount' type='xs:int'/>
+     <xs:element name='individualGain' type='xs:int'/>
+     <xs:element minOccurs='0' name='individualGainDateFrom' type='xs:dateTime'/>
+     <xs:element minOccurs='0' name='individualGainDateTo' type='xs:dateTime'/>
+     <xs:element name='preregistationGainedCount' type='xs:int'/>
+     <xs:element name='registationGainedCount' type='xs:int'/>
+     <xs:element name='sourceTypeCoveragePercent'>
+      <xs:complexType>
+       <xs:sequence>
+        <xs:element maxOccurs='unbounded' minOccurs='0' name='entry'>
+         <xs:complexType>
+          <xs:sequence>
+           <xs:element minOccurs='0' name='key' type='tns:sourceType'/>
+           <xs:element minOccurs='0' name='value' type='xs:int'/>
+          </xs:sequence>
+         </xs:complexType>
+        </xs:element>
+       </xs:sequence>
+      </xs:complexType>
+     </xs:element>
+     <xs:element minOccurs='0' name='standardGain' type='xs:int'/>
+     <xs:element name='totalGain' type='xs:int'/>
+     <xs:element maxOccurs='unbounded' minOccurs='0' name='webConversion' nillable='true' type='tns:clientAffiliateWebConversionApiTO'/>
+    </xs:sequence>
+   </xs:complexType>
+   <xs:complexType name='clientAffiliateWebConversionApiTO'>
+    <xs:sequence>
+     <xs:element minOccurs='0' name='percent' type='xs:int'/>
+     <xs:element minOccurs='0' name='web' type='xs:string'/>
+    </xs:sequence>
+   </xs:complexType>
+   <xs:complexType name='maratonInfoApiRequest'>
+    <xs:complexContent>
+     <xs:extension base='tns:baseApiRequest'>
+      <xs:sequence/>
+     </xs:extension>
+    </xs:complexContent>
+   </xs:complexType>
+   <xs:complexType name='maratonInfoApiResponse'>
+    <xs:complexContent>
+     <xs:extension base='tns:baseApiResponse'>
+      <xs:sequence>
+       <xs:element minOccurs='0' name='maratonInfo' type='tns:maratonInfoApiTO'/>
+      </xs:sequence>
+     </xs:extension>
+    </xs:complexContent>
+   </xs:complexType>
+   <xs:complexType name='maratonInfoApiTO'>
+    <xs:sequence>
+     <xs:element minOccurs='0' name='amountPerClientForAliveClients' type='xs:decimal'/>
+     <xs:element minOccurs='0' name='amountPredictionPerClient' type='xs:decimal'/>
+     <xs:element minOccurs='0' name='amountRemainingToBetToday' type='xs:decimal'/>
+     <xs:element name='jokersRemainingCount' type='xs:int'/>
+     <xs:element maxOccurs='unbounded' minOccurs='0' name='maratonStatGraph' nillable='true' type='tns:maratonStatApiTO'/>
+    </xs:sequence>
+   </xs:complexType>
+   <xs:complexType name='maratonStatApiTO'>
+    <xs:sequence>
+     <xs:element minOccurs='0' name='amountPerClient' type='xs:decimal'/>
+     <xs:element name='clientsCount' type='xs:int'/>
+     <xs:element minOccurs='0' name='date' type='xs:dateTime'/>
+    </xs:sequence>
+   </xs:complexType>
+   <xs:complexType name='articleApiRequest'>
+    <xs:complexContent>
+     <xs:extension base='tns:baseApiRequest'>
+      <xs:sequence>
+       <xs:element name='pageId' type='xs:string'/>
+      </xs:sequence>
+     </xs:extension>
+    </xs:complexContent>
+   </xs:complexType>
+   <xs:complexType name='articleApiResponse'>
+    <xs:complexContent>
+     <xs:extension base='tns:baseApiResponse'>
+      <xs:sequence>
+       <xs:element name='article' type='tns:articleApiTO'/>
+      </xs:sequence>
+     </xs:extension>
+    </xs:complexContent>
+   </xs:complexType>
+   <xs:complexType name='articleApiTO'>
+    <xs:sequence>
+     <xs:element minOccurs='0' name='categoryId' type='xs:string'/>
+     <xs:element minOccurs='0' name='date' type='xs:dateTime'/>
+     <xs:element minOccurs='0' name='id' type='xs:string'/>
+     <xs:element minOccurs='0' name='label' type='xs:string'/>
+     <xs:element minOccurs='0' name='name' type='xs:string'/>
+     <xs:element minOccurs='0' name='niceUrlName' type='xs:string'/>
+     <xs:element minOccurs='0' name='text' type='xs:string'/>
+    </xs:sequence>
+   </xs:complexType>
+   <xs:complexType name='finishPreregistrationApiRequest'>
+    <xs:complexContent>
+     <xs:extension base='tns:baseApiRequest'>
+      <xs:sequence>
+       <xs:element name='oldPassword' type='xs:string'/>
+       <xs:element name='newPassword' type='xs:string'/>
+       <xs:element name='newPasswordConfirm' type='xs:string'/>
+       <xs:element name='userName' type='xs:string'/>
+      </xs:sequence>
+     </xs:extension>
+    </xs:complexContent>
+   </xs:complexType>
+   <xs:complexType name='finishPreregistrationApiResponse'>
+    <xs:complexContent>
+     <xs:extension base='tns:baseApiResponse'>
+      <xs:sequence/>
+     </xs:extension>
+    </xs:complexContent>
+   </xs:complexType>
+   <xs:complexType name='userNameSuggestionsApiRequest'>
+    <xs:complexContent>
+     <xs:extension base='tns:baseApiRequest'>
+      <xs:sequence>
+       <xs:element default='' minOccurs='0' name='userName' nillable='true' type='xs:string'/>
+       <xs:element default='' minOccurs='0' name='firstName' nillable='true' type='xs:string'/>
+       <xs:element default='' minOccurs='0' name='lastName' nillable='true' type='xs:string'/>
+      </xs:sequence>
+     </xs:extension>
+    </xs:complexContent>
+   </xs:complexType>
+   <xs:complexType name='userNameSuggetionsApiResponse'>
+    <xs:complexContent>
+     <xs:extension base='tns:baseApiResponse'>
+      <xs:sequence>
+       <xs:element name='usernameUniqueness' type='tns:usernameUniquenessApiTO'/>
+      </xs:sequence>
+     </xs:extension>
+    </xs:complexContent>
+   </xs:complexType>
+   <xs:complexType name='usernameUniquenessApiTO'>
+    <xs:sequence>
+     <xs:element maxOccurs='unbounded' minOccurs='0' name='suggests' nillable='true' type='xs:string'/>
+     <xs:element name='unique' type='xs:boolean'/>
+     <xs:element name='valid' type='xs:boolean'/>
+    </xs:sequence>
+   </xs:complexType>
+   <xs:complexType name='getNewFeaturesApiRequest'>
+    <xs:complexContent>
+     <xs:extension base='tns:baseApiRequest'>
+      <xs:sequence/>
+     </xs:extension>
+    </xs:complexContent>
+   </xs:complexType>
+   <xs:complexType name='getNewFeaturesApiResponse'>
+    <xs:complexContent>
+     <xs:extension base='tns:baseApiResponse'>
+      <xs:sequence>
+       <xs:element minOccurs='0' name='currentVersionNumber' nillable='true' type='xs:string'/>
+       <xs:element minOccurs='0' name='newFeaturesInNewAppVersion' nillable='true' type='xs:string'/>
+      </xs:sequence>
+     </xs:extension>
+    </xs:complexContent>
+   </xs:complexType>
+   <xs:simpleType name='contestTypeEnum'>
+    <xs:restriction base='xs:string'>
+     <xs:enumeration value='TIPSPORT_CUP'/>
+     <xs:enumeration value='ATP_CUP'/>
+     <xs:enumeration value='TIPSPORT_LEAGUE'/>
+     <xs:enumeration value='MASS_CONTEST'/>
+     <xs:enumeration value='DUEL'/>
+    </xs:restriction>
+   </xs:simpleType>
+   <xs:simpleType name='betStateEnum'>
+    <xs:restriction base='xs:string'>
+     <xs:enumeration value='UNEVALUATED'/>
+     <xs:enumeration value='WON'/>
+     <xs:enumeration value='LOST'/>
+     <xs:enumeration value='FAULT'/>
+    </xs:restriction>
+   </xs:simpleType>
+   <xs:simpleType name='tlRankingsTypes'>
+    <xs:restriction base='xs:string'>
+     <xs:enumeration value='TIP_LEAGUE'/>
+     <xs:enumeration value='MONTH_BRANCH'/>
+     <xs:enumeration value='MONTH_INTERNET'/>
+     <xs:enumeration value='YEAR_BRANCH'/>
+     <xs:enumeration value='YEAR_INTERNET'/>
+    </xs:restriction>
+   </xs:simpleType>
+   <xs:simpleType name='countryEnum'>
+    <xs:restriction base='xs:string'>
+     <xs:enumeration value='CZ'/>
+     <xs:enumeration value='SK'/>
+     <xs:enumeration value='PL'/>
+     <xs:enumeration value='MT'/>
+    </xs:restriction>
+   </xs:simpleType>
+   <xs:simpleType name='firmTypeEnum'>
+    <xs:restriction base='xs:string'>
+     <xs:enumeration value='TIPSPORT'/>
+     <xs:enumeration value='CHANCE'/>
+    </xs:restriction>
+   </xs:simpleType>
+   <xs:simpleType name='contestType'>
+    <xs:restriction base='xs:string'>
+     <xs:enumeration value='TIPSPORT_LIGA'/>
+     <xs:enumeration value='LIBEREC'/>
+     <xs:enumeration value='TIPSPORT_CUP'/>
+     <xs:enumeration value='INTERNATIONAL_MARATHON'/>
+     <xs:enumeration value='INTERNATIONAL_TIPSPORT_CUP'/>
+     <xs:enumeration value='INTERNATIONAL_TIPSPORT_LIGA'/>
+     <xs:enumeration value='ATP_CUP'/>
+     <xs:enumeration value='ATP_CUP_CHAMPION_TOURNAMENT'/>
+     <xs:enumeration value='ATP_CUP_RANKING'/>
+    </xs:restriction>
+   </xs:simpleType>
+   <xs:simpleType name='apiClientPlatformEnum'>
+    <xs:restriction base='xs:string'>
+     <xs:enumeration value='ANDROID'/>
+     <xs:enumeration value='IOS'/>
+     <xs:enumeration value='MOBILEWEB'/>
+     <xs:enumeration value='WEB'/>
+    </xs:restriction>
+   </xs:simpleType>
+   <xs:simpleType name='identityCardEnum'>
+    <xs:restriction base='xs:string'>
+     <xs:enumeration value='ID_CARD'/>
+     <xs:enumeration value='PASSPORT'/>
+     <xs:enumeration value='RESIDENCE_PERMIT'/>
+     <xs:enumeration value='DRIVING_LICENCE'/>
+    </xs:restriction>
+   </xs:simpleType>
+   <xs:simpleType name='weekDay'>
+    <xs:restriction base='xs:string'>
+     <xs:enumeration value='MONDAY'/>
+     <xs:enumeration value='TUESDAY'/>
+     <xs:enumeration value='WEDNESDAY'/>
+     <xs:enumeration value='THURSDAY'/>
+     <xs:enumeration value='FRIDAY'/>
+     <xs:enumeration value='SATURDAY'/>
+     <xs:enumeration value='SUNDAY'/>
+    </xs:restriction>
+   </xs:simpleType>
+   <xs:simpleType name='sourceType'>
+    <xs:restriction base='xs:string'>
+     <xs:enumeration value='TICKETS'/>
+     <xs:enumeration value='ANALYZES'/>
+    </xs:restriction>
+   </xs:simpleType>
+  </xs:schema>
+ </types>
+ <message name='CommonBettingWS_getBranches'>
+  <part name='arg0' type='tns:branchesApiRequest'></part>
+ </message>
+ <message name='CommonBettingWS_setNewPasswordResponse'>
+  <part name='return' type='tns:setNewPasswordApiResponse'></part>
+ </message>
+ <message name='CommonBettingWS_getTipsportLeagueLimitsResponse'>
+  <part name='return' type='tns:tipsportLeagueLimitsResponse'></part>
+ </message>
+ <message name='CommonBettingWS_getTipsportLeague'>
+  <part name='arg0' type='tns:tipsportLeagueApiRequest'></part>
+ </message>
+ <message name='CommonBettingWS_getNewFeaturesResponse'>
+  <part name='return' type='tns:getNewFeaturesApiResponse'></part>
+ </message>
+ <message name='CommonBettingWS_getCitiesResponse'>
+  <part name='return' type='tns:getCitiesApiResponse'></part>
+ </message>
+ <message name='CommonBettingWS_getArticle'>
+  <part name='arg0' type='tns:articleApiRequest'></part>
+ </message>
+ <message name='CommonBettingWS_logoutUserResponse'>
+  <part name='return' type='tns:logoutUserApiResponse'></part>
+ </message>
+ <message name='CommonBettingWS_getClientProfileResponse'>
+  <part name='return' type='tns:clientProfileApiResponse'></part>
+ </message>
+ <message name='CommonBettingWS_getAccountStateResponse'>
+  <part name='return' type='tns:accountStateApiResponse'></part>
+ </message>
+ <message name='CommonBettingWS_getTipsportLeagueDetailResponse'>
+  <part name='return' type='tns:tipsportLeagueDetailApiResponse'></part>
+ </message>
+ <message name='CommonBettingWS_setNewPassword'>
+  <part name='arg0' type='tns:setNewPasswordApiRequest'></part>
+ </message>
+ <message name='CommonBettingWS_loginUserResponse'>
+  <part name='return' type='tns:loginUserApiResponse'></part>
+ </message>
+ <message name='CommonBettingWS_getTipsportCups'>
+  <part name='arg0' type='tns:tipsportCupsRequest'></part>
+ </message>
+ <message name='CommonBettingWS_affiliateParticipateResponse'>
+  <part name='return' type='tns:affiliateParticipateApiResponse'></part>
+ </message>
+ <message name='CommonBettingWS_getMaratonInfo'>
+  <part name='arg0' type='tns:maratonInfoApiRequest'></part>
+ </message>
+ <message name='CommonBettingWS_userNameSuggestions'>
+  <part name='arg0' type='tns:userNameSuggestionsApiRequest'></part>
+ </message>
+ <message name='CommonBettingWS_getArticleResponse'>
+  <part name='return' type='tns:articleApiResponse'></part>
+ </message>
+ <message name='CommonBettingWS_getTicketsLiveAndPrematch'>
+  <part name='arg0' type='tns:liveAndPrematchTicketsApiRequest'></part>
+ </message>
+ <message name='CommonBettingWS_clientPreregistration'>
+  <part name='arg0' type='tns:preRegistrationApiRequest'></part>
+ </message>
+ <message name='CommonBettingWS_getTipsportLeagueResponse'>
+  <part name='return' type='tns:tipsportLeagueApiResponse'></part>
+ </message>
+ <message name='CommonBettingWS_setLanguage'>
+  <part name='arg0' type='tns:languageApiRequest'></part>
+ </message>
+ <message name='CommonBettingWS_logoutPartnerResponse'>
+  <part name='return' type='tns:logoutPartnerApiResponse'></part>
+ </message>
+ <message name='CommonBettingWS_clientPreregistrationResponse'>
+  <part name='return' type='tns:preRegistrationApiResponse'></part>
+ </message>
+ <message name='CommonBettingWS_finishPreregistration'>
+  <part name='arg0' type='tns:finishPreregistrationApiRequest'></part>
+ </message>
+ <message name='CommonBettingWS_getForgottenPasswordResponse'>
+  <part name='return' type='tns:forgottenPasswordApiResponse'></part>
+ </message>
+ <message name='CommonBettingWS_getClientAffiliateInfoResponse'>
+  <part name='return' type='tns:affiliateInfoApiResponse'></part>
+ </message>
+ <message name='CommonBettingWS_getTicketsResponse'>
+  <part name='return' type='tns:ticketsApiResponse'></part>
+ </message>
+ <message name='CommonBettingWS_getClientAvatar'>
+  <part name='arg0' type='tns:clientAvatarApiRequest'></part>
+ </message>
+ <message name='CommonBettingWS_getBranchOfficeHoursResponse'>
+  <part name='return' type='tns:branchOfficeHoursApiResponse'></part>
+ </message>
+ <message name='CommonBettingWS_logoutPartner'>
+  <part name='arg0' type='tns:logoutPartnerApiRequest'></part>
+ </message>
+ <message name='CommonBettingWS_loginPartnerResponse'>
+  <part name='return' type='tns:loginPartnerApiResponse'></part>
+ </message>
+ <message name='CommonBettingWS_getTipsportCupLimitsResponse'>
+  <part name='return' type='tns:tipsportCupLimitsApiResponse'></part>
+ </message>
+ <message name='CommonBettingWS_getTipsportCupsResponse'>
+  <part name='return' type='tns:tipsportCupsResponse'></part>
+ </message>
+ <message name='CommonBettingWS_affiliateParticipate'>
+  <part name='arg0' type='tns:affiliateParticipateApiRequest'></part>
+ </message>
+ <message name='CommonBettingWS_getClientProfile'>
+  <part name='arg0' type='tns:clientProfileApiRequest'></part>
+ </message>
+ <message name='CommonBettingWS_getBranchesResponse'>
+  <part name='return' type='tns:branchesApiResponse'></part>
+ </message>
+ <message name='CommonBettingWS_getTipsportCupInfoResponse'>
+  <part name='return' type='tns:tipsportCupInfoResponse'></part>
+ </message>
+ <message name='CommonBettingWS_setLanguageResponse'>
+  <part name='return' type='tns:languageApiResponse'></part>
+ </message>
+ <message name='CommonBettingWS_loginPartner'>
+  <part name='arg0' type='tns:loginPartnerApiRequest'></part>
+ </message>
+ <message name='CommonBettingWS_getTipsportCupLimits'>
+  <part name='arg0' type='tns:tipsportCupLimitsRequest'></part>
+ </message>
+ <message name='CommonBettingWS_getTicketsLiveAndPrematch2'>
+  <part name='arg0' type='tns:liveAndPrematchTicketsApiRequest'></part>
+ </message>
+ <message name='CommonBettingWS_getForgottenPassword'>
+  <part name='arg0' type='tns:forgottenPasswordApiRequest'></part>
+ </message>
+ <message name='CommonBettingWS_getTransactions'>
+  <part name='arg0' type='tns:transactionsApiRequest'></part>
+ </message>
+ <message name='CommonBettingWS_getNewFeatures'>
+  <part name='arg0' type='tns:getNewFeaturesApiRequest'></part>
+ </message>
+ <message name='CommonBettingWS_getTipsportLeagueDetail'>
+  <part name='arg0' type='tns:tipsportLeagueDetailApiRequest'></part>
+ </message>
+ <message name='CommonBettingWS_getTicketsLiveAndPrematch2Response'>
+  <part name='return' type='tns:liveAndPrematchTicketsApiResponse'></part>
+ </message>
+ <message name='CommonBettingWS_getAccountState'>
+  <part name='arg0' type='tns:accountStateApiRequest'></part>
+ </message>
+ <message name='CommonBettingWS_setClientProfilePreferences'>
+  <part name='arg0' type='tns:clientProfilePreferencesApiRequest'></part>
+ </message>
+ <message name='CommonBettingWS_getClientAvatarResponse'>
+  <part name='return' type='tns:clientAvatarApiResponse'></part>
+ </message>
+ <message name='CommonBettingWS_getClientAffiliateInfo'>
+  <part name='arg0' type='tns:affiliateInfoApiRequest'></part>
+ </message>
+ <message name='CommonBettingWS_getTransactionsResponse'>
+  <part name='return' type='tns:transactionsApiResponse'></part>
+ </message>
+ <message name='CommonBettingWS_getTickets'>
+  <part name='arg0' type='tns:ticketsApiRequest'></part>
+ </message>
+ <message name='CommonBettingWS_getTicketsLiveAndPrematchResponse'>
+  <part name='return' type='tns:liveAndPrematchTicketsApiResponse'></part>
+ </message>
+ <message name='CommonBettingWS_getBranchOfficeHours'>
+  <part name='arg0' type='tns:branchOfficeHoursApiRequest'></part>
+ </message>
+ <message name='CommonBettingWS_getTipsportLeagueLimits'>
+  <part name='arg0' type='tns:tipsportLeagueLimitsRequest'></part>
+ </message>
+ <message name='CommonBettingWS_getMaratonInfoResponse'>
+  <part name='return' type='tns:maratonInfoApiResponse'></part>
+ </message>
+ <message name='CommonBettingWS_finishPreregistrationResponse'>
+  <part name='return' type='tns:finishPreregistrationApiResponse'></part>
+ </message>
+ <message name='CommonBettingWS_userNameSuggestionsResponse'>
+  <part name='return' type='tns:userNameSuggetionsApiResponse'></part>
+ </message>
+ <message name='CommonBettingWS_getClientProfilePreferences'>
+  <part name='arg0' type='tns:clientProfilePreferencesInfoApiRequest'></part>
+ </message>
+ <message name='CommonBettingWS_getTicketDetail'>
+  <part name='arg0' type='tns:ticketDetailApiRequest'></part>
+ </message>
+ <message name='CommonBettingWS_logoutUser'>
+  <part name='arg0' type='tns:logoutUserApiRequest'></part>
+ </message>
+ <message name='CommonBettingWS_setClientProfilePreferencesResponse'>
+  <part name='return' type='tns:clientProfilePreferencesApiResponse'></part>
+ </message>
+ <message name='CommonBettingWS_getCities'>
+  <part name='arg0' type='tns:getCitiesApiRequest'></part>
+ </message>
+ <message name='CommonBettingWS_loginUser'>
+  <part name='arg0' type='tns:loginUserApiRequest'></part>
+ </message>
+ <message name='CommonBettingWS_getClientProfilePreferencesResponse'>
+  <part name='return' type='tns:clientProfilePreferencesInfoApiResponse'></part>
+ </message>
+ <message name='CommonBettingWS_getTicketDetailResponse'>
+  <part name='return' type='tns:ticketDetailApiResponse'></part>
+ </message>
+ <message name='CommonBettingWS_getTipsportCupInfo'>
+  <part name='arg0' type='tns:tipsportCupInfoRequest'></part>
+ </message>
+ <portType name='CommonBettingWS'>
+  <operation name='affiliateParticipate' parameterOrder='arg0'>
+   <input message='tns:CommonBettingWS_affiliateParticipate'></input>
+   <output message='tns:CommonBettingWS_affiliateParticipateResponse'></output>
+  </operation>
+  <operation name='clientPreregistration' parameterOrder='arg0'>
+   <input message='tns:CommonBettingWS_clientPreregistration'></input>
+   <output message='tns:CommonBettingWS_clientPreregistrationResponse'></output>
+  </operation>
+  <operation name='finishPreregistration' parameterOrder='arg0'>
+   <input message='tns:CommonBettingWS_finishPreregistration'></input>
+   <output message='tns:CommonBettingWS_finishPreregistrationResponse'></output>
+  </operation>
+  <operation name='getAccountState' parameterOrder='arg0'>
+   <input message='tns:CommonBettingWS_getAccountState'></input>
+   <output message='tns:CommonBettingWS_getAccountStateResponse'></output>
+  </operation>
+  <operation name='getArticle' parameterOrder='arg0'>
+   <input message='tns:CommonBettingWS_getArticle'></input>
+   <output message='tns:CommonBettingWS_getArticleResponse'></output>
+  </operation>
+  <operation name='getBranchOfficeHours' parameterOrder='arg0'>
+   <input message='tns:CommonBettingWS_getBranchOfficeHours'></input>
+   <output message='tns:CommonBettingWS_getBranchOfficeHoursResponse'></output>
+  </operation>
+  <operation name='getBranches' parameterOrder='arg0'>
+   <input message='tns:CommonBettingWS_getBranches'></input>
+   <output message='tns:CommonBettingWS_getBranchesResponse'></output>
+  </operation>
+  <operation name='getCities' parameterOrder='arg0'>
+   <input message='tns:CommonBettingWS_getCities'></input>
+   <output message='tns:CommonBettingWS_getCitiesResponse'></output>
+  </operation>
+  <operation name='getClientAffiliateInfo' parameterOrder='arg0'>
+   <input message='tns:CommonBettingWS_getClientAffiliateInfo'></input>
+   <output message='tns:CommonBettingWS_getClientAffiliateInfoResponse'></output>
+  </operation>
+  <operation name='getClientAvatar' parameterOrder='arg0'>
+   <input message='tns:CommonBettingWS_getClientAvatar'></input>
+   <output message='tns:CommonBettingWS_getClientAvatarResponse'></output>
+  </operation>
+  <operation name='getClientProfile' parameterOrder='arg0'>
+   <input message='tns:CommonBettingWS_getClientProfile'></input>
+   <output message='tns:CommonBettingWS_getClientProfileResponse'></output>
+  </operation>
+  <operation name='getClientProfilePreferences' parameterOrder='arg0'>
+   <input message='tns:CommonBettingWS_getClientProfilePreferences'></input>
+   <output message='tns:CommonBettingWS_getClientProfilePreferencesResponse'></output>
+  </operation>
+  <operation name='getForgottenPassword' parameterOrder='arg0'>
+   <input message='tns:CommonBettingWS_getForgottenPassword'></input>
+   <output message='tns:CommonBettingWS_getForgottenPasswordResponse'></output>
+  </operation>
+  <operation name='getMaratonInfo' parameterOrder='arg0'>
+   <input message='tns:CommonBettingWS_getMaratonInfo'></input>
+   <output message='tns:CommonBettingWS_getMaratonInfoResponse'></output>
+  </operation>
+  <operation name='getNewFeatures' parameterOrder='arg0'>
+   <input message='tns:CommonBettingWS_getNewFeatures'></input>
+   <output message='tns:CommonBettingWS_getNewFeaturesResponse'></output>
+  </operation>
+  <operation name='getTicketDetail' parameterOrder='arg0'>
+   <input message='tns:CommonBettingWS_getTicketDetail'></input>
+   <output message='tns:CommonBettingWS_getTicketDetailResponse'></output>
+  </operation>
+  <operation name='getTickets' parameterOrder='arg0'>
+   <input message='tns:CommonBettingWS_getTickets'></input>
+   <output message='tns:CommonBettingWS_getTicketsResponse'></output>
+  </operation>
+  <operation name='getTicketsLiveAndPrematch' parameterOrder='arg0'>
+   <input message='tns:CommonBettingWS_getTicketsLiveAndPrematch'></input>
+   <output message='tns:CommonBettingWS_getTicketsLiveAndPrematchResponse'></output>
+  </operation>
+  <operation name='getTicketsLiveAndPrematch2' parameterOrder='arg0'>
+   <input message='tns:CommonBettingWS_getTicketsLiveAndPrematch2'></input>
+   <output message='tns:CommonBettingWS_getTicketsLiveAndPrematch2Response'></output>
+  </operation>
+  <operation name='getTipsportCupInfo' parameterOrder='arg0'>
+   <input message='tns:CommonBettingWS_getTipsportCupInfo'></input>
+   <output message='tns:CommonBettingWS_getTipsportCupInfoResponse'></output>
+  </operation>
+  <operation name='getTipsportCupLimits' parameterOrder='arg0'>
+   <input message='tns:CommonBettingWS_getTipsportCupLimits'></input>
+   <output message='tns:CommonBettingWS_getTipsportCupLimitsResponse'></output>
+  </operation>
+  <operation name='getTipsportCups' parameterOrder='arg0'>
+   <input message='tns:CommonBettingWS_getTipsportCups'></input>
+   <output message='tns:CommonBettingWS_getTipsportCupsResponse'></output>
+  </operation>
+  <operation name='getTipsportLeague' parameterOrder='arg0'>
+   <input message='tns:CommonBettingWS_getTipsportLeague'></input>
+   <output message='tns:CommonBettingWS_getTipsportLeagueResponse'></output>
+  </operation>
+  <operation name='getTipsportLeagueDetail' parameterOrder='arg0'>
+   <input message='tns:CommonBettingWS_getTipsportLeagueDetail'></input>
+   <output message='tns:CommonBettingWS_getTipsportLeagueDetailResponse'></output>
+  </operation>
+  <operation name='getTipsportLeagueLimits' parameterOrder='arg0'>
+   <input message='tns:CommonBettingWS_getTipsportLeagueLimits'></input>
+   <output message='tns:CommonBettingWS_getTipsportLeagueLimitsResponse'></output>
+  </operation>
+  <operation name='getTransactions' parameterOrder='arg0'>
+   <input message='tns:CommonBettingWS_getTransactions'></input>
+   <output message='tns:CommonBettingWS_getTransactionsResponse'></output>
+  </operation>
+  <operation name='loginPartner' parameterOrder='arg0'>
+   <input message='tns:CommonBettingWS_loginPartner'></input>
+   <output message='tns:CommonBettingWS_loginPartnerResponse'></output>
+  </operation>
+  <operation name='loginUser' parameterOrder='arg0'>
+   <input message='tns:CommonBettingWS_loginUser'></input>
+   <output message='tns:CommonBettingWS_loginUserResponse'></output>
+  </operation>
+  <operation name='logoutPartner' parameterOrder='arg0'>
+   <input message='tns:CommonBettingWS_logoutPartner'></input>
+   <output message='tns:CommonBettingWS_logoutPartnerResponse'></output>
+  </operation>
+  <operation name='logoutUser' parameterOrder='arg0'>
+   <input message='tns:CommonBettingWS_logoutUser'></input>
+   <output message='tns:CommonBettingWS_logoutUserResponse'></output>
+  </operation>
+  <operation name='setClientProfilePreferences' parameterOrder='arg0'>
+   <input message='tns:CommonBettingWS_setClientProfilePreferences'></input>
+   <output message='tns:CommonBettingWS_setClientProfilePreferencesResponse'></output>
+  </operation>
+  <operation name='setLanguage' parameterOrder='arg0'>
+   <input message='tns:CommonBettingWS_setLanguage'></input>
+   <output message='tns:CommonBettingWS_setLanguageResponse'></output>
+  </operation>
+  <operation name='setNewPassword' parameterOrder='arg0'>
+   <input message='tns:CommonBettingWS_setNewPassword'></input>
+   <output message='tns:CommonBettingWS_setNewPasswordResponse'></output>
+  </operation>
+  <operation name='userNameSuggestions' parameterOrder='arg0'>
+   <input message='tns:CommonBettingWS_userNameSuggestions'></input>
+   <output message='tns:CommonBettingWS_userNameSuggestionsResponse'></output>
+  </operation>
+ </portType>
+ <binding name='CommonBettingWSBinding' type='tns:CommonBettingWS'>
+  <soap:binding style='rpc' transport='http://schemas.xmlsoap.org/soap/http'/>
+  <operation name='affiliateParticipate'>
+   <soap:operation soapAction=''/>
+   <input>
+    <soap:body namespace='http://cz/tipsport/api/to' use='literal'/>
+   </input>
+   <output>
+    <soap:body namespace='http://cz/tipsport/api/to' use='literal'/>
+   </output>
+  </operation>
+  <operation name='clientPreregistration'>
+   <soap:operation soapAction=''/>
+   <input>
+    <soap:body namespace='http://cz/tipsport/api/to' use='literal'/>
+   </input>
+   <output>
+    <soap:body namespace='http://cz/tipsport/api/to' use='literal'/>
+   </output>
+  </operation>
+  <operation name='finishPreregistration'>
+   <soap:operation soapAction=''/>
+   <input>
+    <soap:body namespace='http://cz/tipsport/api/to' use='literal'/>
+   </input>
+   <output>
+    <soap:body namespace='http://cz/tipsport/api/to' use='literal'/>
+   </output>
+  </operation>
+  <operation name='getAccountState'>
+   <soap:operation soapAction=''/>
+   <input>
+    <soap:body namespace='http://cz/tipsport/api/to' use='literal'/>
+   </input>
+   <output>
+    <soap:body namespace='http://cz/tipsport/api/to' use='literal'/>
+   </output>
+  </operation>
+  <operation name='getArticle'>
+   <soap:operation soapAction=''/>
+   <input>
+    <soap:body namespace='http://cz/tipsport/api/to' use='literal'/>
+   </input>
+   <output>
+    <soap:body namespace='http://cz/tipsport/api/to' use='literal'/>
+   </output>
+  </operation>
+  <operation name='getBranchOfficeHours'>
+   <soap:operation soapAction=''/>
+   <input>
+    <soap:body namespace='http://cz/tipsport/api/to' use='literal'/>
+   </input>
+   <output>
+    <soap:body namespace='http://cz/tipsport/api/to' use='literal'/>
+   </output>
+  </operation>
+  <operation name='getBranches'>
+   <soap:operation soapAction=''/>
+   <input>
+    <soap:body namespace='http://cz/tipsport/api/to' use='literal'/>
+   </input>
+   <output>
+    <soap:body namespace='http://cz/tipsport/api/to' use='literal'/>
+   </output>
+  </operation>
+  <operation name='getCities'>
+   <soap:operation soapAction=''/>
+   <input>
+    <soap:body namespace='http://cz/tipsport/api/to' use='literal'/>
+   </input>
+   <output>
+    <soap:body namespace='http://cz/tipsport/api/to' use='literal'/>
+   </output>
+  </operation>
+  <operation name='getClientAffiliateInfo'>
+   <soap:operation soapAction=''/>
+   <input>
+    <soap:body namespace='http://cz/tipsport/api/to' use='literal'/>
+   </input>
+   <output>
+    <soap:body namespace='http://cz/tipsport/api/to' use='literal'/>
+   </output>
+  </operation>
+  <operation name='getClientAvatar'>
+   <soap:operation soapAction=''/>
+   <input>
+    <soap:body namespace='http://cz/tipsport/api/to' use='literal'/>
+   </input>
+   <output>
+    <soap:body namespace='http://cz/tipsport/api/to' use='literal'/>
+   </output>
+  </operation>
+  <operation name='getClientProfile'>
+   <soap:operation soapAction=''/>
+   <input>
+    <soap:body namespace='http://cz/tipsport/api/to' use='literal'/>
+   </input>
+   <output>
+    <soap:body namespace='http://cz/tipsport/api/to' use='literal'/>
+   </output>
+  </operation>
+  <operation name='getClientProfilePreferences'>
+   <soap:operation soapAction=''/>
+   <input>
+    <soap:body namespace='http://cz/tipsport/api/to' use='literal'/>
+   </input>
+   <output>
+    <soap:body namespace='http://cz/tipsport/api/to' use='literal'/>
+   </output>
+  </operation>
+  <operation name='getForgottenPassword'>
+   <soap:operation soapAction=''/>
+   <input>
+    <soap:body namespace='http://cz/tipsport/api/to' use='literal'/>
+   </input>
+   <output>
+    <soap:body namespace='http://cz/tipsport/api/to' use='literal'/>
+   </output>
+  </operation>
+  <operation name='getMaratonInfo'>
+   <soap:operation soapAction=''/>
+   <input>
+    <soap:body namespace='http://cz/tipsport/api/to' use='literal'/>
+   </input>
+   <output>
+    <soap:body namespace='http://cz/tipsport/api/to' use='literal'/>
+   </output>
+  </operation>
+  <operation name='getNewFeatures'>
+   <soap:operation soapAction=''/>
+   <input>
+    <soap:body namespace='http://cz/tipsport/api/to' use='literal'/>
+   </input>
+   <output>
+    <soap:body namespace='http://cz/tipsport/api/to' use='literal'/>
+   </output>
+  </operation>
+  <operation name='getTicketDetail'>
+   <soap:operation soapAction=''/>
+   <input>
+    <soap:body namespace='http://cz/tipsport/api/to' use='literal'/>
+   </input>
+   <output>
+    <soap:body namespace='http://cz/tipsport/api/to' use='literal'/>
+   </output>
+  </operation>
+  <operation name='getTickets'>
+   <soap:operation soapAction=''/>
+   <input>
+    <soap:body namespace='http://cz/tipsport/api/to' use='literal'/>
+   </input>
+   <output>
+    <soap:body namespace='http://cz/tipsport/api/to' use='literal'/>
+   </output>
+  </operation>
+  <operation name='getTicketsLiveAndPrematch'>
+   <soap:operation soapAction=''/>
+   <input>
+    <soap:body namespace='http://cz/tipsport/api/to' use='literal'/>
+   </input>
+   <output>
+    <soap:body namespace='http://cz/tipsport/api/to' use='literal'/>
+   </output>
+  </operation>
+  <operation name='getTicketsLiveAndPrematch2'>
+   <soap:operation soapAction=''/>
+   <input>
+    <soap:body namespace='http://cz/tipsport/api/to' use='literal'/>
+   </input>
+   <output>
+    <soap:body namespace='http://cz/tipsport/api/to' use='literal'/>
+   </output>
+  </operation>
+  <operation name='getTipsportCupInfo'>
+   <soap:operation soapAction=''/>
+   <input>
+    <soap:body namespace='http://cz/tipsport/api/to' use='literal'/>
+   </input>
+   <output>
+    <soap:body namespace='http://cz/tipsport/api/to' use='literal'/>
+   </output>
+  </operation>
+  <operation name='getTipsportCupLimits'>
+   <soap:operation soapAction=''/>
+   <input>
+    <soap:body namespace='http://cz/tipsport/api/to' use='literal'/>
+   </input>
+   <output>
+    <soap:body namespace='http://cz/tipsport/api/to' use='literal'/>
+   </output>
+  </operation>
+  <operation name='getTipsportCups'>
+   <soap:operation soapAction=''/>
+   <input>
+    <soap:body namespace='http://cz/tipsport/api/to' use='literal'/>
+   </input>
+   <output>
+    <soap:body namespace='http://cz/tipsport/api/to' use='literal'/>
+   </output>
+  </operation>
+  <operation name='getTipsportLeague'>
+   <soap:operation soapAction=''/>
+   <input>
+    <soap:body namespace='http://cz/tipsport/api/to' use='literal'/>
+   </input>
+   <output>
+    <soap:body namespace='http://cz/tipsport/api/to' use='literal'/>
+   </output>
+  </operation>
+  <operation name='getTipsportLeagueDetail'>
+   <soap:operation soapAction=''/>
+   <input>
+    <soap:body namespace='http://cz/tipsport/api/to' use='literal'/>
+   </input>
+   <output>
+    <soap:body namespace='http://cz/tipsport/api/to' use='literal'/>
+   </output>
+  </operation>
+  <operation name='getTipsportLeagueLimits'>
+   <soap:operation soapAction=''/>
+   <input>
+    <soap:body namespace='http://cz/tipsport/api/to' use='literal'/>
+   </input>
+   <output>
+    <soap:body namespace='http://cz/tipsport/api/to' use='literal'/>
+   </output>
+  </operation>
+  <operation name='getTransactions'>
+   <soap:operation soapAction=''/>
+   <input>
+    <soap:body namespace='http://cz/tipsport/api/to' use='literal'/>
+   </input>
+   <output>
+    <soap:body namespace='http://cz/tipsport/api/to' use='literal'/>
+   </output>
+  </operation>
+  <operation name='loginPartner'>
+   <soap:operation soapAction=''/>
+   <input>
+    <soap:body namespace='http://cz/tipsport/api/to' use='literal'/>
+   </input>
+   <output>
+    <soap:body namespace='http://cz/tipsport/api/to' use='literal'/>
+   </output>
+  </operation>
+  <operation name='loginUser'>
+   <soap:operation soapAction=''/>
+   <input>
+    <soap:body namespace='http://cz/tipsport/api/to' use='literal'/>
+   </input>
+   <output>
+    <soap:body namespace='http://cz/tipsport/api/to' use='literal'/>
+   </output>
+  </operation>
+  <operation name='logoutPartner'>
+   <soap:operation soapAction=''/>
+   <input>
+    <soap:body namespace='http://cz/tipsport/api/to' use='literal'/>
+   </input>
+   <output>
+    <soap:body namespace='http://cz/tipsport/api/to' use='literal'/>
+   </output>
+  </operation>
+  <operation name='logoutUser'>
+   <soap:operation soapAction=''/>
+   <input>
+    <soap:body namespace='http://cz/tipsport/api/to' use='literal'/>
+   </input>
+   <output>
+    <soap:body namespace='http://cz/tipsport/api/to' use='literal'/>
+   </output>
+  </operation>
+  <operation name='setClientProfilePreferences'>
+   <soap:operation soapAction=''/>
+   <input>
+    <soap:body namespace='http://cz/tipsport/api/to' use='literal'/>
+   </input>
+   <output>
+    <soap:body namespace='http://cz/tipsport/api/to' use='literal'/>
+   </output>
+  </operation>
+  <operation name='setLanguage'>
+   <soap:operation soapAction=''/>
+   <input>
+    <soap:body namespace='http://cz/tipsport/api/to' use='literal'/>
+   </input>
+   <output>
+    <soap:body namespace='http://cz/tipsport/api/to' use='literal'/>
+   </output>
+  </operation>
+  <operation name='setNewPassword'>
+   <soap:operation soapAction=''/>
+   <input>
+    <soap:body namespace='http://cz/tipsport/api/to' use='literal'/>
+   </input>
+   <output>
+    <soap:body namespace='http://cz/tipsport/api/to' use='literal'/>
+   </output>
+  </operation>
+  <operation name='userNameSuggestions'>
+   <soap:operation soapAction=''/>
+   <input>
+    <soap:body namespace='http://cz/tipsport/api/to' use='literal'/>
+   </input>
+   <output>
+    <soap:body namespace='http://cz/tipsport/api/to' use='literal'/>
+   </output>
+  </operation>
+ </binding>
+ <service name='CommonBettingWS'>
+  <port binding='tns:CommonBettingWSBinding' name='CommonBettingWSPort'>
+   <soap:address location='http://nautilush.tipsport.cz:8082/webtip/CommonBettingWS'/>
+  </port>
+ </service>
+</definitions>

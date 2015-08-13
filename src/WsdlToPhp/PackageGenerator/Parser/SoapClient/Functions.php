@@ -6,15 +6,20 @@ class Functions extends AbstractParser
 {
     public function parse()
     {
-        $methods  = $this->generator->__getFunctions();
-        $services = $this->generator->getServices();
+        $methods = $this
+            ->getGenerator()
+            ->getSoapClient()
+            ->getSoapClient()
+            ->getSoapClient()
+            ->__getFunctions();
+        $services = $this->getGenerator()->getServices();
         if (is_array($methods) && count($methods)) {
             foreach ($methods as $method) {
                 $infos = explode(' ', $method);
                 /**
                  * "Regular" SOAP Style
                  */
-                if (count($infos) <= 3) {
+                if (count($infos) < 3) {
                     $returnType = $infos[0];
                     if (count($infos) < 3 && strpos($infos[1], '()') !== false && array_key_exists(1, $infos)) {
                         $methodName = trim(str_replace('()', '', $infos[1]));
@@ -23,9 +28,9 @@ class Functions extends AbstractParser
                         list($methodName, $parameterType) = explode('(', $infos[1]);
                     }
                     if (!empty($returnType) && !empty($methodName)) {
-                        $services->addService($this->generator->getServiceName($methodName), $methodName, $parameterType, $returnType);
+                        $services->addService($this->getGenerator(), $this->getGenerator()->getServiceName($methodName), $methodName, $parameterType, $returnType);
                     }
-                } elseif (count($infos) > 3) {
+                } elseif (count($infos) >= 3) {
                     /**
                      * RPC SOAP Style
                      * Some RPC WS defines the return type as a list of values
@@ -38,8 +43,8 @@ class Functions extends AbstractParser
                     /**
                      * Returns type is not defined in some case
                      */
-                    $start              = 0;
-                    $returnType         = strpos($infos[0], '(') === false ? $infos[0] : '';
+                    $start = 0;
+                    $returnType = strpos($infos[0], '(') === false ? $infos[0] : '';
                     $firstParameterType = '';
                     if (empty($returnType) && strpos($infos[0], '(') !== false) {
                         $start = 1;
@@ -54,6 +59,7 @@ class Functions extends AbstractParser
                         for ($i = $start; $i < $infosCount; $i += 2) {
                             $info = str_replace(array(
                                 ', ',
+                                ',',
                                 '(',
                                 ')',
                                 '$',
@@ -64,7 +70,7 @@ class Functions extends AbstractParser
                                 ));
                             }
                         }
-                        $services->addService($this->generator->getServiceName($methodName), $methodName, $methodParameters, empty($returnType) ? 'unknown' : $returnType);
+                        $services->addService($this->getGenerator(), $this->getGenerator()->getServiceName($methodName), $methodName, $methodParameters, empty($returnType) ? 'unknown' : $returnType);
                     }
                 }
             }

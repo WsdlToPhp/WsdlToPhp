@@ -34,7 +34,7 @@ abstract class AbstractDomDocumentHandler
                 }
             }
         } else {
-            throw new \InvalidArgumentException('Document seems to be invalid');
+            throw new \InvalidArgumentException('Document seems to be invalid', __LINE__);
         }
     }
     /**
@@ -123,30 +123,52 @@ abstract class AbstractDomDocumentHandler
     /**
      * @param string $name
      * @param array $attributes
+     * @param \DOMNode $node
      * @return ElementHandler[]
      */
-    public function getElementsByNameAndAttributes($name, array $attributes)
+    public function getElementsByNameAndAttributes($name, array $attributes, \DOMNode $node = null)
     {
         $matchingElements = $this->getElementsByName($name);
-        if (!empty($attributes) && !empty($matchingElements)) {
-            $xpath = new \DOMXPath($this->domDocument);
-            $xQuery = sprintf("//*[local-name() = '%s']", $name);
-            foreach ($attributes as $attributeName=>$attributeValue) {
-                $xQuery .= sprintf("[@%s='%s']", $attributeName, $attributeValue);
-            }
-            $nodes = $xpath->query($xQuery);
+        if ((!empty($attributes) || $node instanceof \DOMNode) && !empty($matchingElements)) {
+            $nodes = $this->searchTagsByXpath($name, $attributes, $node);
             if (!empty($nodes)) {
-                $matchingElements = array();
-                $index = 0;
-                foreach ($nodes as $node) {
-                    if ($node instanceof \DOMElement) {
-                        $matchingElements[] = $this->getElementHandler($node, $this, $index);
-                        $index++;
-                    }
-                }
+                $matchingElements = $this->getElementsHandlers($nodes);
             }
         }
         return $matchingElements;
+    }
+    /**
+     * @param \DOMNodeList $nodeList
+     * @return ElementHandler[]
+     */
+    public function getElementsHandlers(\DOMNodeList $nodeList)
+    {
+        $nodes = array();
+        if (!empty($nodeList)) {
+            $index = 0;
+            foreach ($nodeList as $node) {
+                if ($node instanceof \DOMElement) {
+                    $nodes[] = $this->getElementHandler($node, $this, $index);
+                    $index++;
+                }
+            }
+        }
+        return $nodes;
+    }
+    /**
+     * @param string $name
+     * @param array $attributes
+     * @param \DOMNode $node
+     * @return \DOMNodeList
+     */
+    public function searchTagsByXpath($name, array $attributes, \DOMNode $node = null)
+    {
+        $xpath = new \DOMXPath($this->domDocument);
+        $xQuery = sprintf("%s//*[local-name() = '%s']", $node instanceof \DOMNode ? '.' : '', $name);
+        foreach ($attributes as $attributeName=>$attributeValue) {
+            $xQuery .= sprintf("[@%s='%s']", $attributeName, $attributeValue);
+        }
+        return $xpath->query($xQuery, $node);
     }
     /**
      * @param string $name

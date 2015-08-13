@@ -7,7 +7,6 @@ use WsdlToPhp\PackageGenerator\DomHandler\AttributeHandler;
 use WsdlToPhp\PackageGenerator\DomHandler\Wsdl\Tag\AbstractTag as Tag;
 use WsdlToPhp\PackageGenerator\DomHandler\Wsdl\Tag\TagRestriction as Restriction;
 use WsdlToPhp\PackageGenerator\Model\Wsdl;
-use WsdlToPhp\PackageGenerator\Model\Schema;
 use WsdlToPhp\PackageGenerator\Model\Struct;
 
 class TagRestriction extends AbstractTagParser
@@ -22,13 +21,6 @@ class TagRestriction extends AbstractTagParser
                 $this->parseRestriction($tag);
             }
         }
-    }
-    /**
-     * @see \WsdlToPhp\PackageGenerator\Parser\Wsdl\AbstractParser::parseSchema()
-     */
-    protected function parseSchema(Wsdl $wsdl, Schema $schema)
-    {
-        $this->parseWsdl($wsdl);
     }
     /**
      * @see \WsdlToPhp\PackageGenerator\Parser\Wsdl\AbstractParser::parsingTag()
@@ -46,7 +38,7 @@ class TagRestriction extends AbstractTagParser
         if ($parent instanceof Tag) {
             $model = $this->getModel($parent);
             if ($model instanceof Struct) {
-                $this->getGenerator()->getStructs()->addVirtualStruct($parent->getAttributeName());
+                $this->getGenerator()->getStructs()->addVirtualStruct($this->getGenerator(), $parent->getAttributeName());
                 $this->parseRestrictionAttributes($parent, $model, $restriction);
                 $this->parseRestrictionChildren($parent, $restriction);
             }
