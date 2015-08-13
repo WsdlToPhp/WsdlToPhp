@@ -24,6 +24,7 @@
                 <directory>./src/PackageBase/tests/</directory>
                 <directory>./src/PhpGenerator/tests/</directory>
                 <directory>./src/PackageGenerator/Tests/</directory>
+                <directory>./vendor</directory>
             </exclude>
         </whitelist>
     </filter>
