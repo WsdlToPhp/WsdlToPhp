@@ -26,11 +26,11 @@
     },
     "autoload": {
         "psr-4": {
-            "WsdlToPhp\\PackageGenerator\\": "src/PackageGenerator/",
-            "WsdlToPhp\\PhpGenerator\\": "src/PhpGenerator/src/",
-            "WsdlToPhp\\PhpGenerator\\Tests\\": "src/PhpGenerator/tests/",
-            "WsdlToPhp\\PackageBase\\": "src/PackageBase/src/",
-            "WsdlToPhp\\PackageBase\\Tests\\": "src/PackageBase/tests/"
+            "WsdlToPhp\\PackageGenerator\\": "src/WsdlToPhp/PackageGenerator/",
+            "WsdlToPhp\\PhpGenerator\\": "src/WsdlToPhp/PhpGenerator/src/",
+            "WsdlToPhp\\PhpGenerator\\Tests\\": "src/WsdlToPhp/PhpGenerator/tests/",
+            "WsdlToPhp\\PackageBase\\": "src/WsdlToPhp/PackageBase/src/",
+            "WsdlToPhp\\PackageBase\\Tests\\": "src/WsdlToPhp/PackageBase/tests/"
         }
     }
 }
