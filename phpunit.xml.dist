@@ -10,7 +10,9 @@
     </php>
     <testsuites>
         <testsuite name="WsdlToPhp Test Suite">
-            <directory>./src/WsdlToPhp/*/Tests/</directory>
+            <directory>./src/WsdlToPhp/PackageBase/tests/</directory>
+            <directory>./src/WsdlToPhp/PhpGenerator/tests/</directory>
+            <directory>./src/WsdlToPhp/PackageGenerator/Tests/</directory>
         </testsuite>
     </testsuites>
 
@@ -18,7 +20,10 @@
         <whitelist>
             <directory>./</directory>
             <exclude>
-                <directory>vendor</directory>
+                <directory>./src/WsdlToPhp/PackageBase/tests/</directory>
+                <directory>./src/WsdlToPhp/PhpGenerator/tests/</directory>
+                <directory>./src/WsdlToPhp/PackageGenerator/Tests/</directory>
+                <directory>./vendor</directory>
             </exclude>
         </whitelist>
     </filter>

@@ -1,7 +1,3 @@
-.settings
-.buildpath
-.project
 vendor/
 composer.lock
 phpunit.xml
-src/WsdlToPhp/*/*.sh
