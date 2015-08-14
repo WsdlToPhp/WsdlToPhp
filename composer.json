@@ -1,10 +1,10 @@
 {
-    "name": "generators",
+    "name": "wsdltophp/generators",
     "description": "Wsdl to php components",
     "version": "1.0.0",
     "type": "library",
     "keywords" : ["soap","wsdl","php","generator"],
-    "homepage" : "https://github.com/WsdlToPhp",
+    "homepage" : "https://github.com/WsdlToPhp/WsdlToPhp",
     "license" : "MIT",
     "authors" : [
         {
