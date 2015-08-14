@@ -4,20 +4,27 @@
          xsi:noNamespaceSchemaLocation="http://schema.phpunit.de/4.1/phpunit.xsd"
          backupGlobals="false"
          colors="true"
-         bootstrap="vendor/autoload.php"
->
+         bootstrap="vendor/autoload.php">
     <php>
         <ini name="error_reporting" value="-1" />
     </php>
     <testsuites>
-        <testsuite name="Symfony Test Suite">
-            <directory>./src/WsdlToPhp/*/Tests/</directory>
+        <testsuite name="WsdlToPhp Test Suite">
+            <directory>./src/WsdlToPhp/PackageBase/tests/</directory>
+            <directory>./src/WsdlToPhp/PhpGenerator/tests/</directory>
+            <directory>./src/WsdlToPhp/PackageGenerator/Tests/</directory>
         </testsuite>
     </testsuites>
 
     <filter>
         <whitelist>
             <directory>./</directory>
+            <exclude>
+                <directory>./src/WsdlToPhp/PackageBase/tests/</directory>
+                <directory>./src/WsdlToPhp/PhpGenerator/tests/</directory>
+                <directory>./src/WsdlToPhp/PackageGenerator/Tests/</directory>
+                <directory>./vendor</directory>
+            </exclude>
         </whitelist>
     </filter>
 </phpunit>
